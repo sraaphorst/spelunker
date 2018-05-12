@@ -1,0 +1,57 @@
+# *** CMake ***
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+makefile
+src_extern/nauty/makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# *** CLion ***
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+/cmake-build-*/
+*-prefix
+*-prefix/**
+*.dSYM
+*.dSYM/**
+
+# *** Apps and C++ code ***
+Apps/differences
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
