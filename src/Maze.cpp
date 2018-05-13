@@ -13,7 +13,7 @@ namespace vorpal {
     namespace maze {
         Maze::Maze(const int _width, const int _height, const Position _start, const PositionCollection _endingPositions)
         : width(_width), height(_height), start(_start), endingPositions(_endingPositions) {
-            initializeEmptyLayout();
+            initializeEmptyLayout(true);
             checkPositions();
         }
 
@@ -22,13 +22,18 @@ namespace vorpal {
             checkPositions();
         }
 
-        void Maze::initializeEmptyLayout() {
-            for (auto l: layout) l.clear();
+        void Maze::initializeEmptyLayout(bool walls) {
+            for (auto r: layout) {
+                for (auto c : r)
+                    c.clear();
+                r.clear();
+            }
             layout.clear();
 
-            // Set width x height of EMPTY.
-            std::vector< MazeType > row(width, MazeType::EMPTY);
-            layout = std::vector< std::vector< MazeType > > (height, row);
+            // Set width x height of appropriate wall type.
+            Cell cell(4, walls);
+            Row row(width, cell);
+            layout = Layout(height, row);
         }
 
         void Maze::checkPositions() {
@@ -40,10 +45,6 @@ namespace vorpal {
         void Maze::checkPosition(const vorpal::maze::Position &p) {
             if (p.first < 0 || p.first > width || p.second < 0 || p.second >= height)
                 throw OutOfBoundsPosition(p);
-
-            const MazeType mt = layout[p.first][p.second];
-            if (layout[p.first][p.second] != MazeType::EMPTY)
-                throw IllegalPositionType(p, mt);
         }
     }
 }

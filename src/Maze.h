@@ -44,7 +44,13 @@ namespace vorpal {
              */
             virtual void generate() = 0;
         protected:
-            void initializeEmptyLayout();
+            /// Initialize the layout of the maze to the "empty" layout.
+            /**
+             * Initialize the layout of the maze to the "empty" layout.
+             * This is a width x height vector of all walls (if walls is true) or no walls (if walls is empty).
+             * @param walls indicates whether the maze should be all walls or no walls
+             */
+            void initializeEmptyLayout(bool walls);
 
             int width;
             int height;

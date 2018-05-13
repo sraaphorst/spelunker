@@ -23,21 +23,6 @@ namespace vorpal {
             explicit Exception(const std::string what) : std::logic_error(what) {}
         };
 
-        class IllegalPositionType : public Exception {
-        public:
-            IllegalPositionType(const Position &p, const MazeType t) : Exception(msg(p, t)) {}
-
-        private:
-            static std::string msg(const Position &p, const MazeType t) {
-                return "Start position "
-                       + vorpal::typeclasses::Show<Position>::show(p)
-                       + " cannot occur on maze type "
-                       + vorpal::typeclasses::Show<MazeType>::show(t)
-                       + ".";
-
-            }
-        };
-
         class OutOfBoundsPosition : public Exception {
         public:
             OutOfBoundsPosition(const Position &p) : Exception(msg(p)) {}

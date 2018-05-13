@@ -15,31 +15,32 @@
 
 namespace vorpal {
     namespace maze {
-        /// The types of terrain comprising a maze.
-        /**
-         * The three types of terrain possible in a maze:
-         * FLOOR is empty floor
-         * WALL is a closed wall
-         * OUTOFBOUNDS is a square that is marked as not able to use for any algorithms,
-         *             and one that cannot be traversed. This can come in handy for making
-         *             interestingly-shaped mazes.
-         * EMPTY is an unused space, and can be used by the maze generation algorithms.
-         */
-        enum MazeType {
-            FLOOR,
-            WALL,
-            UNUSABLE,
-            EMPTY,
+        /// The four directions for each square in a maze.
+        enum Direction {
+            NORTH = 0,
+            EAST,
+            SOUTH,
+            WEST,
         };
 
         /// An (x,y) position in a maze.
         using Position = std::pair<int, int>;
 
-        /// The layout of a maze, as a rectangle.
-        using Layout = std::vector<std::vector<MazeType>>;
+        /// A cell in the maze.
+        using Cell = std::vector< bool >;
+
+        /// A row in the maze.
+        using Row = std::vector< Cell >;
+
+        /// The layout of a maze.
+        /**
+         * The layout of a maze, as a rectangle, indexed by (x,y,d), where (x,y) is the Position and d is the
+         * Direction. The value is true if there is a wall, and false otherwise.
+         */
+        using Layout = std::vector< Row >;
 
         /// A collection of positions.
-        using PositionCollection = std::set<Position>;
+        using PositionCollection = std::set< Position >;
     }
 }
 
@@ -48,18 +49,18 @@ namespace vorpal {
         using namespace vorpal::maze;
 
         template<>
-        struct vorpal::typeclasses::Show<MazeType> {
-            static std::string show(const MazeType &t) {
+        struct vorpal::typeclasses::Show< Direction > {
+            static std::string show(const Direction &t) {
                 switch (t) {
-                    case FLOOR:    return "FLOOR";
-                    case WALL:     return "WALL";
-                    case UNUSABLE: return "UNUSABLE";
-                    case EMPTY:    return "EMPTY";
-                    default:       return "UNDEFINED";
+                    case NORTH: return "NORTH";
+                    case EAST:  return "EAST";
+                    case SOUTH: return "SOUTH";
+                    case WEST:  return "WEST";
+                    default:    return "UNDEFINED";
                 }
             }
             static constexpr bool is_instance = true;
-            using type = MazeType;
+            using type = Direction;
         };
     }
 }
