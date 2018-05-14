@@ -44,10 +44,15 @@ namespace vorpal::typeclasses {
     template<typename A, template<typename, typename> typename Container>
     struct Show<Container<A, std::allocator<A> > > {
         static std::string show(const Container<A, std::allocator<A> > &c) {
-            std::string s;
+            std::string s = '[';
+            bool notFirst = false;
             for (auto a : c) {
+                if (notFirst)
+                    s += ',';
+                notFirst = true;
                 s += Show<A>::show(a);
             }
+            s += ']';
             return s;
         }
 
