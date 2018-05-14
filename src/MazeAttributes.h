@@ -7,6 +7,7 @@
 #ifndef SPELUNKER_MAZEATTRIBUTES_H
 #define SPELUNKER_MAZEATTRIBUTES_H
 
+#include <map>
 #include <ostream>
 #include <set>
 #include <tuple>
@@ -15,6 +16,12 @@
 
 namespace vorpal {
     namespace maze {
+        /// An (x,y) cell in a maze.
+        using Cell = std::pair<int, int>;
+
+        /// A collection of cells.
+        using CellCollection = std::vector<Cell>;
+
         /// The four directions for each square in a maze.
         enum Direction {
             NORTH = 0,
@@ -23,24 +30,22 @@ namespace vorpal {
             WEST,
         };
 
-        /// An (x,y) position in a maze.
-        using Position = std::pair<int, int>;
+        /// A list of all Directions for iteration.
+        const std::vector<Direction> Directions{NORTH, EAST, SOUTH, WEST};
 
-        /// A cell in the maze.
-        using Cell = std::vector< bool >;
+        /// A position in a maze, i.e. a Cell and a Direction.
+        using Position = std::pair<Cell, Direction>;
 
-        /// A row in the maze.
-        using Row = std::vector< Cell >;
+        /// The ID for a wall. Walls are ranked to ints.
+        using WallID = int;
 
-        /// The layout of a maze.
+        /// The wall incidence of a maze.
         /**
-         * The layout of a maze, as a rectangle, indexed by (x,y,d), where (x,y) is the Position and d is the
-         * Direction. The value is true if there is a wall, and false otherwise.
+         * The incidence of walls in a maze, which is a map from the rank of the wall to a bool indicating
+         * its existence. This, with Layout, determines the maze. We represent this by vector since we assume
+         * a contiguous range of wall incidences.
          */
-        using Layout = std::vector< Row >;
-
-        /// A collection of positions.
-        using PositionCollection = std::set< Position >;
+        using WallIncidence = std::vector<bool>;
     }
 }
 
@@ -49,16 +54,22 @@ namespace vorpal {
         using namespace vorpal::maze;
 
         template<>
-        struct vorpal::typeclasses::Show< Direction > {
+        struct Show<Direction> {
             static std::string show(const Direction &t) {
                 switch (t) {
-                    case NORTH: return "NORTH";
-                    case EAST:  return "EAST";
-                    case SOUTH: return "SOUTH";
-                    case WEST:  return "WEST";
-                    default:    return "UNDEFINED";
+                    case NORTH:
+                        return "NORTH";
+                    case EAST:
+                        return "EAST";
+                    case SOUTH:
+                        return "SOUTH";
+                    case WEST:
+                        return "WEST";
+                    default:
+                        return "UNDEFINED";
                 }
             }
+
             static constexpr bool is_instance = true;
             using type = Direction;
         };

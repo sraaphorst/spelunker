@@ -7,6 +7,7 @@
 #ifndef SPELUNKER_MAZE_H
 #define SPELUNKER_MAZE_H
 
+#include <algorithm>
 #include "MazeAttributes.h"
 
 namespace vorpal {
@@ -15,6 +16,25 @@ namespace vorpal {
         /**
          * The most generic characteristics of a 2D planar maze.
          * It encompasses a layout, as well as starting and ending positions.
+         *
+         * If we have width w and height h, and we assume that the maze is surrounded by walls,
+         * then we have:
+         * 1. c = w * h cells; and
+         * 2. z = (w-1)*h + w*(h-1) walls.
+         *
+         * Here is an example of a 4x3 maze. The bounding walls are not shown:
+         *
+         *  0 1 2 3
+         * 0 | | |
+         *  -+-+-+-
+         * 1 | | |
+         *  -+-+-+-
+         * 2 | | |
+         *
+         * The maze can be fully represented by the incidence of walls. We assign a rank to the walls in the
+         * range [0,z), and then represent their incidence by a vector of bool. For convenience of working with
+         * cells, we have a function that takes a cell coordinates and a direction and returns the rank of the
+         * wall, or -1 if the wall is a bounding wall.
          */
         class Maze {
         public:
@@ -27,48 +47,73 @@ namespace vorpal {
              * @param s the starting position
              * @param ends the ending positions
              */
-            Maze(const int w, const int h, const Position s, const PositionCollection ends);
+            Maze(const int w,
+                 const int h,
+                 const Cell s,
+                 const CellCollection ends);
             virtual ~Maze() = default;
 
-            virtual inline Layout &getLayout() noexcept final { return layout; }
-            virtual inline void setLayout(const Layout &playout) final;
+            static inline Cell cell(int x, int y) { return std::make_pair(x,y); }
+            static inline Position pos(int x, int y, Direction d) { return std::make_pair(cell(x,y),d); }
+            static inline Position pos(const Cell &c, Direction d) { return std::make_pair(c,d); }
+
+            virtual inline const WallIncidence &getWallIncidence() noexcept final { return wallIncidence; }
 
             virtual inline int getWidth() noexcept final { return width; }
             virtual inline int getHeight() noexcept final { return height; }
 
-            virtual inline Position getStartingPosition() noexcept final { return start; }
-            virtual inline PositionCollection getEndngPositions() noexcept final { return endingPositions; }
+            virtual inline Cell getStartingCell() noexcept final { return startCell; }
+            virtual inline CellCollection getEndngCells() noexcept final { return endingCells; }
 
             /**
              * Generate a maze that meets the requirements.
              */
-            virtual void generate() = 0;
+            virtual const WallIncidence generate() { WallIncidence(); };
         protected:
             /// Initialize the layout of the maze to the "empty" layout.
             /**
              * Initialize the layout of the maze to the "empty" layout.
-             * This is a width x height vector of all walls (if walls is true) or no walls (if walls is empty).
-             * @param walls indicates whether the maze should be all walls or no walls
+             * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
              */
-            void initializeEmptyLayout(bool walls);
+            WallIncidence initializeEmptyLayout(bool walls);
 
-            int width;
-            int height;
-            Layout layout;
-            Position start;
-            PositionCollection endingPositions;
+            /// A function that maps positions to wall ranks.
+            /**
+             * A position is a current location in the maze, which corresponds to a cell (x,y) and the direction
+             * d in which one is facing. This function takes a position and finds the wall rank to which it
+             * corresponds, or -1 if it corresponds to a bounding wall, i.e. a wall at the boundary of the maze.
+             * @param x the x coordinate
+             * @param y the y coordinate
+             * @param d the direction
+             * @return the rank of the wall at this position
+             */
+            virtual WallID rankPosition(const Position &p) final;
+
+            /// A static function used by rankPosition, separated out for testing.
+            static WallID rankPositionS(const int w, const int h, const int x, const int y, const Direction d);
+
+            // We consider these "fixed characteristics" of the maze.
+            const int width;
+            const int height;
+            const Cell startCell;
+            const CellCollection endingCells;
+            const int numWalls;
+            const WallIncidence wallIncidence;
 
         private:
-            /**
-             * Check the start and end positions to make sure they appear in valid places.
-             */
-            void checkPositions();
+            /// Check the start and end positions to make sure they appear in valid places.
+            void checkCells();
 
             /**
              * Check a position to make sure it appears in a valid place.
              * @param p the position to check
              */
-            void checkPosition(const Position &p);
+            void checkCell(const Cell &c);
+
+#ifndef NDEBUG
+            /// Static test case for the rankPosition function.
+            void test_rankPositionS(const int w, const int h);
+#endif
         };
     }
 }

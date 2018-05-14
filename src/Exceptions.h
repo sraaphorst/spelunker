@@ -23,13 +23,13 @@ namespace vorpal {
             explicit Exception(const std::string what) : std::logic_error(what) {}
         };
 
-        class OutOfBoundsPosition : public Exception {
+        class OutOfBoundsCell : public Exception {
         public:
-            OutOfBoundsPosition(const Position &p) : Exception(msg(p)) {}
+            OutOfBoundsCell(const Cell &c) : Exception(msg(c)) {}
 
         private:
-            static std::string msg(const Position &p) {
-                return "Position " + vorpal::typeclasses::Show<Position>::show(p) + " is out of bounds.";
+            static std::string msg(const Cell &c) {
+                return "Cell " + vorpal::typeclasses::Show<Cell>::show(c) + " is out of bounds.";
             }
         };
 

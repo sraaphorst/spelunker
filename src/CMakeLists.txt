@@ -14,11 +14,10 @@ set(PUBLIC_HEADER_FILES
         Exceptions.h
         Maze.h
         MazeAttributes.h
-        RectangularMaze.h
-        WallAdderMaze.h)
+        RandomizedKruskalMaze.h)
 
 set(SOURCE_FILES
-        Maze.cpp)
+        Maze.cpp RandomizedKruskalMaze.cpp DisjointSetHelper.h)
 
 add_library(spelunker SHARED
         ${SOURCE_FILES}
