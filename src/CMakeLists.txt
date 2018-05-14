@@ -1,8 +1,8 @@
 # CMakeLists.txt
 # By Sebastian Raaphorst, 2018.
 
-set (SPELUNKER_VERSION_MAJOR 1)
-set (SPELUNKER_VERSION_MINOR 0)
+set (SPELUNKER_VERSION_MAJOR 0)
+set (SPELUNKER_VERSION_MINOR 1)
 set (SPELUNKER_VERSION_BUILD 0)
 
 configure_file (

@@ -13,17 +13,15 @@
 
 #include "maze.h"
 
-namespace vorpal {
-    namespace maze {
-        class RandomizedKruskalMaze final : public Maze {
-        public:
-            RandomizedKruskalMaze(const int w,
-                                  const int h,
-                                  const Cell &s,
-                                  const CellCollection &ends);
+namespace vorpal::maze {
+    class RandomizedKruskalMaze final : public Maze {
+    public:
+        RandomizedKruskalMaze(const int w,
+                              const int h,
+                              const Cell &s,
+                              const CellCollection &ends);
 
-            const WallIncidence generate() override;
-        };
-    }
+        const WallIncidence generate() override;
+    };
 }
 #endif //SPELUNKER_RANDOMIZEDKRUSKALMAZE_H
