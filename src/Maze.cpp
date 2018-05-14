@@ -5,6 +5,9 @@
  */
 
 #include <cassert>
+#include <map>
+#include <tuple>
+#include <vector>
 #include "Exceptions.h"
 #include "MazeAttributes.h"
 #include "Maze.h"
@@ -59,6 +62,35 @@ namespace vorpal {
 
         }
 
+        const UnrankWallMap Maze::createUnrankWallMap() {
+            return createUnrankWallMapS(width, height);
+        }
+
+        const UnrankWallMap Maze::createUnrankWallMapS(const int w, const int h) {
+            UnrankWallMap umap;
+
+            // The easiest way to do this is the inefficient way: iterate over all possible positions and collect
+            // up their wall ranks. We need a vector to do this, which we will turn into a pair since there should
+            // be two or a failure has occurred.
+            std::map< WallID, std::vector< Position > > unrankings;
+            for (int x=0; x < w; ++x)
+                for (int y=0; y < h; ++y) {
+                for (auto d : Directions) {
+                    unrankings[rankPositionS(w, h, x, y, d)].emplace_back(pos(x,y,d));
+                }
+            }
+
+            // Now convert to pairs.
+            for (auto kv : unrankings) {
+                const int rk = kv.first;
+                const std::vector< Position > ps = kv.second;
+                assert(ps.size() == 2);
+                umap.insert(std::make_pair(rk, std::make_pair(ps[0], ps[1])));
+            }
+
+            return umap;
+        }
+
         void Maze::checkCells() {
             checkCell(startCell);
             for (auto p: endingCells)
@@ -90,6 +122,25 @@ namespace vorpal {
             for (int i=0; i < numwalls; ++i)
                 assert(ranks.find(i) != ranks.end());
         }
-    }
+
+        void Maze::test_createUnrankWallMapS(const int width, const int height) {
+            const UnrankWallMap m = createUnrankWallMapS(width, height);
+            for (auto kv : m) {
+                auto rk = kv.first;
+
+                auto p1 = kv.second.first;
+                auto x1 = p1.first.first;
+                auto y1 = p1.first.second;
+                auto d1 = p1.second;
+                assert(rankPositionS(width, height, x1, y1, d1) == rk);
+
+                auto p2 = kv.second.second;
+                auto x2 = p2.first.first;
+                auto y2 = p2.first.second;
+                auto d2 = p2.second;
+                assert(rankPositionS(width, height, x1, y1, d1) == rk);
+            }
+        }
 #endif
+    }
 }

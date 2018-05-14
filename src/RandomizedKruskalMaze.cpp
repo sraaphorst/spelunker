@@ -5,6 +5,7 @@
  */
 
 #include <algorithm>
+#include <random>
 #include <set>
 #include <tuple>
 #include <vector>
@@ -28,12 +29,12 @@ namespace vorpal {
             WallIncidence wi = initializeEmptyLayout(true);
 
             // Create a collection of all possible walls.
-            // TODO: This is not going to work. We need walls so that we can determine the cells on either side of them.
             std::vector< int > walls;
-            for (auto x = 0; x < width; ++x)
-                for (auto y = 0; y < height; ++y)
-                    for (auto d : Directions)
-                        walls.emplace_back(rankPosition(pos(x, y, d)));
+            for (auto w = 0; w < numWalls; ++w)
+                walls.emplace_back(w);
+
+            // Get the map of wall ranks to adjacent cells.
+            UnrankWallMap unrank = createUnrankWallMap();
 
             // Given a wall, find its adjacent cell.
             // We need disjoint sets to represent the connected sets of cells.
@@ -46,8 +47,8 @@ namespace vorpal {
             // Create a vector of all elements.
             std::vector< Element > elements;
             elements.reserve(width * height);
-            for (int x=0; x < width; ++x)
-                for (int y=0; y < width; ++y)
+            for (auto x=0; x < width; ++x)
+                for (auto y=0; y < width; ++y)
                     elements.emplace_back(Element(ranker(x, y)));
 
             // Create disjoint singleton sets.
@@ -57,10 +58,31 @@ namespace vorpal {
             std::for_each(elements.begin(), elements.end(), [&dsets](auto e) { dsets.make_set(e); });
 
             // Shuffle the vector of walls and then iterate over them.
-            random_shuffle(walls.begin(), walls.end());
+            std::random_device rd;
+            std::mt19937 g(rd());
+            std::shuffle(walls.begin(), walls.end(), g);
 
-            // TODO: Fix and fill in rest.
-            // Make the compiler happy for now.
+            for (auto w : walls) {
+                auto pp = unrank[w];
+                auto c1  = pp.first.first;
+                auto cx1 = c1.first;
+                auto cy1 = c1.second;
+                auto cr1 = ranker(cx1, cy1);
+
+                auto c2  = pp.second.first;
+                auto cx2 = c2.first;
+                auto cy2 = c2.second;
+                auto cr2 = ranker(cx2, cy2);
+
+                // If the cells belong to separate partitions, remove the wall and join them.
+                auto set1 = dsets.find_set(Element(cr1));
+                auto set2 = dsets.find_set(Element(cr2));
+                if (set1 != set2) {
+                    wi[w] = false;
+                    dsets.link(set1, set2);
+                }
+            }
+
             return wi;
         }
     }

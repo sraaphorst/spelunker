@@ -92,6 +92,13 @@ namespace vorpal {
             /// A static function used by rankPosition, separated out for testing.
             static WallID rankPositionS(const int w, const int h, const int x, const int y, const Direction d);
 
+            /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
+            virtual const UnrankWallMap createUnrankWallMap();
+
+            /// A static function used by unrankWallID, separated out for testing.
+            static const UnrankWallMap createUnrankWallMapS(const int w, const int h);
+
+
             // We consider these "fixed characteristics" of the maze.
             const int width;
             const int height;
@@ -111,8 +118,11 @@ namespace vorpal {
             void checkCell(const Cell &c);
 
 #ifndef NDEBUG
-            /// Static test case for the rankPosition function.
-            void test_rankPositionS(const int w, const int h);
+            /// Static test case for the rankPositionS function.
+            static void test_rankPositionS(const int w, const int h);
+
+            /// Static test case for the createUnrankWallMapS function.
+            static void test_createUnrankWallMapS(const int w, const int h);
 #endif
         };
     }

@@ -8,7 +8,6 @@
 #define SPELUNKER_MAZEATTRIBUTES_H
 
 #include <map>
-#include <ostream>
 #include <set>
 #include <tuple>
 #include <vector>
@@ -46,6 +45,9 @@ namespace vorpal {
          * a contiguous range of wall incidences.
          */
         using WallIncidence = std::vector<bool>;
+
+        /// Used to reverse wall ranking, i.e. a map that takes a wall rank and gives the two cells it separates.
+        using UnrankWallMap = std::map< WallID, const std::pair< Position, Position > >;
     }
 }
 
