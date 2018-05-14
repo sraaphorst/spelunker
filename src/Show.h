@@ -58,7 +58,7 @@ namespace vorpal::typeclasses {
     template<typename A, typename B>
     struct Show<std::pair<A, B>> {
         static std::string show(const std::pair<A, B> &p) {
-            return '(' + Show<A>::show(p.first) + "," + Show<A>::show(p.second) + ')';
+            return '(' + Show<A>::show(p.first) + "," + Show<B>::show(p.second) + ')';
         }
 
         static constexpr bool is_instance = true;
