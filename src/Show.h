@@ -38,7 +38,7 @@ namespace vorpal::typeclasses {
         }
 
         static constexpr bool is_instance = true;
-        using type = int;
+        using type = string;
     };
 
     template<typename A, template<typename, typename> typename Container>
