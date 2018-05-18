@@ -8,12 +8,13 @@
 #define SPELUNKER_MAZEATTRIBUTES_H
 
 #include <map>
+#include <optional>
 #include <set>
 #include <tuple>
 #include <vector>
 #include "Show.h"
 
-namespace vorpal::maze {
+namespace vorpal::maze::types {
     /// An (x,y) cell in a maze.
     using Cell = std::pair<int, int>;
 
@@ -28,8 +29,13 @@ namespace vorpal::maze {
         WEST,
     };
 
+    /// The type of a starting cell: it may be defined, or not.
+    using PossibleStartCell = std::optional<Cell>;
+
     /// A list of all Directions for iteration.
-    const std::vector<Direction> Directions{NORTH, EAST, SOUTH, WEST};
+    const std::vector<const Direction> directions() {
+        return std::vector<const Direction> {NORTH, EAST, SOUTH, WEST};
+    }
 
     /// A position in a maze, i.e. a Cell and a Direction.
     using Position = std::pair<Cell, Direction>;
@@ -46,11 +52,44 @@ namespace vorpal::maze {
     using WallIncidence = std::vector<bool>;
 
     /// Used to reverse wall ranking, i.e. a map that takes a wall rank and gives the two cells it separates.
-    using UnrankWallMap = std::map<WallID, const std::pair<Position, Position> >;
+    using UnrankWallMap = std::map<WallID, std::pair<Position, Position> >;
+
+    /// Convenience function to make coordinates (x,y) into a Cell.
+    /**
+     * Takes coordinates (x,y) and makes them into a Cell.
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     * @return a Cell representing (x,y)
+     */
+    inline Cell cell(int x, int y) { return std::make_pair(x, y); }
+
+    /// Convenience function to make coordinates and a Direction into a maze Position.
+    /**
+     * Takes coordinates (x,y) and a Direction and creates a Position in the maze.
+     * @param x the x coordinate of the position
+     * @param y the y coordinate of the position
+     * @param d the direction faced in the (x,y) cell
+     * @return a Position representing Cell (x,y) and the Direction
+     */
+    inline Position pos(int x, int y, Direction d) { return std::make_pair(cell(x, y), d); }
+
+    /// Convenience function to make a Cell and a Direction into a maze Position.
+    /**
+     * Takes a Cell and a Direction and creates a maze Position.
+     * @param c the (x,y) cell in the maze
+     * @param d the direction faced in the (x,y) cell
+     * @return a Position representing the Cell and the Direction
+     */
+    inline Position pos(const Cell &c, Direction d) { return std::make_pair(c, d); }
+
+    /// Calculates the number of possible internal (non-boundary) walls in a maze of width w and height h.
+    inline const int calculateNumWalls(const int w, const int h) {
+        return (w - 1) * h + w * (h - 1);
+    }
 }
 
 namespace vorpal::typeclasses {
-    using namespace vorpal::maze;
+    using namespace vorpal::maze::types;
 
     template<>
     struct Show<Direction> {

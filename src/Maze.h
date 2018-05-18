@@ -8,13 +8,16 @@
 #define SPELUNKER_MAZE_H
 
 #include <algorithm>
+#include <optional>
 #include "MazeAttributes.h"
 
 namespace vorpal::maze {
-    /// The most generic type of planar 2D maze.
+    /// An immutable 2D planar maze.
     /**
-     * The most generic characteristics of a 2D planar maze.
+     * A immutable 2D planar maze where walls have no thickness.
      * It encompasses a layout, as well as starting and ending positions.
+     *
+     * Here is a brief description as to how the layout is stored:
      *
      * If we have width w and height h, and we assume that the maze is surrounded by walls,
      * then we have:
@@ -35,53 +38,56 @@ namespace vorpal::maze {
      * cells, we have a function that takes a cell coordinates and a direction and returns the rank of the
      * wall, or -1 if the wall is a bounding wall.
      */
-    class Maze {
+    class Maze final {
     public:
-        /// Create a completely empty maze bounded by width and height.
+        /// Create a maze bounded by width and height, with a start and ending positions.
         /**
-         * Creates a completely empty maze within a bounded rectangle of width
-         * and height, along with the start position and the ending positions.
+         * Creates a maze within a bounded rectangle of width and height, along with the start position and
+         * the ending positions.
          * @param w width of the maze
          * @param h height of the maze
-         * @param s the starting position
-         * @param ends the ending positions
+         * @param s an optional starting position
+         * @param ends a collection of the ending positions
+         * @param walls the wall incidence as described above
          */
-        Maze(const int w,
-             const int h,
-             const Cell s,
-             const CellCollection ends);
+        Maze(int w,
+             int h,
+             const types::PossibleStartCell &s,
+             const types::CellCollection &ends,
+             const types::WallIncidence &walls);
+
+        /// Creates a maze bounded by width and height, but with no start / end positions.
+        /**
+         * Creates a maze within a bounded rectangle of width and height.
+         * @param w width of the maze
+         * @param h height of the maze
+         * @param the wall incidence structure
+         */
+        Maze(int w,
+             int h,
+             const types::WallIncidence &walls);
 
         virtual ~Maze() = default;
 
-        static inline Cell cell(int x, int y) { return std::make_pair(x, y); }
+        inline int getWidth() const noexcept { return width; }
+        inline int getHeight() const noexcept { return height; }
 
-        static inline Position pos(int x, int y, Direction d) { return std::make_pair(cell(x, y), d); }
+        inline types::PossibleStartCell getStartingCell() const noexcept { return startCell; }
+        inline types::CellCollection getEndingCells() const noexcept { return endingCells; }
 
-        static inline Position pos(const Cell &c, Direction d) { return std::make_pair(c, d); }
+        /// Create a new maze with the specified starting cell.
+        const Maze withStartingCell(const types::PossibleStartCell &s) const;
 
-        virtual inline const WallIncidence &getWallIncidence() noexcept final { return wallIncidence; }
+        /// Create a new maze with the specified ending cells.
+        const Maze withEndingCells(const types::CellCollection &ends) const;
 
-        virtual inline int getWidth() noexcept final { return width; }
+        /// For a given position, determine if there is a wall.
+        bool wall(const types::Position &p) const noexcept;
 
-        virtual inline int getHeight() noexcept final { return height; }
+        /// For a given set of coordinates (x,y) and a direction, determine if there is a wall.
+        bool wall(int x, int y, types::Direction d) const noexcept;
 
-        virtual inline Cell getStartingCell() noexcept final { return startCell; }
-
-        virtual inline CellCollection getEndngCells() noexcept final { return endingCells; }
-
-        /**
-         * Generate a maze that meets the requirements.
-         */
-        virtual const WallIncidence generate() { WallIncidence(); };
-
-    protected:
-        /// Initialize the layout of the maze to the "empty" layout.
-        /**
-         * Initialize the layout of the maze to the "empty" layout.
-         * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
-         */
-        WallIncidence initializeEmptyLayout(bool walls);
-
+    private:
         /// A function that maps positions to wall ranks.
         /**
          * A position is a current location in the maze, which corresponds to a cell (x,y) and the direction
@@ -92,42 +98,45 @@ namespace vorpal::maze {
          * @param d the direction
          * @return the rank of the wall at this position
          */
-        virtual WallID rankPosition(const Position &p) final;
+        types::WallID rankPosition(const types::Position &p) const;
+
+        /// A function that maps a cell (x,y) and direction to wall ranks.
+        types::WallID rankPosition(int x, int y, types::Direction d) const;
 
         /// A static function used by rankPosition, separated out for testing.
-        static WallID rankPositionS(const int w, const int h, const int x, const int y, const Direction d);
+        static types::WallID rankPositionS(int w, int h, int x, int y, types::Direction d);
 
         /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
-        virtual const UnrankWallMap createUnrankWallMap();
+        const types::UnrankWallMap createUnrankWallMap() const noexcept;
 
         /// A static function used by unrankWallID, separated out for testing.
-        static const UnrankWallMap createUnrankWallMapS(const int w, const int h);
+        static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
 
-
-        // We consider these "fixed characteristics" of the maze.
-        const int width;
-        const int height;
-        const Cell startCell;
-        const CellCollection endingCells;
-        const int numWalls;
-        const WallIncidence wallIncidence;
-
-    private:
         /// Check the start and end positions to make sure they appear in valid places.
-        void checkCells();
+        void checkCells() const;
 
         /**
-         * Check a position to make sure it appears in a valid place.
-         * @param p the position to check
+         * Check a cell to make sure it appears in a valid place.
+         * @param c the cell to check
          */
-        void checkCell(const Cell &c);
+        void checkCell(const types::Cell &c) const;
+
+        /// Static auxiliary method to check to see if a cell is valid.
+        static void checkCell(int w, int h, int x, int y);
+
+        const int width;
+        const int height;
+        const int numWalls;
+        const types::PossibleStartCell startCell;
+        const types::CellCollection endingCells;
+        const types::WallIncidence wallIncidence;
 
 #ifndef NDEBUG
         /// Static test case for the rankPositionS function.
-        static void test_rankPositionS(const int w, const int h);
+        static void test_rankPositionS(int w, int h);
 
         /// Static test case for the createUnrankWallMapS function.
-        static void test_createUnrankWallMapS(const int w, const int h);
+        static void test_createUnrankWallMapS(int w, int h);
 #endif
     };
 }

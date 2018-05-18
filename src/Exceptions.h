@@ -25,11 +25,11 @@ namespace vorpal {
 
         class OutOfBoundsCell : public Exception {
         public:
-            OutOfBoundsCell(const Cell &c) : Exception(msg(c)) {}
+            OutOfBoundsCell(const types::Cell &c) : Exception(msg(c)) {}
 
         private:
-            static std::string msg(const Cell &c) {
-                return "Cell " + vorpal::typeclasses::Show<Cell>::show(c) + " is out of bounds.";
+            static std::string msg(const types::Cell &c) {
+                return "Cell " + vorpal::typeclasses::Show<types::Cell>::show(c) + " is out of bounds.";
             }
         };
 

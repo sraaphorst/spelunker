@@ -1,0 +1,44 @@
+/**
+ * MazeGenerator.h
+ *
+ * By Sebastian Raaphorst, 2018.
+ *
+ * The superclass of all maze generators.
+ */
+
+#ifndef SPELUNKER_MAZEGENERATOR_H
+#define SPELUNKER_MAZEGENERATOR_H
+
+#include "MazeAttributes.h"
+#include "Maze.h"
+
+namespace vorpal::maze {
+    class MazeGenerator {
+    private:
+        const int width;
+        const int height;
+
+        /// The total number of possible interior (non-boundary) walls.
+        const int numWalls;
+
+    public:
+        MazeGenerator(const int w, const int h);
+
+        virtual ~MazeGenerator() = default;
+
+        virtual Maze &generate() = 0;
+
+    protected:
+        /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
+        /**
+         * Initialize the layout of the maze to the "empty" layout.
+         * This consists of the wall incidences all being set to true or false.
+         * The boundary walls are always maintained.
+         * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
+         * @return an "empty" layout
+         */
+        types::WallIncidence initializeEmptyLayout(bool walls);
+    };
+};
+
+#endif //SPELUNKER_MAZEGENERATOR_H

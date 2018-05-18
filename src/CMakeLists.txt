@@ -17,7 +17,7 @@ set(PUBLIC_HEADER_FILES
         RandomizedKruskalMaze.h)
 
 set(SOURCE_FILES
-        Maze.cpp RandomizedKruskalMaze.cpp DisjointSetHelper.h)
+        Maze.cpp RandomizedKruskalMaze.cpp DisjointSetHelper.h MazeGenerator.cpp MazeGenerator.h)
 
 add_library(spelunker SHARED
         ${SOURCE_FILES}

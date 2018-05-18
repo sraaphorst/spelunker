@@ -1,3 +1,7 @@
+/**
+ * This is just a placeholder for now.
+ */
+
 #include <qapplication.h>
 #include <qpushbutton.h>
 
