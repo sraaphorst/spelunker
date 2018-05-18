@@ -12,6 +12,9 @@
 #include "MazeAttributes.h"
 
 namespace vorpal::maze {
+    // Class forward.
+    class MazeGenerator;
+
     /// An immutable 2D planar maze.
     /**
      * A immutable 2D planar maze where walls have no thickness.
@@ -106,12 +109,6 @@ namespace vorpal::maze {
         /// A static function used by rankPosition, separated out for testing.
         static types::WallID rankPositionS(int w, int h, int x, int y, types::Direction d);
 
-        /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
-        const types::UnrankWallMap createUnrankWallMap() const noexcept;
-
-        /// A static function used by unrankWallID, separated out for testing.
-        static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
-
         /// Check the start and end positions to make sure they appear in valid places.
         void checkCells() const;
 
@@ -138,6 +135,8 @@ namespace vorpal::maze {
         /// Static test case for the createUnrankWallMapS function.
         static void test_createUnrankWallMapS(int w, int h);
 #endif
+
+        friend MazeGenerator;
     };
 }
 #endif //SPELUNKER_MAZE_H

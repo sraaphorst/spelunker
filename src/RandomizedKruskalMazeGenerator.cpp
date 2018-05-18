@@ -11,18 +11,15 @@
 #include <boost/pending/disjoint_sets.hpp>
 #include "DisjointSetHelper.h"
 #include "Maze.h"
-#include "RandomizedKruskalMaze.h"
+#include "RandomizedKruskalMazeGenerator.h"
 
 namespace vorpal::maze {
     using namespace std;
 
-    RandomizedKruskalMaze::RandomizedKruskalMaze(const int w,
-                                                 const int h,
-                                                 const vorpal::maze::Cell &s,
-                                                 const vorpal::maze::CellCollection &ends)
-            : Maze(w, h, s, ends) {}
+    RandomizedKruskalMazeGenerator::RandomizedKruskalMazeGenerator(const int w, const int h)
+            : MazeGenerator(w, h) {}
 
-    const WallIncidence RandomizedKruskalMaze::generate() {
+    const Maze RandomizedKruskalMazeGenerator::generate() {
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -82,6 +79,6 @@ namespace vorpal::maze {
             }
         }
 
-        return wi;
+        return Maze(width, height, wi);
     }
 }

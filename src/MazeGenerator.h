@@ -14,7 +14,7 @@
 
 namespace vorpal::maze {
     class MazeGenerator {
-    private:
+    protected:
         const int width;
         const int height;
 
@@ -22,11 +22,11 @@ namespace vorpal::maze {
         const int numWalls;
 
     public:
-        MazeGenerator(const int w, const int h);
+        MazeGenerator(int w, int h);
 
         virtual ~MazeGenerator() = default;
 
-        virtual Maze &generate() = 0;
+        virtual const Maze generate() = 0;
 
     protected:
         /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
@@ -38,6 +38,12 @@ namespace vorpal::maze {
          * @return an "empty" layout
          */
         types::WallIncidence initializeEmptyLayout(bool walls);
+
+        /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
+        const types::UnrankWallMap createUnrankWallMap() const;
+
+        /// A static function used by unrankWallID, separated out for testing.
+        static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
     };
 };
 
