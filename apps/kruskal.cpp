@@ -1,5 +1,5 @@
 /**
- * mazetest.cpp
+ * kruskal.cpp
  *
  * By Sebastian Raaphorst, 2018.
  */

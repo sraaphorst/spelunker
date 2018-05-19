@@ -39,3 +39,5 @@ install(TARGETS spelunker
         DESTINATION lib
         PUBLIC_HEADER DESTINATION include/spelunker)
 
+target_include_directories(spelunker PUBLIC ${SMAKE_CURRENT_SOURCE_DIR})
+
