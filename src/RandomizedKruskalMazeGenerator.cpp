@@ -54,8 +54,6 @@ namespace vorpal::maze {
         for (auto &e: elements)
             dsets.make_set(e);
 
-        //dsets.compress_sets(elements.begin(), elements.end());
-
         // Shuffle the vector of walls and then iterate over them.
         std::random_device rd;
         std::mt19937 g(rd());
