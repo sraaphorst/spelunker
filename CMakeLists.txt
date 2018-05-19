@@ -13,5 +13,7 @@ add_subdirectory(src)
 
 find_package(Qt5Widgets REQUIRED)
 
-add_executable(mazerunner mazerunner.cpp)
-target_link_libraries(mazerunner Qt5::Widgets)
+add_executable(mazetest   mazetest.cpp)
+#add_executable(mazerunner mazerunner.cpp)
+#target_link_libraries(mazerunner Qt5::Widgets)
+target_link_libraries(mazetest LINK_PUBLIC spelunker)

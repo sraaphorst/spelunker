@@ -39,11 +39,13 @@ namespace vorpal::maze {
     }
 
     bool Maze::wall(const vorpal::maze::types::Position &p) const noexcept {
-        return wallIncidence[rankPosition(p)];
+        const int rk = rankPosition(p);
+        return rk == -1 || wallIncidence[rk];
     }
 
     bool Maze::wall(int x, int y, vorpal::maze::types::Direction d) const noexcept {
-        return wallIncidence[rankPosition(x, y, d)];
+        const int rk = rankPosition(x, y, d);
+        return rk == -1 || wallIncidence[rk];
     }
 
     types::WallID Maze::rankPosition(const types::Position &p) const {

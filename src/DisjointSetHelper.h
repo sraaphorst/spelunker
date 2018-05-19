@@ -13,19 +13,28 @@
 #include <vector>
 #include <boost/pending/property.hpp>
 
+#include <iostream>
+#include <iomanip>
+
+
 /// Element of a set of disjoint sets, represented by an int. Do a lookup into a vector if necessary.
 struct Element {
 public:
-    explicit Element(int id) : dsID(id) {};
+    explicit Element(int n) : mSomeInt(n) {};
+
+    int someInt() const { return mSomeInt; }
 
     size_t dsID;
     size_t dsRank;
     size_t dsParent;
+
+private:
+    int mSomeInt;
 };
 
 inline bool
 operator==(Element const &lhs, Element const &rhs) {
-    return lhs.dsID == rhs.dsID;
+    return lhs.someInt() == rhs.someInt();
 }
 
 inline bool
@@ -78,8 +87,35 @@ compareByParent(Element const &lhs, Element const &rhs) {
 }
 
 inline bool
-compareByID(Element const &lhs, Element const &rhs) {
-    return lhs.dsID < rhs.dsID;
+compareBySomeInt(Element const &lhs, Element const &rhs) {
+    return lhs.someInt() < rhs.someInt();
+}
+
+void
+printElements(std::vector<Element>& elements)
+{
+    std::cout << "Elements:            ";
+    for (size_t i = 0; i < elements.size(); ++i)
+    {
+        std::cout << std::setw(4) << elements[i].someInt();
+    }
+    std::cout << std::endl;
+    std::cout << "Set representatives: ";
+    for (size_t i = 0; i < elements.size(); ++i)
+    {
+        std::cout << std::setw(4) << elements[i].dsParent;
+    }
+    std::cout << std::endl;
+    std::cout << "ID                 : ";
+    for (size_t i = 0; i < elements.size(); ++i)
+    {
+        std::cout << std::setw(4) << elements[i].dsID;
+    }
+    std::cout << std::endl;
+    std::cout << "Rank               : ";
+    for (size_t i=0; i < elements.size(); ++i)
+        std::cout << std::setw(4) << elements[i].dsRank;
+    std::cout << std::endl;
 }
 
 #endif //SPELUNKER_DISJOINTSETHELPER_H

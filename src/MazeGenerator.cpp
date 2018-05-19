@@ -33,7 +33,9 @@ namespace vorpal::maze {
         for (auto x = 0; x < w; ++x)
             for (auto y = 0; y < h; ++y) {
                 for (auto d : types::directions()) {
-                    unrankings[Maze::rankPositionS(w, h, x, y, d)].emplace_back(pos(x, y, d));
+                    const int rk = Maze::rankPositionS(w, h, x, y, d);
+                    if (rk != -1)
+                        unrankings[rk].emplace_back(pos(x, y, d));
                 }
             }
 
@@ -41,6 +43,7 @@ namespace vorpal::maze {
         for (auto kv : unrankings) {
             const auto rk = kv.first;
             const auto ps = kv.second;
+
             assert(ps.size() == 2);
             umap.insert(std::make_pair(rk, std::make_pair(ps[0], ps[1])));
         }

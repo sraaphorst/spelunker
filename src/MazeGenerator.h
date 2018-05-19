@@ -46,10 +46,8 @@ namespace vorpal::maze {
         static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
 
 #ifndef NDEBUG
-
         /// Static test case for the createUnrankWallMapS function.
         static void test_createUnrankWallMapS(int w, int h);
-
 #endif
     };
 };

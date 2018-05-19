@@ -11,13 +11,22 @@ configure_file (
     )
 
 set(PUBLIC_HEADER_FILES
+        StringMazeRenderer.h
         Exceptions.h
+        FullMaze.h
         Maze.h
         MazeAttributes.h
+        MazeGenerator.h
+        MazeRenderer.h
         RandomizedKruskalMazeGenerator.h)
 
 set(SOURCE_FILES
-        Maze.cpp RandomizedKruskalMazeGenerator.cpp DisjointSetHelper.h MazeGenerator.cpp MazeGenerator.h)
+        StringMazeRenderer.cpp
+        Maze.cpp
+        DisjointSetHelper.h
+        MazeGenerator.cpp
+        RandomizedKruskalMazeGenerator.cpp
+        Show.h)
 
 add_library(spelunker SHARED
         ${SOURCE_FILES}

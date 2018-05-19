@@ -10,6 +10,8 @@
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
+#include <iostream>
+
 #include "DisjointSetHelper.h"
 #include "Maze.h"
 #include "RandomizedKruskalMazeGenerator.h"
@@ -36,22 +38,32 @@ namespace vorpal::maze {
         // We need disjoint sets to represent the connected sets of cells.
         // To do so efficiently, we use Boost's disjoint_sets with some helper classes and methods.
 
-        // Rank / unrank cells:
-        const auto ranker = [this](int x, int y) { return x * width + y; };
-        const auto unranker = [this](int rk) { return std::make_pair(rk / width, rk % width); };
+        // Rank cells:
+        const auto ranker = [this](int x, int y) { return y * width + x; };
 
         // Create a vector of all elements.
         std::vector<Element> elements;
+        cout << "Creating w=" << width << " x h=" << height << " total=" << (width * height) << endl;
         elements.reserve(width * height);
         for (auto x = 0; x < width; ++x)
-            for (auto y = 0; y < width; ++y)
+            for (auto y = 0; y < height; ++y) {
                 elements.emplace_back(Element(ranker(x, y)));
+            }
+
+        cout << "Created " << elements.size() << " elements." << endl;
+        for (auto i=0; i < elements.size(); ++i)
+            elements[i].dsID = i;
 
         // Create disjoint singleton sets.
         Rank rank(elements);
         Parent parent(elements);
         boost::disjoint_sets<Rank *, Parent *> dsets(&rank, &parent);
-        std::for_each(elements.begin(), elements.end(), [&dsets](auto e) { dsets.make_set(e); });
+        for (auto &e: elements)
+            dsets.make_set(e);
+//        std::for_each(elements.begin(), elements.end(), [&dsets](auto e) { dsets.make_set(e); });
+
+        dsets.compress_sets(elements.begin(), elements.end());
+        printElements(elements);
 
         // Shuffle the vector of walls and then iterate over them.
         std::random_device rd;
@@ -71,14 +83,23 @@ namespace vorpal::maze {
             const auto &cy2 = c2.second;
             const auto cr2 = ranker(cx2, cy2);
 
+            cout << "C1: (" << cx1 << "," << cy1 << ") - (" << cx2 << "," << cy2 << "), r1=" << cr1 << ", r2=" << cr2 << endl;
+
             // If the cells belong to separate partitions, remove the wall and join them.
-            const auto set1 = dsets.find_set(Element(cr1));
-            const auto set2 = dsets.find_set(Element(cr2));
+            const auto &set1 = dsets.find_set(elements.at(cr1));
+            const auto &set2 = dsets.find_set(elements.at(cr2));
+//            cout << "cr1=" << cr1 << ", cr2= " << cr2 << ", rk1=" << set1.dsRank << ", rk2=" << set2.dsRank
+//                 << ", id1=" << set1.dsID << ", id2=" << set2.dsID << endl;
             if (set1 != set2) {
+                cout << "Removing wall " << w << ": (" << cx1 << "," << cy1 << ") - (" << cx2 << "," << cy2 << ")\n";
                 wi[w] = false;
                 dsets.link(set1, set2);
+                cout << "Done" << endl;
+                //dsets.union_set(elements[cr1], elements[cr2]);
             }
         }
+
+        printElements(elements);
 
         return Maze(width, height, wi);
     }

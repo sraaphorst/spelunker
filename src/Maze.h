@@ -11,7 +11,7 @@
 #include <optional>
 #include <sstream>
 
-#include "ASCIIMazeRenderer.h"
+#include "StringMazeRenderer.h"
 #include "MazeAttributes.h"
 #include "Show.h"
 
@@ -146,10 +146,8 @@ namespace vorpal::typeclasses {
     struct Show<maze::Maze> {
         static std::string show(const maze::Maze &m) {
             std::ostringstream out;
-
-            maze::ASCIIMazeRenderer r(out);
+            maze::StringMazeRenderer r(out);
             r.render(m);
-
             return out.str();
         }
 
