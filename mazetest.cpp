@@ -16,10 +16,7 @@ using namespace vorpal::typeclasses;
 
 int main(int argc, char *argv[]) {
     RandomizedKruskalMazeGenerator g(40, 30);
-    cout << "Generating..." << endl;
     const Maze m = g.generate();
-    cout << "Printing maze..." << endl;
     cout << Show<Maze>::show(m) << endl;
-    cout << "Done!" << endl;
     return 0;
 }
