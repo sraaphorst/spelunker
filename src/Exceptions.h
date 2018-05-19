@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <tuple>
+
 #include "MazeAttributes.h"
 #include "Show.h"
 

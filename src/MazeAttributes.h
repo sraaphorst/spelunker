@@ -12,6 +12,7 @@
 #include <set>
 #include <tuple>
 #include <vector>
+
 #include "Show.h"
 
 namespace vorpal::maze::types {
@@ -33,8 +34,8 @@ namespace vorpal::maze::types {
     using PossibleStartCell = std::optional<Cell>;
 
     /// A list of all Directions for iteration.
-    const std::vector<const Direction> directions() {
-        return std::vector<const Direction> {NORTH, EAST, SOUTH, WEST};
+    inline const std::vector<Direction> directions() {
+        return std::vector<Direction> {NORTH, EAST, SOUTH, WEST};
     }
 
     /// A position in a maze, i.e. a Cell and a Direction.

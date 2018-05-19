@@ -9,8 +9,8 @@
 #ifndef SPELUNKER_MAZEGENERATOR_H
 #define SPELUNKER_MAZEGENERATOR_H
 
-#include "MazeAttributes.h"
 #include "Maze.h"
+#include "MazeAttributes.h"
 
 namespace vorpal::maze {
     class MazeGenerator {
@@ -44,6 +44,13 @@ namespace vorpal::maze {
 
         /// A static function used by unrankWallID, separated out for testing.
         static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
+
+#ifndef NDEBUG
+
+        /// Static test case for the createUnrankWallMapS function.
+        static void test_createUnrankWallMapS(int w, int h);
+
+#endif
     };
 };
 

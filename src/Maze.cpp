@@ -38,11 +38,11 @@ namespace vorpal::maze {
         return Maze(width, height, startCell, ends, wallIncidence);
     }
 
-    bool Maze::wall(const vorpal::maze::types::Position &p) const {
+    bool Maze::wall(const vorpal::maze::types::Position &p) const noexcept {
         return wallIncidence[rankPosition(p)];
     }
 
-    bool Maze::wall(int x, int y, vorpal::maze::types::Direction d) const {
+    bool Maze::wall(int x, int y, vorpal::maze::types::Direction d) const noexcept {
         return wallIncidence[rankPosition(x, y, d)];
     }
 
@@ -123,25 +123,6 @@ namespace vorpal::maze {
 
         for (auto i = 0; i < numwalls; ++i)
             assert(ranks.find(i) != ranks.end());
-    }
-
-    void Maze::test_createUnrankWallMapS(const int w, const int h) {
-        const auto m = createUnrankWallMapS(w, h);
-        for (auto kv : m) {
-            const auto &rk = kv.first;
-
-            const auto &p1 = kv.second.first;
-            const auto &x1 = p1.first.first;
-            const auto &y1 = p1.first.second;
-            const auto &d1 = p1.second;
-            assert(rankPositionS(w, h, x1, y1, d1) == rk);
-
-            const auto &p2 = kv.second.second;
-            const auto &x2 = p2.first.first;
-            const auto &y2 = p2.first.second;
-            const auto &d2 = p2.second;
-            assert(rankPositionS(w, h, x1, y1, d1) == rk);
-        }
     }
 #endif
 }

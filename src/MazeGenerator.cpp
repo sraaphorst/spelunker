@@ -47,4 +47,25 @@ namespace vorpal::maze {
 
         return umap;
     }
+
+#ifndef NDEBUG
+    void MazeGenerator::test_createUnrankWallMapS(const int w, const int h) {
+        const auto m = createUnrankWallMapS(w, h);
+        for (auto kv : m) {
+            const auto &rk = kv.first;
+
+            const auto &p1 = kv.second.first;
+            const auto &x1 = p1.first.first;
+            const auto &y1 = p1.first.second;
+            const auto &d1 = p1.second;
+            assert(Maze::rankPositionS(w, h, x1, y1, d1) == rk);
+
+            const auto &p2 = kv.second.second;
+            const auto &x2 = p2.first.first;
+            const auto &y2 = p2.first.second;
+            const auto &d2 = p2.second;
+            assert(Maze::rankPositionS(w, h, x1, y1, d1) == rk);
+        }
+    }
+#endif
 }

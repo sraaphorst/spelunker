@@ -9,6 +9,7 @@
 #include <tuple>
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
+
 #include "DisjointSetHelper.h"
 #include "Maze.h"
 #include "RandomizedKruskalMazeGenerator.h"

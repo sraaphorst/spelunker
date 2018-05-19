@@ -9,7 +9,11 @@
 
 #include <algorithm>
 #include <optional>
+#include <sstream>
+
+#include "ASCIIMazeRenderer.h"
 #include "MazeAttributes.h"
+#include "Show.h"
 
 namespace vorpal::maze {
     // Class forward.
@@ -131,12 +135,26 @@ namespace vorpal::maze {
 #ifndef NDEBUG
         /// Static test case for the rankPositionS function.
         static void test_rankPositionS(int w, int h);
-
-        /// Static test case for the createUnrankWallMapS function.
-        static void test_createUnrankWallMapS(int w, int h);
 #endif
 
         friend MazeGenerator;
+    };
+}
+
+namespace vorpal::typeclasses {
+    template<>
+    struct Show<maze::Maze> {
+        static std::string show(const maze::Maze &m) {
+            std::ostringstream out;
+
+            maze::ASCIIMazeRenderer r(out);
+            r.render(m);
+
+            return out.str();
+        }
+
+        static constexpr bool is_instance = true;
+        using type = maze::Maze;
     };
 }
 #endif //SPELUNKER_MAZE_H
