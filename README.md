@@ -8,7 +8,7 @@ Right now, the library can:
 
 2. Generate randomized Kruskal mazes.
 
-It also defines a type class, `Show`, that can be used to easily create string representations of mazes for text output.
+It also defines a type class, `Show`, that can be used to easily create string representations of mazes, coordinates, positions, etc. for text output.
 
 # Further work
 
