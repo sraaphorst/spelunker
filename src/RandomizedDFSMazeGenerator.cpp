@@ -47,8 +47,8 @@ namespace vorpal::maze {
 
             // Pick an unvisited neighbour, remove the wall to it, and move to it by pushing it on the stack.
             std::uniform_int_distribution<> dis(0, nbrs.size() - 1);
-            auto nbr = nbrs[dis(g)];
-            auto w = rankPos(nbr);
+            const auto nbr = nbrs[dis(g)];
+            const auto w = rankPos(nbr);
             wi[w] = false;
             stack.push(nbr.first);
         }
