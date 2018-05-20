@@ -17,10 +17,10 @@
 namespace vorpal::maze {
     class Maze;
 
-    class RandomizedPrim2MazeGenerator final : MazeGenerator {
+    class Prim2MazeGenerator final : MazeGenerator {
     public:
-        RandomizedPrim2MazeGenerator(int w, int h);
-        virtual ~RandomizedPrim2MazeGenerator() = default;
+        Prim2MazeGenerator(int w, int h);
+        virtual ~Prim2MazeGenerator() = default;
 
         const Maze generate() override;
 

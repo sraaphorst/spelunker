@@ -10,13 +10,13 @@
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "RandomizedPrim2MazeGenerator.h"
+#include "Prim2MazeGenerator.h"
 
 namespace vorpal::maze {
-    RandomizedPrim2MazeGenerator::RandomizedPrim2MazeGenerator(int w, int h)
+    Prim2MazeGenerator::Prim2MazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}
 
-    const Maze RandomizedPrim2MazeGenerator::generate() {
+    const Maze Prim2MazeGenerator::generate() {
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -71,7 +71,7 @@ namespace vorpal::maze {
         return Maze(width, height, wi);
     }
 
-    void RandomizedPrim2MazeGenerator::addUnivisitedNeighbourCells(const types::Cell &c,
+    void Prim2MazeGenerator::addUnivisitedNeighbourCells(const types::Cell &c,
                                                                    types::CellCollection &cells,
                                                                    const types::CellIndicator &ci) {
         const int x = c.first;

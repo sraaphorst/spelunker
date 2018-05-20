@@ -14,13 +14,13 @@
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "RandomizedKruskalMazeGenerator.h"
+#include "KruskalMazeGenerator.h"
 
 namespace vorpal::maze {
-    RandomizedKruskalMazeGenerator::RandomizedKruskalMazeGenerator(const int w, const int h)
+    KruskalMazeGenerator::KruskalMazeGenerator(const int w, const int h)
             : MazeGenerator(w, h) {}
 
-    const Maze RandomizedKruskalMazeGenerator::generate() {
+    const Maze KruskalMazeGenerator::generate() {
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 

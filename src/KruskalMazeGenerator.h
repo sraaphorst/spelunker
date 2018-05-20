@@ -19,10 +19,10 @@ namespace vorpal::maze {
     class Maze;
 
     /// A @see{MazeGenerator} using the randomized Kruskal method.
-    class RandomizedKruskalMazeGenerator final : public MazeGenerator {
+    class KruskalMazeGenerator final : public MazeGenerator {
     public:
-        RandomizedKruskalMazeGenerator(int w, int h);
-        virtual ~RandomizedKruskalMazeGenerator() = default;
+        KruskalMazeGenerator(int w, int h);
+        virtual ~KruskalMazeGenerator() = default;
 
         const Maze generate() override;
     };

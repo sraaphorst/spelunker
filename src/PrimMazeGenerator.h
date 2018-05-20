@@ -18,10 +18,10 @@ namespace vorpal::maze {
     class Maze;
 
     /// A @see{MazeGenerator} using the randomized Prim method.
-    class RandomizedPrimMazeGenerator final : public MazeGenerator {
+    class PrimMazeGenerator final : public MazeGenerator {
     public:
-        RandomizedPrimMazeGenerator(int w, int h);
-        virtual ~RandomizedPrimMazeGenerator() = default;
+        PrimMazeGenerator(int w, int h);
+        virtual ~PrimMazeGenerator() = default;
 
         const Maze generate() override;
 

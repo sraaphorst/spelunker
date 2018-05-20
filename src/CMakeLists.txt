@@ -12,27 +12,27 @@ configure_file (
 
 set(PUBLIC_HEADER_FILES
         StringMazeRenderer.h
+        DFSMazeGenerator.h
         Exceptions.h
+        KruskalMazeGenerator.h
         Maze.h
         MazeAttributes.h
         MazeGenerator.h
         MazeRenderer.h
-        RandomizedDFSMazeGenerator.h
-        RandomizedKruskalMazeGenerator.h
-        RandomizedPrimMazeGenerator.h
-        RandomizedPrim2MazeGenerator.h
+        PrimMazeGenerator.h
+        Prim2MazeGenerator.h
         )
 
 set(SOURCE_FILES
-        StringMazeRenderer.cpp
-        Maze.cpp
+        DFSMazeGenerator.cpp
         DisjointSetHelper.h
+        KruskalMazeGenerator.cpp
+        Maze.cpp
         MazeGenerator.cpp
-        RandomizedDFSMazeGenerator.cpp
-        RandomizedKruskalMazeGenerator.cpp
-        RandomizedPrimMazeGenerator.cpp
-        RandomizedPrim2MazeGenerator.cpp
+        PrimMazeGenerator.cpp
+        Prim2MazeGenerator.cpp
         Show.h
+        StringMazeRenderer.cpp
         )
 
 add_library(spelunker SHARED

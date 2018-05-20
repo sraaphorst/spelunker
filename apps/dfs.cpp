@@ -6,9 +6,9 @@
  * Generate a maze using the randomized DFS algorithm.
  */
 
-#include "RandomizedDFSMazeGenerator.h"
+#include "DFSMazeGenerator.h"
 #include "Executor.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::RandomizedDFSMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<vorpal::maze::DFSMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

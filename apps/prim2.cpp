@@ -7,8 +7,8 @@
  */
 
 #include "Executor.h"
-#include "RandomizedPrim2MazeGenerator.h"
+#include "Prim2MazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::RandomizedPrim2MazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<vorpal::maze::Prim2MazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

@@ -11,13 +11,13 @@
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "RandomizedDFSMazeGenerator.h"
+#include "DFSMazeGenerator.h"
 
 namespace vorpal::maze {
-    RandomizedDFSMazeGenerator::RandomizedDFSMazeGenerator(int w, int h)
+    DFSMazeGenerator::DFSMazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}
 
-    const Maze RandomizedDFSMazeGenerator::generate() {
+    const Maze DFSMazeGenerator::generate() {
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 

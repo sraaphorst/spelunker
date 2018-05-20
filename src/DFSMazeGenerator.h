@@ -18,10 +18,10 @@ namespace vorpal::maze {
     class Maze;
 
     /// A @see{MazeGenerator} using the randomized DFS method.
-    class RandomizedDFSMazeGenerator final : public MazeGenerator {
+    class DFSMazeGenerator final : public MazeGenerator {
     public:
-        RandomizedDFSMazeGenerator(int w, int h);
-        virtual ~RandomizedDFSMazeGenerator() = default;
+        DFSMazeGenerator(int w, int h);
+        virtual ~DFSMazeGenerator() = default;
 
         const Maze generate() override;
     };
