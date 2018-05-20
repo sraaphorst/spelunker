@@ -44,7 +44,7 @@ namespace vorpal::maze {
             for (auto y = 0; y < height; ++y)
                 elements.emplace_back(Element(ranker(x, y)));
 
-        for (auto i=0; i < elements.size(); ++i)
+        for (auto i = 0; i < elements.size(); ++i)
             elements[i].dsID = i;
 
         // Create disjoint singleton sets.

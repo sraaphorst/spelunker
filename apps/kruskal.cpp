@@ -2,21 +2,13 @@
  * kruskal.cpp
  *
  * By Sebastian Raaphorst, 2018.
+ *
+ * Generate a maze using the randomized Kruskal algorithm.
  */
 
-#include <iostream>
-
-#include "Maze.h"
+#include "Executor.h"
 #include "RandomizedKruskalMazeGenerator.h"
-#include "FullMaze.h"
-
-using namespace std;
-using namespace vorpal::maze;
-using namespace vorpal::typeclasses;
 
 int main(int argc, char *argv[]) {
-    RandomizedKruskalMazeGenerator g(40, 30);
-    const Maze m = g.generate();
-    cout << Show<Maze>::show(m) << endl;
-    return 0;
+    return Executor<vorpal::maze::RandomizedKruskalMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

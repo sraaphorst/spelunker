@@ -45,6 +45,10 @@ namespace vorpal::maze {
         /// A static function used by unrankWallID, separated out for testing.
         static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
 
+        inline const types::WallID rankPos(const types::Position p) const {
+            return Maze::rankPositionS(width, height, p.first.first, p.first.second, p.second);
+        }
+
 #ifndef NDEBUG
         /// Static test case for the createUnrankWallMapS function.
         static void test_createUnrankWallMapS(int w, int h);

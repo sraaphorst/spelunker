@@ -13,11 +13,11 @@ configure_file (
 set(PUBLIC_HEADER_FILES
         StringMazeRenderer.h
         Exceptions.h
-        FullMaze.h
         Maze.h
         MazeAttributes.h
         MazeGenerator.h
         MazeRenderer.h
+        RandomizedDFSMazeGenerator.h
         RandomizedKruskalMazeGenerator.h)
 
 set(SOURCE_FILES
@@ -25,6 +25,7 @@ set(SOURCE_FILES
         Maze.cpp
         DisjointSetHelper.h
         MazeGenerator.cpp
+        RandomizedDFSMazeGenerator.cpp
         RandomizedKruskalMazeGenerator.cpp
         Show.h)
 
