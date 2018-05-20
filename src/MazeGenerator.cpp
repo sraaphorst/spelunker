@@ -55,6 +55,36 @@ namespace vorpal::maze {
         return Maze::rankPositionS(width, height, p.first.first, p.first.second, p.second);
     }
 
+    const types::Neighbours MazeGenerator::unvisitedNeighbours(const types::Cell &c,
+                                                               const types::CellIndicator &ci) const {
+        return neighbours(c, ci, false);
+    }
+
+    const types::Neighbours MazeGenerator::visitedNeighbours(const types::Cell &c,
+                                                             const types::CellIndicator &ci) const {
+        return neighbours(c, ci, true);
+    }
+
+    const types::Neighbours MazeGenerator::neighbours(const types::Cell &c,
+                                                      const types::CellIndicator &ci,
+                                                      bool visited) const {
+        types::Neighbours nbrs;
+
+        const int x = c.first;
+        const int y = c.second;
+
+        // Note we have to SWITCH the directions here because we want the direction in which we come INTO that node.
+        if (x - 1 >= 0 && ci[x - 1][y] == visited)
+            nbrs.emplace_back(types::pos(x - 1, y, types::EAST));
+        if (y - 1 >= 0 && ci[x][y - 1] == visited)
+            nbrs.emplace_back(types::pos(x, y - 1, types::SOUTH));
+        if (x + 1 < width && ci[x + 1][y] == visited)
+            nbrs.emplace_back(types::pos(x + 1, y, types::WEST));
+        if (y + 1 < height && ci[x][y + 1] == visited)
+            nbrs.emplace_back(types::pos(x, y + 1, types::NORTH));
+        return nbrs;
+    }
+
 #ifndef NDEBUG
     void MazeGenerator::test_createUnrankWallMapS(const int w, const int h) {
         const auto m = createUnrankWallMapS(w, h);

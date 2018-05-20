@@ -19,7 +19,9 @@ set(PUBLIC_HEADER_FILES
         MazeRenderer.h
         RandomizedDFSMazeGenerator.h
         RandomizedKruskalMazeGenerator.h
-        RandomizedPrimMazeGenerator.h)
+        RandomizedPrimMazeGenerator.h
+        RandomizedPrim2MazeGenerator.h
+        )
 
 set(SOURCE_FILES
         StringMazeRenderer.cpp
@@ -29,14 +31,18 @@ set(SOURCE_FILES
         RandomizedDFSMazeGenerator.cpp
         RandomizedKruskalMazeGenerator.cpp
         RandomizedPrimMazeGenerator.cpp
-        Show.h)
+        RandomizedPrim2MazeGenerator.cpp
+        Show.h
+        )
 
 add_library(spelunker SHARED
         ${SOURCE_FILES}
-        ${PUBLIC_HEADER_FILES})
+        ${PUBLIC_HEADER_FILES}
+        )
 
 set(TYPECLASS_HEADER_FILES
-        Show.h)
+        Show.h
+        )
 
 install(TARGETS spelunker
         DESTINATION lib

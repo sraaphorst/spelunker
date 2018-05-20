@@ -16,7 +16,7 @@
 
 namespace vorpal::maze {
     class Maze;
-    
+
     /// A @see{MazeGenerator} using the randomized DFS method.
     class RandomizedDFSMazeGenerator final : public MazeGenerator {
     public:
@@ -24,13 +24,6 @@ namespace vorpal::maze {
         virtual ~RandomizedDFSMazeGenerator() = default;
 
         const Maze generate() override;
-
-    private:
-        using CellRowIndicator = std::vector<bool>;
-        using CellIndicator = std::vector<CellRowIndicator>;
-        using Neighbours = std::vector<types::Position>;
-
-        const Neighbours unvisitedNeighbours(const types::Cell &c, const CellIndicator &ci) const;
     };
 };
 

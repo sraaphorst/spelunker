@@ -133,6 +133,7 @@ namespace vorpal::maze {
         const types::WallIncidence wallIncidence;
 
 #ifndef NDEBUG
+    public:
         /// Static test case for the rankPositionS function.
         static void test_rankPositionS(int w, int h);
 #endif

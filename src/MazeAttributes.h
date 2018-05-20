@@ -22,6 +22,12 @@ namespace vorpal::maze::types {
     /// A collection of cells.
     using CellCollection = std::vector<Cell>;
 
+    /// An indicator as to whether or not we've processed a Cell for a row.
+    using CellRowIndicator = std::vector<bool>;
+
+    /// An indicator as to whether or not we've processed a Cell.
+    using CellIndicator = std::vector<CellRowIndicator>;
+
     /// The four directions for each square in a maze.
     enum Direction {
         NORTH = 0,
@@ -41,6 +47,9 @@ namespace vorpal::maze::types {
     /// A position in a maze, i.e. a Cell and a Direction.
     using Position = std::pair<Cell, Direction>;
 
+    /// The neighbours of a cell. Walls should face towards the original cell.
+    using Neighbours = std::vector<types::Position>;
+
     /// The ID for a wall. Walls are ranked to ints.
     using WallID = int;
 
@@ -51,6 +60,9 @@ namespace vorpal::maze::types {
      * a contiguous range of wall incidences.
      */
     using WallIncidence = std::vector<bool>;
+
+    /// A collection of walls for processing.
+    using WallCollection = std::vector<WallID>;
 
     /// Used to reverse wall ranking, i.e. a map that takes a wall rank and gives the two cells it separates.
     using UnrankWallMap = std::map<WallID, std::pair<Position, Position> >;

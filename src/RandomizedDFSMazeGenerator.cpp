@@ -22,7 +22,7 @@ namespace vorpal::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         std::random_device rd;
         std::mt19937 g(rd());
@@ -54,24 +54,5 @@ namespace vorpal::maze {
         }
 
         return Maze(width, height, wi);
-    }
-
-    const RandomizedDFSMazeGenerator::Neighbours
-    RandomizedDFSMazeGenerator::unvisitedNeighbours(const types::Cell &c, const CellIndicator &ci) const {
-        Neighbours nbrs;
-
-        const int x = c.first;
-        const int y = c.second;
-
-        // Note we have to SWITCH the directions here because we want the direction in which we come INTO that node.
-        if (x - 1 >= 0 && !ci[x - 1][y])
-            nbrs.emplace_back(types::pos(x - 1, y, types::EAST));
-        if (y - 1 >= 0 && !ci[x][y - 1])
-            nbrs.emplace_back(types::pos(x, y - 1, types::SOUTH));
-        if (x + 1 < width && !ci[x + 1][y])
-            nbrs.emplace_back(types::pos(x + 1, y, types::WEST));
-        if (y + 1 < height && !ci[x][y + 1])
-            nbrs.emplace_back(types::pos(x, y + 1, types::NORTH));
-        return nbrs;
     }
 }

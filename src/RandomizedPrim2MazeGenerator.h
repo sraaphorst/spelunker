@@ -1,0 +1,35 @@
+/**
+ * RandomizedPrim2MazeGenerator.h
+ *
+ * By Sebastian Raaphorst, 2018.
+ *
+ * This is a modification of Prim's algorithm that results in more branching.
+ * See here: <a href="https://en.wikipedia.org/wiki/Maze_generation_algorithm#Modified_version">
+ * Modified Prim's algorithm.</a>
+ */
+
+#ifndef SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H
+#define SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H
+
+#include "MazeAttributes.h"
+#include "MazeGenerator.h"
+
+namespace vorpal::maze {
+    class Maze;
+
+    class RandomizedPrim2MazeGenerator final : MazeGenerator {
+    public:
+        RandomizedPrim2MazeGenerator(int w, int h);
+        virtual ~RandomizedPrim2MazeGenerator() = default;
+
+        const Maze generate() override;
+
+    private:
+        /// Add the unvisited neighbours of a cell to the list to process.
+        void addUnivisitedNeighbourCells(const types::Cell &c,
+                                         types::CellCollection &cells,
+                                         const types::CellIndicator &ci);
+    };
+};
+
+#endif //SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H

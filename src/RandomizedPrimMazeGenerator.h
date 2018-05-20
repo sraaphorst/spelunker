@@ -26,12 +26,8 @@ namespace vorpal::maze {
         const Maze generate() override;
 
     private:
-        using CellRowIndicator = std::vector<bool>;
-        using CellIndicator = std::vector<CellRowIndicator>;
-        using WallList = std::vector<types::WallID>;
-
         /// Add the non-exterior walls of a cell to the wall list, with one possible omission.
-        void addCellWalls(const types::Cell &c, WallList &wallList, const types::WallIncidence &wi);
+        void addCellWalls(const types::Cell &c, types::WallCollection &wallList, const types::WallIncidence &wi);
     };
 };
 

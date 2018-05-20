@@ -6,8 +6,6 @@
 
 #include <algorithm>
 #include <random>
-#include <iostream>
-using namespace std;
 
 #include "Maze.h"
 #include "MazeAttributes.h"
@@ -23,7 +21,7 @@ namespace vorpal::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         std::random_device rd;
         std::mt19937 g(rd());
@@ -36,20 +34,20 @@ namespace vorpal::maze {
 
         // Create a wall list, add the walls of the start cell to it, and mark
         // the start cell as visited.
-        WallList wallList;
-        addCellWalls(types::cell(startX, startY), wallList, wi);
+        types::WallCollection walls;
+        addCellWalls(types::cell(startX, startY), walls, wi);
         ci[startX][startY] = true;
         // We also need to be able to unrank walls.
         auto unrank = createUnrankWallMap();
 
-        while (!wallList.empty()) {
+        while (!walls.empty()) {
             // Pick a random wall from the list.
             // We swap it with the end element and remove that for efficiency.
-            std::uniform_int_distribution<> wallDis(0, wallList.size()-1);
+            std::uniform_int_distribution<> wallDis(0, walls.size()-1);
             const int wallIdx = wallDis(g);
-            std::swap(wallList[wallIdx], wallList.back());
-            const types::WallID wallID = wallList.back();
-            wallList.pop_back();
+            std::swap(walls[wallIdx], walls.back());
+            const types::WallID wallID = walls.back();
+            walls.pop_back();
 
             // This wall divides two cells: at most one of them will be unvisited.
             const auto  cells = unrank[wallID];
@@ -66,14 +64,14 @@ namespace vorpal::maze {
             // Remove this wall, mark the cell as visited, and add its walls to the list.
             wi[wallID] = false;
             ci[unvisitedCell.first][unvisitedCell.second] = true;
-            addCellWalls(unvisitedCell, wallList, wi);
+            addCellWalls(unvisitedCell, walls, wi);
         }
 
         return Maze(width, height, wi);
     }
 
     void RandomizedPrimMazeGenerator::addCellWalls(const types::Cell &c,
-                                                   WallList &wallList,
+                                                   types::WallCollection &wallList,
                                                    const types::WallIncidence &wi) {
         // Check each of the four walls to make sure they are valid and not a boundary wall.
         const int x = c.first;
