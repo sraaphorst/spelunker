@@ -11,11 +11,13 @@
 #ifndef SPELUNKER_RANDOMIZEDDFSMAZEGENERATOR_H
 #define SPELUNKER_RANDOMIZEDDFSMAZEGENERATOR_H
 
-#include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
 namespace vorpal::maze {
+    class Maze;
+    
+    /// A @see{MazeGenerator} using the randomized DFS method.
     class RandomizedDFSMazeGenerator final : public MazeGenerator {
     public:
         RandomizedDFSMazeGenerator(int w, int h);

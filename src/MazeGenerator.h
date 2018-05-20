@@ -9,10 +9,11 @@
 #ifndef SPELUNKER_MAZEGENERATOR_H
 #define SPELUNKER_MAZEGENERATOR_H
 
-#include "Maze.h"
 #include "MazeAttributes.h"
 
 namespace vorpal::maze {
+    class Maze;
+
     class MazeGenerator {
     protected:
         const int width;
@@ -45,9 +46,8 @@ namespace vorpal::maze {
         /// A static function used by unrankWallID, separated out for testing.
         static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
 
-        inline const types::WallID rankPos(const types::Position p) const {
-            return Maze::rankPositionS(width, height, p.first.first, p.first.second, p.second);
-        }
+        /// A function that maps Position to the corresponding ID of the wall in the maze.
+        const types::WallID rankPos(const types::Position &p) const;
 
 #ifndef NDEBUG
         /// Static test case for the createUnrankWallMapS function.

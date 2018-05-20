@@ -18,7 +18,8 @@ set(PUBLIC_HEADER_FILES
         MazeGenerator.h
         MazeRenderer.h
         RandomizedDFSMazeGenerator.h
-        RandomizedKruskalMazeGenerator.h)
+        RandomizedKruskalMazeGenerator.h
+        RandomizedPrimMazeGenerator.h)
 
 set(SOURCE_FILES
         StringMazeRenderer.cpp
@@ -27,6 +28,7 @@ set(SOURCE_FILES
         MazeGenerator.cpp
         RandomizedDFSMazeGenerator.cpp
         RandomizedKruskalMazeGenerator.cpp
+        RandomizedPrimMazeGenerator.cpp
         Show.h)
 
 add_library(spelunker SHARED

@@ -12,6 +12,8 @@
 
 #include "DisjointSetHelper.h"
 #include "Maze.h"
+#include "MazeAttributes.h"
+#include "MazeGenerator.h"
 #include "RandomizedKruskalMazeGenerator.h"
 
 namespace vorpal::maze {

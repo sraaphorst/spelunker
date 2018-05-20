@@ -13,11 +13,12 @@
 
 #include <vector>
 
-#include "Maze.h"
-#include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
 namespace vorpal::maze {
+    class Maze;
+
+    /// A @see{MazeGenerator} using the randomized Kruskal method.
     class RandomizedKruskalMazeGenerator final : public MazeGenerator {
     public:
         RandomizedKruskalMazeGenerator(int w, int h);

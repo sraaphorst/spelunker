@@ -51,6 +51,10 @@ namespace vorpal::maze {
         return umap;
     }
 
+    const types::WallID MazeGenerator::rankPos(const types::Position &p) const {
+        return Maze::rankPositionS(width, height, p.first.first, p.first.second, p.second);
+    }
+
 #ifndef NDEBUG
     void MazeGenerator::test_createUnrankWallMapS(const int w, const int h) {
         const auto m = createUnrankWallMapS(w, h);
