@@ -31,3 +31,6 @@ target_link_libraries(prim LINK_PUBLIC spelunker)
 
 add_executable(prim2 prim2.cpp Executor.h)
 target_link_libraries(prim2 LINK_PUBLIC spelunker)
+
+add_executable(wilson wilson.cpp Executor.h)
+target_link_libraries(wilson LINK_PUBLIC spelunker)

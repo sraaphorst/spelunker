@@ -26,6 +26,7 @@ set(PUBLIC_HEADER_FILES
         Prim2MazeGenerator.h
         RNG.h
         StringMazeRenderer.h
+        WilsonMazeGenerator.h
         )
 
 set(SOURCE_FILES
@@ -43,6 +44,7 @@ set(SOURCE_FILES
         RNG.cpp
         Show.h
         StringMazeRenderer.cpp
+        WilsonMazeGenerator.cpp
         )
 
 add_library(spelunker SHARED

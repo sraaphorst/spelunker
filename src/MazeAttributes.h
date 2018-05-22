@@ -36,12 +36,22 @@ namespace vorpal::maze::types {
         WEST,
     };
 
+    /// Flip a direction.
+    inline Direction flip(const Direction d) {
+        switch (d) {
+            case NORTH: return SOUTH;
+            case EAST:  return WEST;
+            case SOUTH: return NORTH;
+            case WEST:  return EAST;
+        }
+    }
+
     /// The type of a starting cell: it may be defined, or not.
     using PossibleStartCell = std::optional<Cell>;
 
     /// A list of all Directions for iteration.
     inline const std::vector<Direction> directions() {
-        return std::vector<Direction> {NORTH, EAST, SOUTH, WEST};
+        return std::vector<Direction> { NORTH, EAST, SOUTH, WEST };
     }
 
     /// A position in a maze, i.e. a Cell and a Direction.
