@@ -9,6 +9,8 @@
 #ifndef SPELUNKER_MAZEGENERATOR_H
 #define SPELUNKER_MAZEGENERATOR_H
 
+#include <functional>
+
 #include "MazeAttributes.h"
 
 namespace vorpal::maze {
@@ -61,9 +63,20 @@ namespace vorpal::maze {
         /// Find all of the visited neighbours of a cell.
         const types::Neighbours visitedNeighbours(const types::Cell &c, const types::CellIndicator &ci) const;
 
+        /// Find all of the valid neighbours of a cell.
+        const types::Neighbours allNeighbours(const types::Cell &c) const;
+
     private:
-        /// Auxiliary helper function for unvisitedNeighbours and visitedNeighbours.
-        const types::Neighbours neighbours(const types::Cell &c, const types::CellIndicator &ci, bool visited) const;
+        /// Auxiliary helper function for generating lists of neighbours.
+        /**
+         * Auxiliary helper function for generating lists of neightbours.
+         * The filter determines what neighbours are placed on the list.
+         * @param c the cell whose neighbours we list
+         * @param filter a filter to filter the neighbours
+         * @return a list of the neighbours of c where the filter is true
+         */
+        const types::Neighbours neighbours(const types::Cell &c,
+                                           std::function<bool(const int, const int)> filter) const;
 
 #ifndef NDEBUG
     public:

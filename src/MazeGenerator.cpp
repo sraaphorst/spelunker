@@ -57,30 +57,33 @@ namespace vorpal::maze {
 
     const types::Neighbours MazeGenerator::unvisitedNeighbours(const types::Cell &c,
                                                                const types::CellIndicator &ci) const {
-        return neighbours(c, ci, false);
+        return neighbours(c, [&ci](const int x, const int y) { return !ci[x][y]; });
     }
 
     const types::Neighbours MazeGenerator::visitedNeighbours(const types::Cell &c,
                                                              const types::CellIndicator &ci) const {
-        return neighbours(c, ci, true);
+        return neighbours(c, [&ci](const int x, const int y) { return ci[x][y]; });
+    }
+
+    const types::Neighbours MazeGenerator::allNeighbours(const types::Cell &c) const {
+        return neighbours(c, [](const int, const int) { return true; });
     }
 
     const types::Neighbours MazeGenerator::neighbours(const types::Cell &c,
-                                                      const types::CellIndicator &ci,
-                                                      bool visited) const {
+                                                      std::function<bool(const int, const int)> filter) const {
         types::Neighbours nbrs;
 
         const int x = c.first;
         const int y = c.second;
 
         // Note we have to SWITCH the directions here because we want the direction in which we come INTO that node.
-        if (x - 1 >= 0 && ci[x - 1][y] == visited)
+        if (x - 1 >= 0 && filter(x,y))
             nbrs.emplace_back(types::pos(x - 1, y, types::EAST));
-        if (y - 1 >= 0 && ci[x][y - 1] == visited)
+        if (y - 1 >= 0 && filter(x,y))
             nbrs.emplace_back(types::pos(x, y - 1, types::SOUTH));
-        if (x + 1 < width && ci[x + 1][y] == visited)
+        if (x + 1 < width && filter(x,y))
             nbrs.emplace_back(types::pos(x + 1, y, types::WEST));
-        if (y + 1 < height && ci[x][y + 1] == visited)
+        if (y + 1 < height && filter(x,y))
             nbrs.emplace_back(types::pos(x, y + 1, types::NORTH));
         return nbrs;
     }

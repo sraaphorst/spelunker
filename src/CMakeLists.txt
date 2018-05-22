@@ -11,6 +11,7 @@ configure_file (
     )
 
 set(PUBLIC_HEADER_FILES
+        AldousBroderMazeGenerator.h
         BinaryTreeMazeGenerator.h
         DefaultRNG.h
         DFSMazeGenerator.h
@@ -28,6 +29,7 @@ set(PUBLIC_HEADER_FILES
         )
 
 set(SOURCE_FILES
+        AldousBroderMazeGenerator.cpp
         BinaryTreeMazeGenerator.cpp
         DefaultRNG.cpp
         DFSMazeGenerator.cpp
