@@ -12,6 +12,8 @@
 #include "MazeGenerator.h"
 
 namespace vorpal::maze {
+    class Maze;
+
     /// Maze generator using the binary tree approach.
     /**
      * The BinaryTreeMazeGenerator iterates over the maze, row-by-row (although visiting the cells in any order

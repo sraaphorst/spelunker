@@ -42,4 +42,8 @@ namespace vorpal::math {
 
         return getRNG()->randomRangeImpl(lower, upper);
     }
+
+    double RNG::randomProbability() {
+        return getRNG()->randomProbabilityImpl();
+    }
 }

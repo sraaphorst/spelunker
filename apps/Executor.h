@@ -9,33 +9,17 @@
 #ifndef SPELUNKER_GENERATETEMPLATE_H
 #define SPELUNKER_GENERATETEMPLATE_H
 
-//template<typename T>
-//int generateAndDisplayMaze(int argc, char *argv[]);
 
-
-#include <cstdlib>
 #include <iostream>
 
 #include "Maze.h"
 #include "Show.h"
-#include "Executor.h"
+#include "Utils.h"
 
 template<typename T>
 class Executor {
 private:
-    Executor() {}
-
-    static long parseLong(const char *str) {
-        long val = 0;
-        char *temp;
-
-        val = strtol(str, &temp, 0);
-
-        if (*temp != '\0')
-            return -1;
-
-        return val;
-    }
+    Executor() = default;
 
 public:
     /// Generate a Maze using a MazeGenerator (type T), and output it. argv[1] is width, argv[2] is height.
@@ -54,13 +38,13 @@ public:
         }
 
         // Parse the width and height.
-        const int width = parseLong(argv[1]);
+        const int width = Utils::parseLong(argv[1]);
         if (width <= 0) {
             std::cerr << "Invalid width: " << argv[1] << std::endl;
             return 2;
         }
 
-        const int height = parseLong(argv[2]);
+        const int height = Utils::parseLong(argv[2]);
         if (height <= 0) {
             std::cerr << "Invalid height: " << argv[2] << std::endl;
             return 3;
@@ -68,7 +52,7 @@ public:
 
         T gen(width, height);
         const vorpal::maze::Maze m = gen.generate();
-        std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m) << std::endl;
+        std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m);
         return 0;
     }
 };

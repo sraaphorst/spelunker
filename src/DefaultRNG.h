@@ -22,6 +22,8 @@ namespace vorpal::math {
     protected:
         virtual int randomRangeImpl(int lower, int upper) noexcept override;
 
+        virtual double randomProbabilityImpl() noexcept override;
+
     private:
         std::random_device rd;
         std::mt19937 g;

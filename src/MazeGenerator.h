@@ -49,6 +49,12 @@ namespace vorpal::maze {
         /// A function that maps Position to the corresponding ID of the wall in the maze.
         const types::WallID rankPos(const types::Position &p) const;
 
+        /// Rank a cell.
+        const inline int rankCell(const int x, const int y) { return y * width + x; }
+
+        /// Unrank a cell.
+        const inline types::Cell unrankCell(const int rk) { return types::cell(rk % width, rk / width); }
+
         /// Find all of the unvisited neighbours of a cell.
         const types::Neighbours unvisitedNeighbours(const types::Cell &c, const types::CellIndicator &ci) const;
 

@@ -27,7 +27,7 @@ namespace vorpal::math {
         static void setRNG(std::shared_ptr<RNG> &nRNG) noexcept;
         static std::shared_ptr<RNG> getRNG() noexcept;
 
-        /// Retrieve a number in the range [lower,upper).
+        /// Generate a number in the range [lower,upper).
         /**
          * Given a value upper, returns a random number in the range [lower,upper).
          * @param lower the lower bound on the range (inclusive)
@@ -37,7 +37,7 @@ namespace vorpal::math {
          */
         static int randomRange(int lower, int upper);
 
-        /// Retrieve a number in the range [0,upper).
+        /// Generate a number in the range [0,upper).
         /**
          * Given a value upper, returns a random number in the range [0,upper).
          * @param upper the upper bound on the range (exclusive)
@@ -45,6 +45,13 @@ namespace vorpal::math {
          * @throws invalid_argument if upper <= 0
          */
         static inline int randomRange(const int upper) { return randomRange(0, upper); }
+
+        /// Generate a random number in the range [0,1).
+        /**
+         * Generate a random number in the range [0,1).
+         * @return a double d such that 0 <= d < 1
+         */
+        static double randomProbability();
 
         /// Select a random element from a collection.
         /**
@@ -89,6 +96,13 @@ namespace vorpal::math {
          * @return a number r such that lower <= r < upper
          */
         virtual int randomRangeImpl(int lower, int upper) noexcept = 0;
+
+        /// Generate a random number in the range [0,1).
+        /**
+         * Generate a random number in the range [0,1).
+         * @return a double d such that 0 <= d < 1
+         */
+        virtual double randomProbabilityImpl() noexcept = 0;
 
     private:
         /// The random number generator. RNG takes access to it.

@@ -14,6 +14,7 @@ set(PUBLIC_HEADER_FILES
         BinaryTreeMazeGenerator.h
         DefaultRNG.h
         DFSMazeGenerator.h
+        EllerMazeGenerator.h
         Exceptions.h
         KruskalMazeGenerator.h
         Maze.h
@@ -31,6 +32,7 @@ set(SOURCE_FILES
         DefaultRNG.cpp
         DFSMazeGenerator.cpp
         DisjointSetHelper.h
+        EllerMazeGenerator.cpp
         KruskalMazeGenerator.cpp
         Maze.cpp
         MazeGenerator.cpp

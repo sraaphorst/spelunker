@@ -4,7 +4,6 @@
  * By Sebastian Raaphorst, 2018.
  */
  
-#include <tuple>
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
@@ -35,15 +34,12 @@ namespace vorpal::maze {
         // We need disjoint sets to represent the connected sets of cells.
         // To do so efficiently, we use Boost's disjoint_sets with some helper classes and methods.
 
-        // Rank cells:
-        const auto ranker = [this](int x, int y) { return y * width + x; };
-
         // Create a vector of all elements.
         std::vector<Element> elements;
         elements.reserve(width * height);
         for (auto x = 0; x < width; ++x)
             for (auto y = 0; y < height; ++y)
-                elements.emplace_back(Element(ranker(x, y)));
+                elements.emplace_back(Element(rankCell(x, y)));
 
         for (auto i = 0; i < elements.size(); ++i)
             elements[i].dsID = i;
@@ -64,12 +60,12 @@ namespace vorpal::maze {
             const auto &c1 = pp.first.first;
             const auto &cx1 = c1.first;
             const auto &cy1 = c1.second;
-            const auto cr1 = ranker(cx1, cy1);
+            const auto cr1 = rankCell(cx1, cy1);
 
             const auto &c2 = pp.second.first;
             const auto &cx2 = c2.first;
             const auto &cy2 = c2.second;
-            const auto cr2 = ranker(cx2, cy2);
+            const auto cr2 = rankCell(cx2, cy2);
 
             // If the cells belong to separate partitions, remove the wall and join them.
             const auto &set1 = dsets.find_set(elements.at(cr1));

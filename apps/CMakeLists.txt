@@ -17,6 +17,9 @@ target_link_libraries(binarytree LINK_PUBLIC spelunker)
 add_executable(dfs dfs.cpp Executor.h)
 target_link_libraries(dfs LINK_PUBLIC spelunker)
 
+add_executable(eller eller.cpp Executor.h)
+target_link_libraries(eller LINK_PUBLIC spelunker)
+
 add_executable(kruskal kruskal.cpp Executor.h)
 target_link_libraries(kruskal LINK_PUBLIC spelunker)
 
