@@ -4,13 +4,17 @@ A WIP C++ library for generating / solving mazes.
 
 Right now, the library can:
 
-1. Generate randomized DFS mazes.
+1. Generate random binary tree mazes.
 
-2. Generate randomized Kruskal mazes.
+2. Generate randomized DFS mazes.
 
-3. Generate randomized Prim mazes, using two different algorithms (one that focuses on walls, and another on cells).
+3. Generate randomized Kruskal mazes.
 
-4. Generate mazes using Eller's algorithm, allowing probability for horizontal wall creation and density per contiguous block of cells in a row for vertical wall creation.
+4. Generate randomized Prim mazes, using two different algorithms (one that focuses on walls, and another on cells).
+
+5. Generate mazes using Eller's algorithm, allowing probability for horizontal wall creation and density per contiguous block of cells in a row for vertical wall creation.
+
+6. Generate mazes with the Aldous-Broder technique.
 
 It also defines a type class, `Show`, that can be used to easily create string representations of mazes, coordinates, positions, etc. for text output.
 
