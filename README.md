@@ -8,6 +8,8 @@ Right now, the library can:
 
 2. Generate randomized Kruskal mazes.
 
+3. Generate randomized Prim mazes, using two different algorithms (one that focuses on walls, and another on cells).
+
 It also defines a type class, `Show`, that can be used to easily create string representations of mazes, coordinates, positions, etc. for text output.
 
 # Further work
