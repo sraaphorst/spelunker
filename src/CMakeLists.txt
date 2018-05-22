@@ -11,6 +11,7 @@ configure_file (
     )
 
 set(PUBLIC_HEADER_FILES
+        BinaryTreeMazeGenerator.h
         DefaultRNG.h
         DFSMazeGenerator.h
         Exceptions.h
@@ -26,6 +27,7 @@ set(PUBLIC_HEADER_FILES
         )
 
 set(SOURCE_FILES
+        BinaryTreeMazeGenerator.cpp
         DefaultRNG.cpp
         DFSMazeGenerator.cpp
         DisjointSetHelper.h
