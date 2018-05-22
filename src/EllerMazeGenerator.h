@@ -22,6 +22,14 @@ namespace vorpal::maze {
         /**
          * Create a maze generator using Eller's algorithm that generates horizontal gaps with probability p
          * and generates vertical gaps with density up to d.
+         *
+         * Note that, for low p, you get long, vertical corridors, since there is little horizontal interaction.
+         * With high p and low d, you get long, horizontal corridors.
+         *
+         * This can be done to absurdity: for example, with p = 0.0001 and any value of d, any maze with less than
+         * 10,000 cells will have an expected value of zero for number of horizontal branches, and thus, the entire
+         * maze will consist of columns joined together by a single bottom row.
+         *
          * @param w width of the maze
          * @param h height of the maze
          * @param p probability with which to adjoin two adjacent cells in different sets

@@ -39,13 +39,13 @@ int main(int argc, char *argv[]) {
     double density = 0.5;
     if (argc == 5) {
         probability = Utils::parseDouble(argv[3]);
-        if (probability <= 0) {
+        if (probability <= 0 || probability >= 1) {
             std::cerr << "Invalid probability: " << argv[3] << std::endl;
             return 4;
         }
 
         density = Utils::parseDouble(argv[4]);
-        if (density <= 0) {
+        if (density <= 0 || density > 1) {
             std::cerr << "Invalid density: " << argv[4] << std::endl;
             return 5;
         }

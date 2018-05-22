@@ -3,7 +3,7 @@
  *
  * By Sebastian Raaphorst, 2018.
  */
- 
+
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
