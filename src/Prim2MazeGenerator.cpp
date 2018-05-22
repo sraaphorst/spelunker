@@ -5,11 +5,11 @@
  */
 
 #include <algorithm>
-#include <random>
 
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
+#include "RNG.h"
 #include "Prim2MazeGenerator.h"
 
 namespace vorpal::maze {
@@ -23,14 +23,9 @@ namespace vorpal::maze {
         // We need a cell lookup to check if we have visited a cell already.
         types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::uniform_int_distribution<> rowDis(0, width - 1);
-        std::uniform_int_distribution<> colDis(0, height - 1);
-
         // Pick a start cell at random.
-        const int startX = rowDis(g);
-        const int startY = colDis(g);
+        const int startX = math::RNG::randomRange(width);
+        const int startY = math::RNG::randomRange(height);
 
         // Create a list of cells. We add the unvisited cells adjacent to cells
         // we have visited to it.
@@ -41,8 +36,7 @@ namespace vorpal::maze {
         while (!cells.empty()) {
             // Pick a random cell from the list.
             // Swap it with the end element and remove it for efficiency.
-            std::uniform_int_distribution<> cellDis(0, cells.size()-1);
-            const int cellIdx = cellDis(g);
+            const int cellIdx = math::RNG::randomRange(cells.size());
             std::swap(cells[cellIdx], cells.back());
             const auto cell = cells.back();
             cells.pop_back();
@@ -57,8 +51,7 @@ namespace vorpal::maze {
             if (nbrs.empty()) continue;
 
             // Pick one at random, remove the wall between them, mark the cell as visited.
-            std::uniform_int_distribution<> nbrDis(0, nbrs.size() - 1);
-            const auto nbr = nbrs[nbrDis(g)];
+            const auto nbr = math::RNG::randomElement(nbrs);
 
             const auto wallID = rankPos(nbr);
             wi[wallID] = false;

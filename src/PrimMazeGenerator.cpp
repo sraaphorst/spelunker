@@ -4,12 +4,10 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include <algorithm>
-#include <random>
-
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
+#include "RNG.h"
 #include "PrimMazeGenerator.h"
 
 namespace vorpal::maze {
@@ -23,14 +21,9 @@ namespace vorpal::maze {
         // We need a cell lookup to check if we have visited a cell already.
         types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::uniform_int_distribution<> rowDis(0, width - 1);
-        std::uniform_int_distribution<> colDis(0, height - 1);
-
         // Pick a cell at random.
-        const int startX = rowDis(g);
-        const int startY = colDis(g);
+        const int startX = math::RNG::randomRange(width);
+        const int startY = math::RNG::randomRange(height);
 
         // Create a wall list, add the walls of the start cell to it, and mark
         // the start cell as visited.
@@ -43,10 +36,9 @@ namespace vorpal::maze {
         while (!walls.empty()) {
             // Pick a random wall from the list.
             // We swap it with the end element and remove that for efficiency.
-            std::uniform_int_distribution<> wallDis(0, walls.size()-1);
-            const int wallIdx = wallDis(g);
+            const auto wallIdx = math::RNG::randomRange(walls.size());
             std::swap(walls[wallIdx], walls.back());
-            const types::WallID wallID = walls.back();
+            const auto wallID = walls.back();
             walls.pop_back();
 
             // This wall divides two cells: at most one of them will be unvisited.

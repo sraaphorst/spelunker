@@ -11,7 +11,7 @@ configure_file (
     )
 
 set(PUBLIC_HEADER_FILES
-        StringMazeRenderer.h
+        DefaultRNG.h
         DFSMazeGenerator.h
         Exceptions.h
         KruskalMazeGenerator.h
@@ -21,9 +21,12 @@ set(PUBLIC_HEADER_FILES
         MazeRenderer.h
         PrimMazeGenerator.h
         Prim2MazeGenerator.h
+        RNG.h
+        StringMazeRenderer.h
         )
 
 set(SOURCE_FILES
+        DefaultRNG.cpp
         DFSMazeGenerator.cpp
         DisjointSetHelper.h
         KruskalMazeGenerator.cpp
@@ -31,6 +34,7 @@ set(SOURCE_FILES
         MazeGenerator.cpp
         PrimMazeGenerator.cpp
         Prim2MazeGenerator.cpp
+        RNG.cpp
         Show.h
         StringMazeRenderer.cpp
         )

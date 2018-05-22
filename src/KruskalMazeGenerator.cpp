@@ -3,9 +3,7 @@
  *
  * By Sebastian Raaphorst, 2018.
  */
-
-#include <algorithm>
-#include <random>
+ 
 #include <tuple>
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
@@ -14,6 +12,7 @@
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
+#include "RNG.h"
 #include "KruskalMazeGenerator.h"
 
 namespace vorpal::maze {
@@ -57,9 +56,7 @@ namespace vorpal::maze {
             dsets.make_set(e);
 
         // Shuffle the vector of walls and then iterate over them.
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(walls.begin(), walls.end(), g);
+        math::RNG::shuffle(walls);
 
         for (auto w : walls) {
             const auto &pp = unrank[w];
