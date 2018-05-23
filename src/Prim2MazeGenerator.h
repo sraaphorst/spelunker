@@ -17,7 +17,7 @@
 namespace vorpal::maze {
     class Maze;
 
-    class Prim2MazeGenerator final : MazeGenerator {
+    class Prim2MazeGenerator final : public MazeGenerator {
     public:
         Prim2MazeGenerator(int w, int h);
         virtual ~Prim2MazeGenerator() = default;

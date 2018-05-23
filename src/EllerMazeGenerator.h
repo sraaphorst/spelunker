@@ -16,7 +16,7 @@
 namespace vorpal::maze {
     class Maze;
 
-    class EllerMazeGenerator final : MazeGenerator {
+    class EllerMazeGenerator final : public MazeGenerator {
     public:
         /// Create a maze generator using Eller's algorithm that generates walls with probability p.
         /**

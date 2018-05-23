@@ -36,7 +36,7 @@ namespace vorpal::math {
         if (lower >= upper) {
             const std::string s = std::string("randomRange called with invalid arguments: ") +
                                   "lower = " + std::to_string(lower) +
-                                  "upper = " + std::to_string(upper);
+                                  " upper = " + std::to_string(upper);
             throw std::invalid_argument(s);
         }
 
