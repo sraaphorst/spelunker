@@ -1,30 +1,36 @@
 # spelunker
 
-A WIP C++ library for generating / solving mazes.
+A C++17 library for generating / solving mazes. (It could be easily adapted for C++14, but this is a learning exercise for me in C++11, 14, and 17.)
 
-Right now, the library can generate mazes using the following algorithms:
+Right now, the library can generate mazes using the following nine algorithms:
 
-1. Random binary trees (probability variants forthcoming);
+1. Aldous-Broder with random walks.
 
-2. Randomized DFS;
+2. Random binary trees (with branching probability).
 
-3. Randomized Kruskal;
+3. Randomized DFS.
 
-4. Randomized Prim, using two different algorithmic variants (one that focuses on walls, and another on cells);
+4. Eller's algorithm, allowing probability for horizontal wall creation and density per contiguous block of cells in a row for vertical wall creation.
 
-5. Eller's algorithm, allowing probability for horizontal wall creation and density per contiguous block of cells in a row for vertical wall creation;
+5. Randomized Kruskal's algorithm.
 
-6. The Aldous-Broder technique; and
+6. Randomized Prim, iterating over walls.
 
-7. Wilson's algorithm.
+7. Randomized Prim, iterating over cells.
+
+8. Recursive division, allowing lower bound density and upper bound density for splits, probability to split vertically, and a flag to force alternating vertical / horizontal splits.
+
+9. Wilson's algorithm.
 
 It also defines a type class, `Show`, that can be used to easily create string representations of mazes, coordinates, positions, etc. for text output.
 
-7. Generate mazes 
+# Requirements
+
+A C++17 capable compiler (unless you want to go through and nest the namespaces), Boost 1.31 or higher (for `disjoint_sets.hpp`), and cmake 3.10 or higher.
 
 # Further work
 
-1. Include many more maze generation algorithms.
+1. Include more maze generation algorithms.
 
 2. Add the ability for listeners to subcribe to `MazeGenerator` instances to receive events when a maze is extended. This will allow, say, drawing of a maze as it is being generated to show how the algorithms work.
 
@@ -35,6 +41,8 @@ It also defines a type class, `Show`, that can be used to easily create string r
 5. Add various maze solvers, and also make them subscribable so that it is possible to draw, step-by-step, the path taken through the maze.
 
 5. Write a Qt UI (as a binary independent of the library) to display all these features (maze step-by-step generation, maze step-by-step solving, etc) in a visually pleasant way.
+
+6. Be able to somehow serialize mazes, preferably in JSON?
 
 # Example
 
