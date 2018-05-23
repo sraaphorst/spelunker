@@ -30,7 +30,11 @@ It also defines a type class, `Show`, that can be used to easily create string r
 
 # Requirements
 
-A C++17 capable compiler (unless you want to go through and nest the namespaces), Boost 1.31 or higher (for `disjoint_sets.hpp`), and cmake 3.10 or higher.
+- A C++17 capable compiler (unless you want to go through, nest the namespaces, and remove the variable binding, e.g. `auto [a,b] = <some pair expression>`);
+
+- Boost 1.31 or higher (for `disjoint_sets.hpp`); and
+
+- CMake 3.10 or higher.
 
 # Further work
 
