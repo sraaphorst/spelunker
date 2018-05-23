@@ -109,6 +109,30 @@ namespace vorpal::maze::types {
     inline const int calculateNumWalls(const int w, const int h) {
         return (w - 1) * h + w * (h - 1);
     }
+
+    /// Maze symmetries. Note that the diagonal reflections can only be performed for square mazes.
+    enum Symmetry {
+        ROTATION_BY_90 = 0,
+        ROTATION_BY_180,
+        ROTATION_BY_270,
+        REFLECTION_IN_Y,
+        REFLECTION_IN_X,
+        REFLECTION_IN_XEQY,
+        REFLECTION_IN_XEQNY,
+    };
+
+    /// Get the name of a group symmetry.
+    inline std::string symmetryName(const Symmetry s) {
+        switch (s) {
+            case ROTATION_BY_90:      return "rotation by 90\u00B0";
+            case ROTATION_BY_180:     return "rotation by 180\u00B0";
+            case ROTATION_BY_270:     return "rotation by 270\u00B0";
+            case REFLECTION_IN_X:     return "reflection in x axis";
+            case REFLECTION_IN_Y:     return "reflection in y axis";
+            case REFLECTION_IN_XEQY:  return "reflection in x=y diagonal";
+            case REFLECTION_IN_XEQNY: return "reflection in x=-y diagonal";
+        }
+    }
 }
 
 namespace vorpal::typeclasses {

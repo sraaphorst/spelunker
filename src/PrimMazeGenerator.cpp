@@ -66,8 +66,7 @@ namespace vorpal::maze {
                                                    types::WallCollection &wallList,
                                                    const types::WallIncidence &wi) {
         // Check each of the four walls to make sure they are valid and not a boundary wall.
-        const int x = c.first;
-        const int y = c.second;
+        const auto [x, y] = c;
 
         // Convenience method to add existing walls to the list.
         auto adder = [this, &wi, &wallList](const int nx, const int ny, const types::Direction d) {

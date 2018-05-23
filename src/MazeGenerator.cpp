@@ -73,17 +73,16 @@ namespace vorpal::maze {
                                                       std::function<bool(const int, const int)> filter) const {
         types::Neighbours nbrs;
 
-        const int x = c.first;
-        const int y = c.second;
+        const auto [x, y] = c;
 
         // Note we have to SWITCH the directions here because we want the direction in which we come INTO that node.
-        if (x - 1 >= 0 && filter(x,y))
+        if (x - 1 >= 0 && filter(x-1,y))
             nbrs.emplace_back(types::pos(x - 1, y, types::EAST));
-        if (y - 1 >= 0 && filter(x,y))
+        if (y - 1 >= 0 && filter(x,y-1))
             nbrs.emplace_back(types::pos(x, y - 1, types::SOUTH));
-        if (x + 1 < width && filter(x,y))
+        if (x + 1 < width && filter(x+1,y))
             nbrs.emplace_back(types::pos(x + 1, y, types::WEST));
-        if (y + 1 < height && filter(x,y))
+        if (y + 1 < height && filter(x,y+1))
             nbrs.emplace_back(types::pos(x, y + 1, types::NORTH));
         return nbrs;
     }

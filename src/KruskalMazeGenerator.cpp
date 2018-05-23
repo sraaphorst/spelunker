@@ -57,19 +57,15 @@ namespace vorpal::maze {
         for (auto w : walls) {
             const auto &pp = unrank[w];
 
-            const auto &c1 = pp.first.first;
-            const auto &cx1 = c1.first;
-            const auto &cy1 = c1.second;
+            const auto& [cx1, cy1] = pp.first.first;
             const auto cr1 = rankCell(cx1, cy1);
 
-            const auto &c2 = pp.second.first;
-            const auto &cx2 = c2.first;
-            const auto &cy2 = c2.second;
+            const auto& [cx2, cy2] = pp.second.first;
             const auto cr2 = rankCell(cx2, cy2);
 
             // If the cells belong to separate partitions, remove the wall and join them.
-            const auto &set1 = dsets.find_set(elements.at(cr1));
-            const auto &set2 = dsets.find_set(elements.at(cr2));
+            const auto &set1 = dsets.find_set(elements[cr1]);
+            const auto &set2 = dsets.find_set(elements[cr2]);
             if (set1 != set2) {
                 wi[w] = false;
                 dsets.link(set1, set2);

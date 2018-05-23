@@ -59,8 +59,7 @@ namespace vorpal::maze {
 
                 // Now update the map to say we reached nbr by the given
                 // position from prevCell.
-                const auto nextCell = nbr.first;
-                const auto dir = nbr.second;
+                const auto [nextCell, dir] = nbr;
 
                 // We flip the direction so we are coming into nextCell instead of leaving it.
                 walk[rankCell(x, y)] = types::flip(dir);

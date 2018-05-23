@@ -48,6 +48,23 @@ namespace vorpal::maze {
         return rk == -1 || wallIncidence[rk];
     }
 
+    bool Maze::operator==(const Maze &other) const {
+        if (width != other.width || height != other.height)
+            return false;
+
+        // We can just compare the wall incidence vectors, since == on vectors of the
+        // same size compares the contents.
+        return wallIncidence == other.wallIncidence;
+    }
+
+//    const Maze Maze::applySymmetry(types::Symmetry s) const {
+//        switch (s) {
+//            int widthN  = height;
+//            int heightN = width;
+//
+//        }
+//    }
+
     types::WallID Maze::rankPosition(const types::Position &p) const {
         const auto &cell = p.first;
         const auto x = cell.first;

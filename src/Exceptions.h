@@ -39,10 +39,22 @@ namespace vorpal {
             IllegalDimensions(const int width, const int height) : Exception(msg(width, height)) {}
 
         private:
-            static std::string msg(const int &width, const int &height) {
+            static std::string msg(const int width, const int height) {
                 return "Dimensions "
                        + vorpal::typeclasses::Show<std::pair<int,int>>::show(std::make_pair(width, height))
                        + "are not legal.";
+            }
+        };
+
+        class IllegalGroupOperation : public Exception {
+        public:
+            IllegalGroupOperation(const int width, const int height, const types::Symmetry s)
+                    : Exception(msg(width, height, s)) {}
+
+        private:
+            static std::string msg(const int width, const int height, const types::Symmetry s) {
+                return "width " + std::to_string(width) + " != " + std::to_string(height)
+                       + ", so cannot perform symmetry " + types::symmetryName(s);
             }
         };
     }

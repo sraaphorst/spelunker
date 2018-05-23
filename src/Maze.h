@@ -94,6 +94,17 @@ namespace vorpal::maze {
         /// For a given set of coordinates (x,y) and a direction, determine if there is a wall.
         bool wall(int x, int y, types::Direction d) const noexcept;
 
+        /// Determine if two mazes are equal.
+        bool operator==(const Maze &other) const;
+
+        /// Determine if two mazes are not equal.
+        bool operator!=(const Maze &other) const {
+            return !(*this == other);
+        }
+
+        /// Perform a group action (rotation or reflection) on the maze to generate a new one.
+        //const Maze applySymmetry(const types::Symmetry s) const;
+
     private:
         /// A function that maps positions to wall ranks.
         /**

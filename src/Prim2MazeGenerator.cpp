@@ -65,18 +65,16 @@ namespace vorpal::maze {
     }
 
     void Prim2MazeGenerator::addUnivisitedNeighbourCells(const types::Cell &c,
-                                                                   types::CellCollection &cells,
-                                                                   const types::CellIndicator &ci) {
-        const int x = c.first;
-        const int y = c.second;
-
-        if (x - 1 >= 0 && !ci[x-1][y])
-            cells.emplace_back(types::cell(x-1, y));
-        if (x + 1 < width && !ci[x+1][y])
-            cells.emplace_back(types::cell(x+1, y));
-        if (y - 1 >= 0 && !ci[x][y-1])
-            cells.emplace_back(types::cell(x, y-1));
-        if (y + 1 < height && !ci[x][y+1])
-            cells.emplace_back(types::cell(x, y+1));
+                                                         types::CellCollection &cells,
+                                                         const types::CellIndicator &ci) {
+        const auto[x, y] = c;
+        if (x - 1 >= 0 && !ci[x - 1][y])
+            cells.emplace_back(types::cell(x - 1, y));
+        if (x + 1 < width && !ci[x + 1][y])
+            cells.emplace_back(types::cell(x + 1, y));
+        if (y - 1 >= 0 && !ci[x][y - 1])
+            cells.emplace_back(types::cell(x, y - 1));
+        if (y + 1 < height && !ci[x][y + 1])
+            cells.emplace_back(types::cell(x, y + 1));
     }
 }
