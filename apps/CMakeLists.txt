@@ -7,6 +7,9 @@ target_link_libraries(aldous_broder LINK_PUBLIC spelunker)
 add_executable(binarytree binarytree.cpp ProbabilisticExecutor.h Utils.h)
 target_link_libraries(binarytree LINK_PUBLIC spelunker)
 
+add_executable(bfs bfs.cpp Executor.h Utils.h)
+target_link_libraries(bfs LINK_PUBLIC spelunker)
+
 add_executable(dfs dfs.cpp Executor.h Utils.h)
 target_link_libraries(dfs LINK_PUBLIC spelunker)
 

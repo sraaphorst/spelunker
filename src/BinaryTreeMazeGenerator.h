@@ -16,10 +16,21 @@ namespace vorpal::maze {
 
     /// Maze generator using the binary tree approach.
     /**
-     * The BinaryTreeMazeGenerator iterates over the maze, row-by-row (although visiting the cells in any order
-     * would work), adding with probability p a wall to the east if possible, and 1-p probability a wall to the
-     * south if possible. In some cases (e.g. the rightmost column), we will not be able to add east walls, and
-     * in one case (i.e. the bottom rightmost cell), we will not be able to add anything.
+     * The BinaryTreeMazeGenerator proceeds as follows:
+     *
+     * Iterate over the cells of the maze, starting in the NW corner and proceeding row-by-row.
+     *
+     * For each cell, if possible to carve an east wall and a south wall, carve an east wall with probability p,
+     * and a south wall with probability 1-p.
+     *
+     * Along the easternmost column, it will only be possible to carve southward.
+     * Along the southmost column, it will only be possible to carve eastward.
+     * In the SE corner, it will not be possible to cave at all.
+     *
+     * This algorithm has significant bias, as paths flow to the SE, but is one of the simplest algorithms.
+     *
+     * The probability factor p, for high p, can result in long horizontal passages, and, for low p,
+     * long vertical passages.
      */
     class BinaryTreeMazeGenerator final : public MazeGenerator {
     public:

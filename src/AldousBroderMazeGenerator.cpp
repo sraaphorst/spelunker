@@ -36,7 +36,6 @@ namespace vorpal::maze {
             const auto nbr  = math::RNG::randomElement(nbrs);
             currX = nbr.first.first;
             currY = nbr.first.second;
-            const auto d = nbr.second;
 
             // Process this cell.
             if (!ci[currX][currY]) {
