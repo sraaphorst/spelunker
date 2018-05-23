@@ -2,7 +2,7 @@
 
 A C++17 library for generating / solving mazes. (It could be easily adapted for C++14, but this is a learning exercise for me in C++11, 14, and 17.)
 
-Right now, the library can generate mazes using the following nine algorithms:
+Right now, the library can generate mazes using the following ten algorithms:
 
 1. Aldous-Broder with random walks.
 
@@ -20,7 +20,9 @@ Right now, the library can generate mazes using the following nine algorithms:
 
 8. Recursive division, allowing lower bound density and upper bound density for splits, probability to split vertically, and a flag to force alternating vertical / horizontal splits.
 
-9. Wilson's algorithm.
+9. Sidewinder algorithm.
+
+10. Wilson's algorithm.
 
 It also defines a type class, `Show`, that can be used to easily create string representations of mazes, coordinates, positions, etc. for text output.
 
