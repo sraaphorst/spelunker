@@ -17,16 +17,20 @@ namespace vorpal::maze {
     /// Maze generator using the binary tree approach.
     /**
      * The BinaryTreeMazeGenerator iterates over the maze, row-by-row (although visiting the cells in any order
-     * would work), adding with 0.5 probability a wall to the east if possible, and 0.5 probability a wall to the
+     * would work), adding with probability p a wall to the east if possible, and 1-p probability a wall to the
      * south if possible. In some cases (e.g. the rightmost column), we will not be able to add east walls, and
      * in one case (i.e. the bottom rightmost cell), we will not be able to add anything.
      */
     class BinaryTreeMazeGenerator final : public MazeGenerator {
     public:
+        BinaryTreeMazeGenerator(int w, int h, double p);
         BinaryTreeMazeGenerator(int w, int h);
         virtual ~BinaryTreeMazeGenerator() = default;
 
         const Maze generate() override;
+
+    private:
+        const double eastProbability;
     };
 }
 

@@ -14,13 +14,13 @@ target_link_libraries(mazerunner
 add_executable(aldous_broder aldous_broder.cpp Executor.h Utils.h)
 target_link_libraries(aldous_broder LINK_PUBLIC spelunker)
 
-add_executable(binarytree binarytree.cpp Executor.h Utils.h)
+add_executable(binarytree binarytree.cpp Utils.h)
 target_link_libraries(binarytree LINK_PUBLIC spelunker)
 
 add_executable(dfs dfs.cpp Executor.h Utils.h)
 target_link_libraries(dfs LINK_PUBLIC spelunker)
 
-add_executable(eller eller.cpp Executor.h Utils.h)
+add_executable(eller eller.cpp Utils.h)
 target_link_libraries(eller LINK_PUBLIC spelunker)
 
 add_executable(kruskal kruskal.cpp Executor.h Utils.h)
