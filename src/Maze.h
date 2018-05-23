@@ -8,6 +8,7 @@
 #define SPELUNKER_MAZE_H
 
 #include <algorithm>
+#include <functional>
 #include <optional>
 #include <sstream>
 
@@ -102,8 +103,8 @@ namespace vorpal::maze {
             return !(*this == other);
         }
 
-        /// Perform a group action (rotation or reflection) on the maze to generate a new one.
-        //const Maze applySymmetry(const types::Symmetry s) const;
+        /// Apply a symmetry to this maze to get a new one.
+        const Maze applySymmetry(types::Symmetry s) const;
 
     private:
         /// A function that maps positions to wall ranks.

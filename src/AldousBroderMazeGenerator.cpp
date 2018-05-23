@@ -10,9 +10,6 @@
 #include "RNG.h"
 #include "AldousBroderMazeGenerator.h"
 
-#include <iostream>
-using namespace std;
-
 namespace vorpal::maze {
     AldousBroderMazeGenerator::AldousBroderMazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}

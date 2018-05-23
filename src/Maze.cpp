@@ -5,6 +5,7 @@
  */
 
 #include <cassert>
+#include <functional>
 #include <map>
 #include <optional>
 #include <tuple>
@@ -57,13 +58,91 @@ namespace vorpal::maze {
         return wallIncidence == other.wallIncidence;
     }
 
-//    const Maze Maze::applySymmetry(types::Symmetry s) const {
-//        switch (s) {
-//            int widthN  = height;
-//            int heightN = width;
-//
-//        }
-//    }
+    const Maze Maze::applySymmetry(types::Symmetry s) const {
+        // Get the symmetry map corresponding to the symmetry.
+        std::function<types::WallID(const types::Position&)> mp;
+
+        switch (s) {
+            case types::ROTATION_BY_90:
+                mp = [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(height, width, height - y - 1, x, types::applySymmetryToDirection(s, d));
+                };
+                break;
+            case types::ROTATION_BY_180:
+                mp =  [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(width, height, width - x - 1, height - y - 1,
+                                               types::applySymmetryToDirection(s, d));
+                };
+                break;
+            case types::ROTATION_BY_270:
+                mp = [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(height, width, y, width - x - 1, types::applySymmetryToDirection(s, d));
+                };
+                break;
+            case types::REFLECTION_IN_X:
+                mp = [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(width, height, x, height - y - 1, types::applySymmetryToDirection(s, d));
+                };
+                break;
+            case types::REFLECTION_IN_Y:
+                mp = [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(width, height, width - x - 1, y, types::applySymmetryToDirection(s, d));
+                };
+                break;
+            case types::REFLECTION_IN_NWSE:
+                if (width != height) throw IllegalGroupOperation(width, height, s);
+                mp = [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(height, width, y, x, types::applySymmetryToDirection(s, d));
+                };
+                break;
+            case types::REFLECTION_IN_NESW:
+                if (width != height) throw IllegalGroupOperation(width, height, s);
+                mp = [this, s](const types::Position &p) {
+                    auto[c, d] = p;
+                    auto[x, y] = c;
+                    return Maze::rankPositionS(height, width, height - y - 1, width - x - 1,
+                                               types::applySymmetryToDirection(s, d));
+                };
+                break;
+        }
+
+        // Determine the new width / height and create the wall incidence.
+        int nWidth, nHeight;
+        if (s == types::ROTATION_BY_180 || s == types::REFLECTION_IN_X || s == types::REFLECTION_IN_Y) {
+            nWidth = width;
+            nHeight = height;
+        } else {
+            nWidth = height;
+            nHeight = width;
+        }
+
+        const auto dirs = types::directions();
+        auto nwi = types::WallIncidence(numWalls, true);
+        for (auto x = 0; x < width; ++x)
+            for (auto y = 0; y < height; ++y)
+                for (auto d : dirs) {
+                    auto p = types::pos(x, y, d);
+                    auto rk = rankPosition(p);
+                    if (rk == -1) continue;
+
+                    auto nRk = mp(p);
+                    nwi[nRk] = wallIncidence[rk];
+                }
+
+        return Maze(nWidth, nHeight, nwi);
+    }
 
     types::WallID Maze::rankPosition(const types::Position &p) const {
         const auto &cell = p.first;
@@ -120,10 +199,11 @@ namespace vorpal::maze {
 
     void Maze::checkCell(const int w, const int h, const int x, const int y) {
         if (x < 0 || x > w || y < 0 || y >= h)
-            throw OutOfBoundsCell(types::Cell(x,y));
+            throw OutOfBoundsCell(types::Cell(x, y));
     }
 
 #ifndef NDEBUG
+
     void Maze::test_rankPositionS(const int w, const int h) {
         std::set<int> ranks;
         const auto numwalls = types::calculateNumWalls(w, h);
@@ -143,5 +223,6 @@ namespace vorpal::maze {
         for (auto i = 0; i < numwalls; ++i)
             assert(ranks.find(i) != ranks.end());
     }
+
 #endif
 }

@@ -13,10 +13,6 @@
 #include <vector>
 #include <boost/pending/property.hpp>
 
-#include <iostream>
-#include <iomanip>
-
-
 /// Element of a set of disjoint sets, represented by an int. Do a lookup into a vector if necessary.
 struct Element {
 public:
