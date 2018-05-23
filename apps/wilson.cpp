@@ -6,8 +6,8 @@
  * Generate a maze using the Wilson algorithm.
  */
 
-#include "WilsonMazeGenerator.h"
 #include "Executor.h"
+#include "WilsonMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<vorpal::maze::WilsonMazeGenerator>::generateAndDisplayMaze(argc, argv);

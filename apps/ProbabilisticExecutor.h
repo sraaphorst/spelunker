@@ -1,13 +1,14 @@
 /**
- * Executor.h
+ * ProbabilisticExecutor.h
  *
  * By Sebastian Raaphorst, 2018.
  *
  * Generalized method of reading parameters, creating a random maze, and outputting the result.
+ * Accept one probability factor.
  */
 
-#ifndef SPELUNKER_GENERATETEMPLATE_H
-#define SPELUNKER_GENERATETEMPLATE_H
+#ifndef SPELUNKER_PROBABILISTICEXECUTOR_H
+#define SPELUNKER_PROBABILISTICEXECUTOR_H
 
 #include <iostream>
 
@@ -16,9 +17,9 @@
 #include "Utils.h"
 
 template<typename T>
-class Executor {
+class ProbabilisticExecutor {
 private:
-    Executor() = default;
+    ProbabilisticExecutor() = default;
 
 public:
     /// Generate a Maze using a MazeGenerator (type T), and output it. argv[1] is width, argv[2] is height.
@@ -31,8 +32,9 @@ public:
      * @return return code for main
      */
     static int generateAndDisplayMaze(int argc, char *argv[]) {
-        if (argc != 3) {
-            std::cerr << "Usage: " << argv[0] << " width height" << std::endl;
+        if (argc != 3 && argc != 4) {
+            std::cerr << "Usage: " << argv[0] << " width height [probability]" << std::endl
+                      << "\tprobability: allows a probability factor to affect output, default 0.5" << std::endl;
             return 1;
         }
 
@@ -49,11 +51,20 @@ public:
             return 3;
         }
 
-        T gen(width, height);
+        double probability = 0.5;
+        if (argc == 4) {
+            probability = Utils::parseDouble(argv[3]);
+            if (probability <= 0 || probability >= 1) {
+                std::cerr << "Invalid probability: " << argv[3] << std::endl;
+                return 4;
+            }
+        }
+
+        T gen(width, height, probability);
         const vorpal::maze::Maze m = gen.generate();
         std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m);
         return 0;
     }
 };
 
-#endif //SPELUNKER_GENERATETEMPLATE_H
+#endif //SPELUNKER_PROBABILISTICEXECUTOR_H

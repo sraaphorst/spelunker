@@ -14,7 +14,7 @@ target_link_libraries(mazerunner
 add_executable(aldous_broder aldous_broder.cpp Executor.h Utils.h)
 target_link_libraries(aldous_broder LINK_PUBLIC spelunker)
 
-add_executable(binarytree binarytree.cpp Utils.h)
+add_executable(binarytree binarytree.cpp ProbabilisticExecutor.h Utils.h)
 target_link_libraries(binarytree LINK_PUBLIC spelunker)
 
 add_executable(dfs dfs.cpp Executor.h Utils.h)
@@ -34,6 +34,9 @@ target_link_libraries(prim2 LINK_PUBLIC spelunker)
 
 add_executable(recursive_division recursive_division.cpp Utils.h)
 target_link_libraries(recursive_division LINK_PUBLIC spelunker)
+
+add_executable(sidewinder sidewinder.cpp ProbabilisticExecutor.h Utils.h)
+target_link_libraries(sidewinder LINK_PUBLIC spelunker)
 
 add_executable(wilson wilson.cpp Executor.h Utils.h)
 target_link_libraries(wilson LINK_PUBLIC spelunker)

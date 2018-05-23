@@ -26,6 +26,7 @@ set(PUBLIC_HEADER_FILES
         Prim2MazeGenerator.h
         RecursiveDivisionMazeGenerator.h
         RNG.h
+        SidewinderMazeGenerator.h
         StringMazeRenderer.h
         WilsonMazeGenerator.h
         )
@@ -45,6 +46,7 @@ set(SOURCE_FILES
         RecursiveDivisionMazeGenerator.cpp
         RNG.cpp
         Show.h
+        SidewinderMazeGenerator.cpp
         StringMazeRenderer.cpp
         WilsonMazeGenerator.cpp
         )
