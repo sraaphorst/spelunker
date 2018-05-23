@@ -13,7 +13,7 @@
 #ifndef SPELUNKER_RNG_H
 #define SPELUNKER_RNG_H
 
-namespace vorpal::math {
+namespace spelunker::math {
     /**
      * The abstract superclass for random number generation algorithms.
      * Implementations can be provided and set. If no implementation is provided,

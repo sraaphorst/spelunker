@@ -10,5 +10,5 @@
 #include "WilsonMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::WilsonMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<spelunker::maze::WilsonMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

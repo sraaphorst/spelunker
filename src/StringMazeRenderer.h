@@ -17,7 +17,7 @@
 #include "MazeAttributes.h"
 #include "MazeRenderer.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     class Maze;
 
     /// A simple maze renderer to an ostream. We use this to define the Show type class for Maze.

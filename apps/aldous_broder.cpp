@@ -11,5 +11,5 @@
 #include "AldousBroderMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::AldousBroderMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<spelunker::maze::AldousBroderMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

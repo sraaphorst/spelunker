@@ -10,7 +10,7 @@
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     MazeGenerator::MazeGenerator(const int w, const int h)
             : width(w), height(h), numWalls(types::calculateNumWalls(w, h)) {}
 

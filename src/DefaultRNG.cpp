@@ -8,7 +8,7 @@
 
 #include "DefaultRNG.h"
 
-namespace vorpal::math {
+namespace spelunker::math {
     DefaultRNG::DefaultRNG()
         : rd(), g(rd()) {}
 

@@ -15,7 +15,7 @@
 
 #include "MazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     class Maze;
 
     /// Maze generator using the Aldous-Broder approach to finding uniform spanning trees.

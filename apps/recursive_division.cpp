@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc == 3) {
-        vorpal::maze::RecursiveDivisionMazeGenerator gen(width, height);
-        const vorpal::maze::Maze m = gen.generate();
-        std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m);
+        spelunker::maze::RecursiveDivisionMazeGenerator gen(width, height);
+        const spelunker::maze::Maze m = gen.generate();
+        std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
     } else {
         const double lowerBound = Utils::parseDouble(argv[3]);
         if (lowerBound < 0 || lowerBound > 1) {
@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
             return 8;
         }
 
-        vorpal::maze::RecursiveDivisionMazeGenerator gen(width, height, lowerBound, upperBound, probability, alternate == 1);
-        const vorpal::maze::Maze m = gen.generate();
-        std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m);
+        spelunker::maze::RecursiveDivisionMazeGenerator gen(width, height, lowerBound, upperBound, probability, alternate == 1);
+        const spelunker::maze::Maze m = gen.generate();
+        std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
     }
 
     return 0;

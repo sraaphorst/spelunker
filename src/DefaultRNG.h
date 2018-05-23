@@ -13,7 +13,7 @@
 
 #include "RNG.h"
 
-namespace vorpal::math {
+namespace spelunker::math {
     /// The default random number generator, which uses STL's implementation of the Mersenne twister.
     /**
      * The default random number generator, using STL's implementation of the Mersenne twister.

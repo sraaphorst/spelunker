@@ -13,7 +13,7 @@
 #include "RNG.h"
 #include "DFSMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     DFSMazeGenerator::DFSMazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}
 

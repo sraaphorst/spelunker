@@ -12,7 +12,7 @@
 #include "RNG.h"
 #include "Prim2MazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     Prim2MazeGenerator::Prim2MazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}
 

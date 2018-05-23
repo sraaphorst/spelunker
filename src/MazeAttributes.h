@@ -2,6 +2,8 @@
  * MazeAttributes.h
  *
  * By Sebastian Raaphorst, 2018.
+ *
+ * Attributes specific to Mazes.
  */
 
 #ifndef SPELUNKER_MAZEATTRIBUTES_H
@@ -15,7 +17,7 @@
 
 #include "Show.h"
 
-namespace vorpal::maze::types {
+namespace spelunker::maze::types {
     /// An (x,y) cell in a maze.
     using Cell = std::pair<int, int>;
 
@@ -187,8 +189,8 @@ namespace vorpal::maze::types {
     }
 }
 
-namespace vorpal::typeclasses {
-    using namespace vorpal::maze::types;
+namespace spelunker::typeclasses {
+    using namespace spelunker::maze::types;
 
     template<>
     struct Show<Direction> {

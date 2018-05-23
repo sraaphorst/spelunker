@@ -7,7 +7,7 @@
 #ifndef SPELUNKER_MAZERENDERER_H
 #define SPELUNKER_MAZERENDERER_H
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     class Maze;
 
     class MazeRenderer {

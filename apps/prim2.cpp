@@ -10,5 +10,5 @@
 #include "Prim2MazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::Prim2MazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<spelunker::maze::Prim2MazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

@@ -12,7 +12,7 @@
 #include "RNG.h"
 #include "WilsonMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     WilsonMazeGenerator::WilsonMazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}
 

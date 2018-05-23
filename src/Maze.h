@@ -16,7 +16,7 @@
 #include "MazeAttributes.h"
 #include "Show.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     // Class forward.
     class MazeGenerator;
 
@@ -77,8 +77,8 @@ namespace vorpal::maze {
 
         virtual ~Maze() = default;
 
-        inline int getWidth() const noexcept { return width; }
-        inline int getHeight() const noexcept { return height; }
+        inline const int getWidth() const noexcept { return width; }
+        inline const int getHeight() const noexcept { return height; }
 
         inline types::PossibleStartCell getStartingCell() const noexcept { return startCell; }
         inline types::CellCollection getEndingCells() const noexcept { return endingCells; }
@@ -154,7 +154,7 @@ namespace vorpal::maze {
     };
 }
 
-namespace vorpal::typeclasses {
+namespace spelunker::typeclasses {
     template<>
     struct Show<maze::Maze> {
         static std::string show(const maze::Maze &m) {

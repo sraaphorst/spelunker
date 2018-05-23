@@ -13,7 +13,7 @@
 #include "DefaultRNG.h"
 #include "RNG.h"
 
-namespace vorpal::math {
+namespace spelunker::math {
     std::shared_ptr<RNG> RNG::rng = nullptr;
 
     RNG::~RNG() {

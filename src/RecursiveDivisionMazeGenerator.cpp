@@ -13,7 +13,7 @@
 #include "RNG.h"
 #include "RecursiveDivisionMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     RecursiveDivisionMazeGenerator::RecursiveDivisionMazeGenerator(int w, int h,
                                                                    double lb, double ub,
                                                                    double p, bool alt)

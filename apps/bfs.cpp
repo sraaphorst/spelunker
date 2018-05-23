@@ -10,5 +10,5 @@
 #include "BFSMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::BFSMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<spelunker::maze::BFSMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

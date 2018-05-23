@@ -14,7 +14,7 @@
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     class Maze;
 
     /// A @see{MazeGenerator} using the randomized Prim method.

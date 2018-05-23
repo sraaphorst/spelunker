@@ -10,7 +10,7 @@
 #include <string>
 #include <tuple>
 
-namespace vorpal::typeclasses {
+namespace spelunker::typeclasses {
     /**
      * An interface for objects that can show themselves, i.e. create a string representation of themselves.
      */

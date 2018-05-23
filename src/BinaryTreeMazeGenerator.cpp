@@ -12,7 +12,7 @@
 #include "RNG.h"
 #include "BinaryTreeMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(int w, int h, double p)
             : MazeGenerator(w, h), eastProbability(p) {}
 

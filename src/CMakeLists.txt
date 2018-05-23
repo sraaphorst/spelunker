@@ -28,6 +28,7 @@ set(PUBLIC_HEADER_FILES
         RecursiveDivisionMazeGenerator.h
         RNG.h
         SidewinderMazeGenerator.h
+        SpelunkerConfig.h
         StringMazeRenderer.h
         WilsonMazeGenerator.h
         )

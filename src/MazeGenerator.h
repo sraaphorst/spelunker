@@ -13,7 +13,7 @@
 
 #include "MazeAttributes.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     class Maze;
 
     class MazeGenerator {

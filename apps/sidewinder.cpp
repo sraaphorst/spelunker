@@ -10,5 +10,5 @@
 #include "SidewinderMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return ProbabilisticExecutor<vorpal::maze::SidewinderMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return ProbabilisticExecutor<spelunker::maze::SidewinderMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

@@ -14,20 +14,20 @@
 #include "Maze.h"
 #include "MazeAttributes.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     using namespace std;
 
     const vector<string> StringMazeRenderer::boxchars = { " ","╶","╷","┌","╴","─","┐","┬","╵","└","│","├","┘","┴","┤","┼" };
 
     StringMazeRenderer::StringMazeRenderer(std::ostream &o) : out(o) {}
 
-    bool StringMazeRenderer::wall(const Maze &m, int x, int y, vorpal::maze::types::Direction d) {
+    bool StringMazeRenderer::wall(const Maze &m, int x, int y, spelunker::maze::types::Direction d) {
         if (x < 0 || x >= m.getWidth())  return false;
         if (y < 0 || y >= m.getHeight()) return false;
         return m.wall(x, y, d);
     }
 
-    void StringMazeRenderer::render(const vorpal::maze::Maze &m) {
+    void StringMazeRenderer::render(const spelunker::maze::Maze &m) {
         /**
          * First, we have to convert the Maze from an x by y grid into an (x+1) by (y+1) box drawing.
          * To determine cell (x,y) in the box drawing, we need the following cells from the Maze:

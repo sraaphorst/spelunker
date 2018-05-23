@@ -15,7 +15,7 @@
 #include "RNG.h"
 #include "EllerMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     EllerMazeGenerator::EllerMazeGenerator(const int w, const int h, const double p, const double d)
             : MazeGenerator(w, h), probability(p), density(d) {}
 

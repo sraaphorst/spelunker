@@ -14,7 +14,7 @@
 #include "RNG.h"
 #include "KruskalMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     KruskalMazeGenerator::KruskalMazeGenerator(const int w, const int h)
             : MazeGenerator(w, h) {}
 

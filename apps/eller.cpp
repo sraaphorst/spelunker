@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    vorpal::maze::EllerMazeGenerator gen(width, height, probability, density);
-    const vorpal::maze::Maze m = gen.generate();
-    std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m);
+    spelunker::maze::EllerMazeGenerator gen(width, height, probability, density);
+    const spelunker::maze::Maze m = gen.generate();
+    std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
     return 0;
 }

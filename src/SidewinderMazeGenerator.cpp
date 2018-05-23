@@ -12,7 +12,7 @@
 #include "RNG.h"
 #include "SidewinderMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     SidewinderMazeGenerator::SidewinderMazeGenerator(int w, int h, double p)
         : MazeGenerator(w, h), probabilityEast(p) {}
 

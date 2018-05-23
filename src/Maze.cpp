@@ -15,7 +15,7 @@
 #include "MazeAttributes.h"
 #include "Maze.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     Maze::Maze(const int w,
                const int h,
                const types::PossibleStartCell &s,
@@ -23,28 +23,30 @@ namespace vorpal::maze {
                const types::WallIncidence &walls)
             : width(w), height(h), numWalls(types::calculateNumWalls(w, h)),
               startCell(s), endingCells(ends), wallIncidence(walls) {
+        if (width < 1 || height < 1)
+            throw shared::IllegalDimensions(width, height);
         checkCells();
     }
 
     Maze::Maze(const int w,
                const int h,
-               const vorpal::maze::types::WallIncidence &walls)
+               const spelunker::maze::types::WallIncidence &walls)
             : Maze(w, h, {}, types::CellCollection(), walls) {}
 
     const Maze Maze::withStartingCell(const types::PossibleStartCell &s) const {
         return Maze(width, height, s, endingCells, wallIncidence);
     }
 
-    const Maze Maze::withEndingCells(const vorpal::maze::types::CellCollection &ends) const {
+    const Maze Maze::withEndingCells(const spelunker::maze::types::CellCollection &ends) const {
         return Maze(width, height, startCell, ends, wallIncidence);
     }
 
-    bool Maze::wall(const vorpal::maze::types::Position &p) const noexcept {
+    bool Maze::wall(const spelunker::maze::types::Position &p) const noexcept {
         const int rk = rankPosition(p);
         return rk == -1 || wallIncidence[rk];
     }
 
-    bool Maze::wall(int x, int y, vorpal::maze::types::Direction d) const noexcept {
+    bool Maze::wall(int x, int y, spelunker::maze::types::Direction d) const noexcept {
         const int rk = rankPosition(x, y, d);
         return rk == -1 || wallIncidence[rk];
     }
@@ -100,7 +102,7 @@ namespace vorpal::maze {
                 };
                 break;
             case types::REFLECTION_IN_NWSE:
-                if (width != height) throw IllegalGroupOperation(width, height, s);
+                if (width != height) throw shared::IllegalGroupOperation(width, height, s);
                 mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
@@ -108,7 +110,7 @@ namespace vorpal::maze {
                 };
                 break;
             case types::REFLECTION_IN_NESW:
-                if (width != height) throw IllegalGroupOperation(width, height, s);
+                if (width != height) throw shared::IllegalGroupOperation(width, height, s);
                 mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
@@ -153,7 +155,7 @@ namespace vorpal::maze {
         return rankPositionS(width, height, x, y, d);
     };
 
-    types::WallID Maze::rankPosition(int x, int y, vorpal::maze::types::Direction d) const {
+    types::WallID Maze::rankPosition(int x, int y, spelunker::maze::types::Direction d) const {
         return rankPositionS(width, height, x, y, d);
     }
 
@@ -199,7 +201,7 @@ namespace vorpal::maze {
 
     void Maze::checkCell(const int w, const int h, const int x, const int y) {
         if (x < 0 || x > w || y < 0 || y >= h)
-            throw OutOfBoundsCell(types::Cell(x, y));
+            throw shared::OutOfBoundsCell(types::Cell(x, y));
     }
 
 #ifndef NDEBUG

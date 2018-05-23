@@ -50,8 +50,8 @@ public:
         }
 
         T gen(width, height);
-        const vorpal::maze::Maze m = gen.generate();
-        std::cout << vorpal::typeclasses::Show<vorpal::maze::Maze>::show(m);
+        const spelunker::maze::Maze m = gen.generate();
+        std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
         return 0;
     }
 };

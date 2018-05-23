@@ -11,7 +11,7 @@
 
 #include "MazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     class Maze;
 
     /**

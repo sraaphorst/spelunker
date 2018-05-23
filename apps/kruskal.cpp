@@ -10,5 +10,5 @@
 #include "KruskalMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return Executor<vorpal::maze::KruskalMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return Executor<spelunker::maze::KruskalMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }

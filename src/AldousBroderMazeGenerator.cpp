@@ -10,7 +10,7 @@
 #include "RNG.h"
 #include "AldousBroderMazeGenerator.h"
 
-namespace vorpal::maze {
+namespace spelunker::maze {
     AldousBroderMazeGenerator::AldousBroderMazeGenerator(int w, int h)
             : MazeGenerator(w, h) {}
 
@@ -22,8 +22,8 @@ namespace vorpal::maze {
         types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         // Pick a random starting position.
-        auto currX = vorpal::math::RNG::randomRange(width);
-        auto currY = vorpal::math::RNG::randomRange(height);
+        auto currX = spelunker::math::RNG::randomRange(width);
+        auto currY = spelunker::math::RNG::randomRange(height);
         ci[currX][currY] = true;
 
         // Keep track of the number of cells visited so we know when to stop.

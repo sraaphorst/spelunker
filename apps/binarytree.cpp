@@ -10,5 +10,5 @@
 #include "BinaryTreeMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
-    return ProbabilisticExecutor<vorpal::maze::BinaryTreeMazeGenerator>::generateAndDisplayMaze(argc, argv);
+    return ProbabilisticExecutor<spelunker::maze::BinaryTreeMazeGenerator>::generateAndDisplayMaze(argc, argv);
 }
