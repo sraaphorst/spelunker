@@ -1,0 +1,12 @@
+# Find includes in corresponding build directories.
+set(CMAKE_INCLUDE_CURRENT_DIR  ON)
+
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt5Widgets REQUIRED)
+
+add_executable(mazerunner ../gui/mazerunner.cpp)
+target_link_libraries(mazerunner
+        Qt5::Widgets
+        spelunker)
