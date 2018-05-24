@@ -2,7 +2,7 @@
 
 A C++17 library for generating / solving mazes. (It could be easily adapted for C++14, but this is a learning exercise for me in C++11, 14, and 17.)
 
-Right now, the library can generate mazes using the following 11 algorithms:
+Right now, the library can generate mazes using the following 12 algorithms:
 
 1. Aldous-Broder with random walks.
 
@@ -14,19 +14,29 @@ Right now, the library can generate mazes using the following 11 algorithms:
 
 5. Eller's algorithm, allowing probability for horizontal wall creation and density per contiguous block of cells in a row for vertical wall creation.
 
-6. Randomized Kruskal's algorithm.
+6. Hunt-and-kill.
 
-7. Randomized Prim, iterating over walls.
+7. Randomized Kruskal's algorithm.
 
-8. Randomized Prim, iterating over cells.
+8. Randomized Prim, iterating over walls.
 
-9. Recursive division, allowing lower bound density and upper bound density for splits, probability to split vertically, and a flag to force alternating vertical / horizontal splits.
+9. Randomized Prim, iterating over cells.
 
-10. Sidewinder algorithm.
+10. Recursive division, allowing lower bound density and upper bound density for splits, probability to split vertically, and a flag to force alternating vertical / horizontal splits.
 
-11. Wilson's algorithm.
+11. Sidewinder algorithm.
 
-It also defines a type class, `Show`, that can be used to easily create string representations of mazes, coordinates, positions, etc. for text output.
+12. Wilson's algorithm.
+
+Previously, the library only supported mazes with walls as cell dividers instead of walls as actual cells. Now I have implemented `ThickMaze`, a class where each cell in the maze is either `FLOOR` or `WALL`. This will allow implementation of additional algorithms, such as cellular automata algorithms.
+
+Spelunker also defines and contains some typeclasses:
+
+1. `Show`, that can be used to easily create string representations of mazes, thick mazes, coordinates, positions, etc. for text output; and
+
+2. `Homomorphism`, that can morph one structure into another. In this case, there is a homomorphism from `Maze` (mazes with cell divider walls) to `ThickMaze` (mazes where walls occupy whole cells). This map is one-to-one or _injective_, meaning that no two `Maze`s map to the same `ThickMaze`. There is no reverse homomorphism, though, from general `ThickMaze` to `Maze`.
+
+This means that any algorithm used to generate `Maze`s can also be used to generate `ThickMaze`s.
 
 # Requirements
 
