@@ -18,6 +18,7 @@ set(PUBLIC_HEADER_FILES
         DFSMazeGenerator.h
         EllerMazeGenerator.h
         Exceptions.h
+        Homomorphism.h
         KruskalMazeGenerator.h
         Maze.h
         MazeAttributes.h
@@ -30,6 +31,10 @@ set(PUBLIC_HEADER_FILES
         SidewinderMazeGenerator.h
         SpelunkerConfig.h
         StringMazeRenderer.h
+        StringThickMazeRenderer.h
+        ThickMaze.h
+        ThickMazeAttributes.h
+        ThickMazeRenderer.h
         WilsonMazeGenerator.h
         )
 
@@ -51,6 +56,8 @@ set(SOURCE_FILES
         Show.h
         SidewinderMazeGenerator.cpp
         StringMazeRenderer.cpp
+        StringThickMazeRenderer.cpp
+        ThickMaze.cpp
         WilsonMazeGenerator.cpp
         )
 

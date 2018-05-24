@@ -15,9 +15,7 @@
 #include "MazeAttributes.h"
 
 namespace spelunker::maze {
-    using namespace std;
-
-    const vector<string> StringMazeRenderer::boxchars = { " ","╶","╷","┌","╴","─","┐","┬","╵","└","│","├","┘","┴","┤","┼" };
+    const std::vector<std::string> StringMazeRenderer::boxchars = { " ","╶","╷","┌","╴","─","┐","┬","╵","└","│","├","┘","┴","┤","┼" };
 
     StringMazeRenderer::StringMazeRenderer(std::ostream &o) : out(o) {}
 
@@ -43,20 +41,20 @@ namespace spelunker::maze {
          * 3. B(x,y,S) = M(x-1, y,   E) || M(  x,   y, W)
          * 4. B(x,y,E) = M(  x, y-1, S) || M(  x,   y, N)
          */
-        const auto w = m.getWidth();
-        const auto h = m.getHeight();
+        const auto width  = m.getWidth();
+        const auto height = m.getHeight();
 
         // Create the box representation of the maze.
-        using BoxEntry = vector<bool>;
-        using BoxColumn = vector<BoxEntry>;
-        using BoxRepresentation = vector<BoxColumn>;
+        using BoxEntry = std::vector<bool>;
+        using BoxColumn = std::vector<BoxEntry>;
+        using BoxRepresentation = std::vector<BoxColumn>;
 
         BoxEntry          bDir(4, false);
-        BoxColumn         bCol(h+1, bDir);
-        BoxRepresentation box(w+1, bCol);
+        BoxColumn         bCol(height+1, bDir);
+        BoxRepresentation box(width+1, bCol);
 
-        for (auto x=0; x <= w; ++x) {
-            for (auto y=0; y <= h; ++y) {
+        for (auto x=0; x <= width; ++x) {
+            for (auto y=0; y <= height; ++y) {
                 box[x][y][types::NORTH] = wall(m, x-1, y-1, types::EAST)  || wall(m,   x, y-1, types::WEST);
                 box[x][y][types::WEST]  = wall(m, x-1, y-1, types::SOUTH) || wall(m, x-1,   y, types::NORTH);
                 box[x][y][types::SOUTH] = wall(m, x-1,   y, types::EAST)  || wall(m,   x,   y, types::WEST);
@@ -65,8 +63,8 @@ namespace spelunker::maze {
         }
 
         // Now we are ready to render.
-        for (auto y=0; y <= h; ++y) {
-            for (auto x=0; x <= w; ++x) {
+        for (auto y=0; y <= height; ++y) {
+            for (auto x=0; x <= width; ++x) {
                 const auto n = box[x][y][types::NORTH] ? 1 : 0;
                 const auto w = box[x][y][types::WEST]  ? 1 : 0;
                 const auto s = box[x][y][types::SOUTH] ? 1 : 0;

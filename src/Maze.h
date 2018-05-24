@@ -7,14 +7,18 @@
 #ifndef SPELUNKER_MAZE_H
 #define SPELUNKER_MAZE_H
 
+#include <iostream>
 #include <algorithm>
 #include <functional>
 #include <optional>
 #include <sstream>
 
-#include "StringMazeRenderer.h"
+#include "Homomorphism.h"
 #include "MazeAttributes.h"
 #include "Show.h"
+#include "StringMazeRenderer.h"
+#include "ThickMaze.h"
+#include "ThickMazeAttributes.h"
 
 namespace spelunker::maze {
     // Class forward.
@@ -166,6 +170,53 @@ namespace spelunker::typeclasses {
 
         static constexpr bool is_instance = true;
         using type = maze::Maze;
+    };
+
+    template<>
+    struct Homomorphism<maze::Maze, thickmaze::ThickMaze> {
+        static const thickmaze::ThickMaze morph(const maze::Maze &m) {
+            const int mwidth  = m.getWidth();
+            const int mheight = m.getHeight();
+            const int twidth  = 2 * mwidth - 1;
+            const int theight = 2 * mheight - 1;
+
+            thickmaze::types::CellContents contents;
+            contents.resize(twidth);
+            for (auto i = 0; i < twidth; ++i)
+                contents[i].resize(theight);
+
+            // Iterate over the walls of the maze and add them to the thick maze, focusing
+            // on the east and the south walls of maze.
+            // For each maze wall, mark (provided not out of bounds) three wall segments
+            // in the thick maze.
+            for (auto x = 0; x < mwidth; ++x)
+                for (auto y = 0; y < mheight; ++y) {
+                    // Ignore the last row of maze when adding southern walls.
+                    if (y < mheight-1 && m.wall(x, y, maze::types::SOUTH)) {
+                        // Find the central position in the thick maze.
+                        const int cx = 2 * x;
+                        const int cy = 2 * y + 1;
+                        if (cx > 0) contents[cx-1][cy] = thickmaze::types::WALL;
+                        contents[cx][cy] = thickmaze::types::WALL;
+                        if (cx < twidth-1) contents[cx+1][cy] = thickmaze::types::WALL;
+                    }
+
+                    // Ignore the last row of maze when adding eastern walls.
+                    if (x < mwidth - 1 && m.wall(x, y, maze::types::EAST)) {
+                        // Find the central position in the thick maze.
+                        const int cx = 2 * x + 1;
+                        const int cy = 2 * y;
+                        if (cy > 0) contents[cx][cy-1] = thickmaze::types::WALL;
+                        contents[cx][cy] = thickmaze::types::WALL;
+                        if (cy < theight-1) contents[cx][cy+1] = thickmaze::types::WALL;
+                    }
+                }
+            return thickmaze::ThickMaze(twidth, theight, contents);
+        }
+
+        static constexpr bool is_instance = true;
+        using src = maze::Maze;
+        using type = thickmaze::ThickMaze;
     };
 }
 #endif //SPELUNKER_MAZE_H

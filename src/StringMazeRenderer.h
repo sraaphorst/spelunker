@@ -22,15 +22,15 @@ namespace spelunker::maze {
 
     /// A simple maze renderer to an ostream. We use this to define the Show type class for Maze.
     /**
-     * This class takes an x by y Maze and converts it to a string that displays the maze using unicode box
-     * characters. The final dimensions of the box output are (2x+1) by (y+1).
+     * This class takes a w by h Maze and converts it to a string that displays the maze using unicode box
+     * characters. The final dimensions of the box output are 2w+1 by h+1.
      */
     class StringMazeRenderer final : public MazeRenderer {
     public:
         StringMazeRenderer(std::ostream &o);
-        virtual ~StringMazeRenderer() = default;
+        ~StringMazeRenderer() = default;
 
-        virtual void render(const Maze &m) override;
+        void render(const Maze &m) override;
 
     private:
         std::ostream &out;
