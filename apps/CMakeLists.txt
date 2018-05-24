@@ -33,3 +33,6 @@ target_link_libraries(sidewinder LINK_PUBLIC spelunker)
 
 add_executable(wilson wilson.cpp Executor.h Utils.h)
 target_link_libraries(wilson LINK_PUBLIC spelunker)
+
+add_executable(thicktest testthick.cpp)
+target_link_libraries(thicktest LINK_PUBLIC spelunker)

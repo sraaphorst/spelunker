@@ -9,7 +9,12 @@
 #ifndef SPELUNKER_THICKMAZE_H
 #define SPELUNKER_THICKMAZE_H
 
+#include <sstream>
+#include <string>
+
+#include "Show.h"
 #include "ThickMazeAttributes.h"
+#include "StringThickMazeRenderer.h"
 
 namespace spelunker::thickmaze {
     /**
@@ -25,6 +30,7 @@ namespace spelunker::thickmaze {
      * is surjective, and thus Mazes and ThickMazes with this property are isomorphic.
      */
     class ThickMaze final {
+    public:
         /**
          * Create a ThickMaze with the given width, height, and contents.
          * This class is effectively immutable.
@@ -47,4 +53,15 @@ namespace spelunker::thickmaze {
     };
 }
 
+namespace spelunker::typeclasses {
+    template<>
+    struct Show<thickmaze::ThickMaze> {
+        static std::string show(const thickmaze::ThickMaze &tm) {
+            std::ostringstream out;
+            thickmaze::StringThickMazeRenderer r(out);
+            r.render(tm);
+            return out.str();
+        }
+    };
+}
 #endif //SPELUNKER_THICKMAZE_H

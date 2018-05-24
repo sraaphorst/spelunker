@@ -25,6 +25,7 @@ namespace spelunker::shared {
     class OutOfBoundsCell : public Exception {
     public:
         OutOfBoundsCell(const spelunker::maze::types::Cell &c) : Exception(msg(c)) {}
+        OutOfBoundsCell(const int x, const int y) : OutOfBoundsCell(maze::types::cell(x, y)) {}
 
     private:
         static std::string msg(const spelunker::maze::types::Cell &c) {
