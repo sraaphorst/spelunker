@@ -16,6 +16,9 @@ target_link_libraries(dfs LINK_PUBLIC spelunker)
 add_executable(eller eller.cpp Utils.h)
 target_link_libraries(eller LINK_PUBLIC spelunker)
 
+add_executable(growing_tree growing_tree.cpp Utils.h)
+target_link_libraries(growing_tree LINK_PUBLIC spelunker)
+
 add_executable(hunt_and_kill hunt_and_kill.cpp Executor.h Utils.h)
 target_link_libraries(hunt_and_kill LINK_PUBLIC spelunker)
 

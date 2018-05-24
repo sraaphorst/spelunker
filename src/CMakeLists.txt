@@ -18,6 +18,7 @@ set(PUBLIC_HEADER_FILES
         DFSMazeGenerator.h
         EllerMazeGenerator.h
         Exceptions.h
+        GrowingTreeMazeGenerator.h
         Homomorphism.h
         HuntAndKillMazeGenerator.h
         KruskalMazeGenerator.h
@@ -47,6 +48,7 @@ set(SOURCE_FILES
         DFSMazeGenerator.cpp
         DisjointSetHelper.h
         EllerMazeGenerator.cpp
+        GrowingTreeMazeGenerator.cpp
         HuntAndKillMazeGenerator.cpp
         KruskalMazeGenerator.cpp
         Maze.cpp
