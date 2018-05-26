@@ -129,7 +129,7 @@ namespace spelunker::maze {
          *
          * Idea for this algorithm inspired by:
          * https://github.com/jamis/theseus/blob/eff25e2d02da00bb9515690b83008ec05e852317/lib/theseus/orthogonal_maze.rb#L108
-         * 
+         *
          * @return a unicursal modification of this maze
          */
         const Maze makeUnicursal() const;
