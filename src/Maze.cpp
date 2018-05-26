@@ -219,6 +219,14 @@ namespace spelunker::maze {
                     if (!s)             wi[ranker(  x2, y2+1, types::EAST)]  = true;
                     if (!(n || s || w)) wi[ranker(  x2,   y2, types::SOUTH)] = true;
                 }
+
+                // If no walls, put a cross in the middle.
+                if (!(n || e || s || w)) {
+                    wi[ranker(  x2,   y2, types::EAST)]  = true;
+                    wi[ranker(  x2,   y2, types::SOUTH)] = true;
+                    wi[ranker(x2+1, y2+1, types::WEST)]  = true;
+                    wi[ranker(x2+1, y2+1, types::NORTH)] = true;
+                }
             }
         }
 
