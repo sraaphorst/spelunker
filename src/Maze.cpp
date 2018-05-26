@@ -146,6 +146,100 @@ namespace spelunker::maze {
         return Maze(nWidth, nHeight, nwi);
     }
 
+    const Maze Maze::makeUnicursal() const {
+        // We need a wall incidence map of size 2w x 2h.
+        const int uw = 2 * width;
+        const int uh = 2 * height;
+        const int uNumWalls = types::calculateNumWalls(uw, uh);
+
+        // We start off empty and use this maze to place walls in the unicursal new one.
+        auto wi = types::WallIncidence(uNumWalls, false);
+
+        // Boundary walls already exist, and trying to add them would be erroneous.
+        const int firstcol = 0;
+        const int lastcol  = width - 1;
+        const int firstrow = 0;
+        const int lastrow  = height - 1;
+
+        // Shorten ranking for new maze.
+        auto ranker = [uw,uh](const int x, const int y, const types::Direction d) { return rankPositionS(uw, uh, x, y, d); };
+
+        for (auto y = 0; y < height; ++y) {
+            auto y2 = 2 * y;
+            for (auto x = 0; x < width; ++x) {
+                auto x2 = 2 * x;
+
+                // Get the four walls of the original cell.
+                const bool n = wall(x, y, types::NORTH);
+                const bool e = wall(x, y, types::EAST);
+                const bool s = wall(x, y, types::SOUTH);
+                const bool w = wall(x, y, types::WEST);
+
+                // Process if the cell has a north wall.
+                if (n) {
+                    if (y != firstrow) {
+                                        wi[ranker(  x2,   y2, types::NORTH)] = true;
+                                        wi[ranker(x2+1,   y2, types::NORTH)] = true;
+                    }
+                    if (!w)             wi[ranker(  x2, y2+1, types::NORTH)] = true;
+                    if (!e)             wi[ranker(x2+1, y2+1, types::NORTH)] = true;
+                    if (!(e || s || w)) wi[ranker(  x2, y2+1, types::EAST)]  = true;
+                }
+
+                // Process if the cell has a south wall.
+                if (s) {
+                    if (y != lastrow) {
+                                        wi[ranker(  x2, y2+1, types::SOUTH)] = true;
+                                        wi[ranker(x2+1, y2+1, types::SOUTH)] = true;
+                    }
+                    if (!w)             wi[ranker(  x2,   y2, types::SOUTH)] = true;
+                    if (!e)             wi[ranker(x2+1,   y2, types::SOUTH)] = true;
+                    if (!(n || e || w)) wi[ranker(  x2,   y2, types::EAST)]  = true;
+                }
+
+                // Process if the cell has a west wall.
+                if (w) {
+                    if (x != firstcol) {
+                                        wi[ranker(  x2,   y2, types::WEST)]  = true;
+                                        wi[ranker(  x2, y2+1, types::WEST)]  = true;
+                    }
+                    if (!n)             wi[ranker(x2+1,   y2, types::WEST)]  = true;
+                    if (!s)             wi[ranker(x2+1, y2+1, types::WEST)]  = true;
+                    if (!(n || e || s)) wi[ranker(x2+1,   y2, types::SOUTH)] = true;
+                }
+
+                // Process if the cell has an east wall.
+                // Process if the cell has a west wall.
+                if (e) {
+                    if (x != lastcol) {
+                                        wi[ranker(x2+1,   y2, types::EAST)]  = true;
+                                        wi[ranker(x2+1, y2+1, types::EAST)]  = true;
+                    }
+                    if (!n)             wi[ranker(  x2,   y2, types::EAST)]  = true;
+                    if (!s)             wi[ranker(  x2, y2+1, types::EAST)]  = true;
+                    if (!(n || s || w)) wi[ranker(  x2,   y2, types::SOUTH)] = true;
+                }
+            }
+        }
+
+        // If the original maze had an entrance, on a border, we make this the entrance + exit.
+        types::PossibleStartCell uStart = {};
+
+        if (startCell.has_value()) {
+            auto [sx, sy] = startCell.value();
+            if (sx == 0 || sx == lastcol) {
+                wi[ranker(sx, sy, types::EAST)]  = true;
+                uStart = { types::cell(sx, sy) };
+            }
+            else if (sy == 0 || sy == lastrow) {
+                wi[ranker(sx, sy, types::SOUTH)] = true;
+                uStart = { types::cell(sx, sy) };
+            }
+        }
+
+        return Maze(uw, uh, uStart, types::CellCollection(), wi);
+    }
+
     types::WallID Maze::rankPosition(const types::Position &p) const {
         const auto &cell = p.first;
         const auto x = cell.first;

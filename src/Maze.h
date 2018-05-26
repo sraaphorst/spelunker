@@ -110,6 +110,30 @@ namespace spelunker::maze {
         /// Apply a symmetry to this maze to get a new one.
         const Maze applySymmetry(types::Symmetry s) const;
 
+        /// Make a perfect maze into a 2w x 2h unicursal maze (aka labyrinth).
+        /**
+         * Make a perfect maze of dimension w x h into a unicursal maze (aka labyrinth) of
+         * dimension 2w x 2h.
+         *
+         * This is done by taking every call and splitting it into a 2 x 2 set of cells
+         * where we bisect the cell, but with dead ends, leave one cell open at the end
+         * of the dead end to allow traversal through and around it.
+         *
+         * Note: The entrance of the original maze, if it exists and is against a border, is
+         * used to determine the entrance point / exit point of this maze.
+         * Otherwise, this maze is just one huge loop.
+         *
+         * Note: Exit points of the original maze are ignored in the construction of this maze,
+         * as by the construction to "unicursalize" this maze, the entrance and exit must be
+         * next to one another.
+         *
+         * Idea for this algorithm inspired by:
+         * https://github.com/jamis/theseus/blob/eff25e2d02da00bb9515690b83008ec05e852317/lib/theseus/orthogonal_maze.rb#L108
+         * 
+         * @return a unicursal modification of this maze
+         */
+        const Maze makeUnicursal() const;
+
     private:
         /// A function that maps positions to wall ranks.
         /**

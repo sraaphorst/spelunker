@@ -1,5 +1,5 @@
 /**
- * testthick.cpp
+ * test_thickify.cpp
  *
  * By Sebastian Raaphorst, 2018.
  */
