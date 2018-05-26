@@ -2,7 +2,7 @@
 
 A C++17 library for generating / solving mazes. (It could be easily adapted for C++14, but this is a learning exercise for me in C++11, 14, and 17.)
 
-Right now, the library can generate mazes using the following 12 algorithms:
+Right now, the library can generate perfect mazes using the following 12 algorithms:
 
 1. Aldous-Broder with random walks.
 
@@ -27,6 +27,8 @@ Right now, the library can generate mazes using the following 12 algorithms:
 11. Sidewinder algorithm.
 
 12. Wilson's algorithm.
+
+Furthermore, mazes can be used to construct _unicursal mazes_ - more commonly known as labyrinths - which are mazes without branches, i.e. one long, twisting passageway.
 
 Previously, the library only supported mazes with walls as cell dividers instead of walls as actual cells. Now I have implemented `ThickMaze`, a class where each cell in the maze is either `FLOOR` or `WALL`. This will allow implementation of additional algorithms, such as cellular automata algorithms.
 
