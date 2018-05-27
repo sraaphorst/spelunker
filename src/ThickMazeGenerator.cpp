@@ -9,5 +9,5 @@
 
 namespace spelunker::thickmaze {
     ThickMazeGenerator::ThickMazeGenerator(int w, int h)
-        width(w), height(h) {}
+        : width(w), height(h) {}
 }

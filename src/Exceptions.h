@@ -24,12 +24,11 @@ namespace spelunker::shared {
     /// Thrown if a cell out of bounds of the maze is accessed.
     class OutOfBoundsCell : public Exception {
     public:
-        OutOfBoundsCell(const spelunker::maze::types::Cell &c) : Exception(msg(c)) {}
-        OutOfBoundsCell(const int x, const int y) : OutOfBoundsCell(maze::types::cell(x, y)) {}
+        OutOfBoundsCell(const types::Cell &c) : Exception(msg(c)) {}
 
     private:
-        static std::string msg(const spelunker::maze::types::Cell &c) {
-            return "Cell " + spelunker::typeclasses::Show<spelunker::maze::types::Cell>::show(c) + " is out of bounds.";
+        static std::string msg(const types::Cell &c) {
+            return "Cell " + spelunker::typeclasses::Show<types::Cell>::show(c) + " is out of bounds.";
         }
     };
 
@@ -53,13 +52,13 @@ namespace spelunker::shared {
      */
     class IllegalGroupOperation : public Exception {
     public:
-        IllegalGroupOperation(const int width, const int height, const spelunker::maze::types::Symmetry s)
+        IllegalGroupOperation(const int width, const int height, const types::Symmetry s)
                 : Exception(msg(width, height, s)) {}
 
     private:
-        static std::string msg(const int width, const int height, const spelunker::maze::types::Symmetry s) {
+        static std::string msg(const int width, const int height, const types::Symmetry s) {
             return "width " + std::to_string(width) + " != " + std::to_string(height)
-                   + ", so cannot perform symmetry " + spelunker::maze::types::symmetryName(s);
+                   + ", so cannot perform symmetry " + types::symmetryName(s);
         }
     };
 }

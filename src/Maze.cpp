@@ -8,6 +8,7 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <set>
 #include <tuple>
 #include <vector>
 
@@ -30,23 +31,23 @@ namespace spelunker::maze {
 
     Maze::Maze(const int w,
                const int h,
-               const spelunker::maze::types::WallIncidence &walls)
+               const types::WallIncidence &walls)
             : Maze(w, h, {}, types::CellCollection(), walls) {}
 
     const Maze Maze::withStartingCell(const types::PossibleStartCell &s) const {
         return Maze(width, height, s, endingCells, wallIncidence);
     }
 
-    const Maze Maze::withEndingCells(const spelunker::maze::types::CellCollection &ends) const {
+    const Maze Maze::withEndingCells(const types::CellCollection &ends) const {
         return Maze(width, height, startCell, ends, wallIncidence);
     }
 
-    bool Maze::wall(const spelunker::maze::types::Position &p) const noexcept {
+    bool Maze::wall(const types::Position &p) const noexcept {
         const int rk = rankPosition(p);
         return rk == -1 || wallIncidence[rk];
     }
 
-    bool Maze::wall(int x, int y, spelunker::maze::types::Direction d) const noexcept {
+    bool Maze::wall(int x, int y, types::Direction d) const noexcept {
         const int rk = rankPosition(x, y, d);
         return rk == -1 || wallIncidence[rk];
     }
@@ -257,7 +258,7 @@ namespace spelunker::maze {
         return rankPositionS(width, height, x, y, d);
     };
 
-    types::WallID Maze::rankPosition(int x, int y, spelunker::maze::types::Direction d) const {
+    types::WallID Maze::rankPosition(int x, int y, types::Direction d) const {
         return rankPositionS(width, height, x, y, d);
     }
 

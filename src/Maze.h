@@ -204,7 +204,7 @@ namespace spelunker::typeclasses {
             const int twidth  = 2 * mwidth - 1;
             const int theight = 2 * mheight - 1;
 
-            thickmaze::types::CellContents contents;
+            types::CellContents contents;
             contents.resize(twidth);
             for (auto i = 0; i < twidth; ++i)
                 contents[i].resize(theight);
@@ -216,23 +216,23 @@ namespace spelunker::typeclasses {
             for (auto x = 0; x < mwidth; ++x)
                 for (auto y = 0; y < mheight; ++y) {
                     // Ignore the last row of maze when adding southern walls.
-                    if (y < mheight-1 && m.wall(x, y, maze::types::SOUTH)) {
+                    if (y < mheight-1 && m.wall(x, y, types::SOUTH)) {
                         // Find the central position in the thick maze.
                         const int cx = 2 * x;
                         const int cy = 2 * y + 1;
-                        if (cx > 0) contents[cx-1][cy] = thickmaze::types::WALL;
-                        contents[cx][cy] = thickmaze::types::WALL;
-                        if (cx < twidth-1) contents[cx+1][cy] = thickmaze::types::WALL;
+                        if (cx > 0) contents[cx-1][cy] = types::WALL;
+                        contents[cx][cy] = types::WALL;
+                        if (cx < twidth-1) contents[cx+1][cy] = types::WALL;
                     }
 
                     // Ignore the last row of maze when adding eastern walls.
-                    if (x < mwidth - 1 && m.wall(x, y, maze::types::EAST)) {
+                    if (x < mwidth - 1 && m.wall(x, y, types::EAST)) {
                         // Find the central position in the thick maze.
                         const int cx = 2 * x + 1;
                         const int cy = 2 * y;
-                        if (cy > 0) contents[cx][cy-1] = thickmaze::types::WALL;
-                        contents[cx][cy] = thickmaze::types::WALL;
-                        if (cy < theight-1) contents[cx][cy+1] = thickmaze::types::WALL;
+                        if (cy > 0) contents[cx][cy-1] = types::WALL;
+                        contents[cx][cy] = types::WALL;
+                        if (cy < theight-1) contents[cx][cy+1] = types::WALL;
                     }
                 }
             return thickmaze::ThickMaze(twidth, theight, contents);

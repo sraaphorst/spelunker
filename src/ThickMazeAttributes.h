@@ -9,9 +9,12 @@
 #ifndef SPELUNKER_THICKMAZEATTRIBUTES_H
 #define SPELUNKER_THICKMAZEATTRIBUTES_H
 
+#include <tuple>
 #include <vector>
 
-namespace spelunker::thickmaze::types {
+#include "CommonMazeAttributes.h"
+
+namespace spelunker::types {
     /// The different types of contents that a cell may contain.
     enum CellType {
         FLOOR = 0,

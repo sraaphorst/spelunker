@@ -19,7 +19,7 @@ namespace spelunker::maze {
 
     StringMazeRenderer::StringMazeRenderer(std::ostream &o) : out(o) {}
 
-    bool StringMazeRenderer::wall(const Maze &m, int x, int y, spelunker::maze::types::Direction d) {
+    bool StringMazeRenderer::wall(const Maze &m, int x, int y, types::Direction d) {
         if (x < 0 || x >= m.getWidth())  return false;
         if (y < 0 || y >= m.getHeight()) return false;
         return m.wall(x, y, d);

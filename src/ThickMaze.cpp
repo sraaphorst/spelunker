@@ -16,7 +16,7 @@ namespace spelunker::thickmaze {
 
     const types::CellType ThickMaze::cell(int x, int y) const {
         if (x < 0 || x >= width || y < 0 || y >= height)
-            throw shared::OutOfBoundsCell(x, y);
+            throw shared::OutOfBoundsCell(types::cell(x, y));
         return contents[x][y];
     }
 }
