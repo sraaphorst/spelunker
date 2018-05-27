@@ -52,7 +52,7 @@ This means that any algorithm used to generate `Maze`s can also be used to gener
 
 # Requirements
 
-- A C++17 capable compiler (unless you want to go through, nest the namespaces, and remove the variable binding, e.g. `auto [a,b] = <some pair expression>`);
+- A C++17 capable compiler (unless you want to go through, nest the namespaces, and remove the variable binding, e.g. `auto [a,b] = <some pair expression>`; however, I suggest you upgrade your GCC to the 7.x branch instead.
 
 - Boost 1.31 or higher (for `disjoint_sets.hpp`); and
 
