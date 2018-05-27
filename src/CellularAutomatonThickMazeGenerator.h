@@ -79,16 +79,18 @@ namespace spelunker::thickmaze {
          *                   then it survives.
          * 3. Otherwise, the cell dies.
          *
-         * Mazecetric has rule B3/S1234 and seems to do better when the mazes are reversed
-         * Maze       has rule B3/S12345 and seems to do better when the mazes are NOT reversed
-         * Vote45     has rule B4678/S35678 and is atrocious, seeming to fill up the space entirely
-         * Vote       has rule B5678/S45678 and generates cavernous, toroidal mazes
+         * MAZECETRIC has rule B3/S1234 and seems to do better when the mazes are reversed
+         * MAZE       has rule B3/S12345 and seems to do better when the mazes are NOT reversed
+         * VOTE45     has rule B4678/S35678 and is atrocious, seeming to fill up the space entirely
+         * VOTE       has rule B5678/S45678 and generates cavernous, toroidal mazes
+         * B2S123     has rule B2/S123 and generates actually quite decent mazes.
          */
         enum Algorithm {
             MAZECETRIC,
             MAZE,
             VOTE45,
             VOTE,
+            B2S123,
         };
 
         /// Convert one of the Algorithms into a DetermineBehaviour.
@@ -112,20 +114,20 @@ namespace spelunker::thickmaze {
          *    The default is using the Moore neighbourhood.
          *
          * determineBehaviour determines the behaviour of each cell with regards to the previous generation.
-         *    The default is MAZE.
+         *    The default is B2S123.
          *
          * The neighbourhoodCounter setting can be manually configured or configured from one of the NeighbourhoodType
          * values, MOORE or VON_NEUMANN_EXTENDED, by using the static fromNeighbourhoodType algorithm.
          *
          * The determineBehaviour setting can be manually configured or configured from one of the Algorithm values,
-         * MAZECETRIC, MAZE, VOTE45, or VOTE by using the static fromAlgorithm method.
+         * MAZECETRIC, MAZE, VOTE45, VOTE, or B2S123 by using the static fromAlgorithm method.
          */
         struct settings {
             double probability = 0.5;
             int numGenerations = 10000;
             int stabilitySize = 5;
             NeighbourCounter neighbourCounter = fromNeighbourhoodType(MOORE);
-            DetermineBehaviour determineBehaviour = fromAlgorithm(MAZE);
+            DetermineBehaviour determineBehaviour = fromAlgorithm(B2S123);
         };
 
         CellularAutomatonThickMazeGenerator(int w, int h, settings s);
