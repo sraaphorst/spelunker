@@ -18,29 +18,16 @@ namespace spelunker::maze {
 
     class RecursiveDivisionMazeGenerator final : public MazeGenerator {
     public:
-        RecursiveDivisionMazeGenerator(int w, int h, double lb, double ub, double p, bool alt);
         RecursiveDivisionMazeGenerator(int w, int h);
         ~RecursiveDivisionMazeGenerator() = default;
 
-        const Maze generate();
+        const Maze generate() override;
     private:
         /// A rectangle struct we use to represent sections of the maze to complete, to avoid recursion.
         struct rectangle {
             const int x, y, w, h;
             rectangle(int px, int py, int pw, int ph) : x(px), y(py), w(pw), h(ph) {}
         };
-
-        /// A lower bound on the sizes of the bisections.
-        const double lowerBound;
-
-        /// An upper bound on the sizes of the bisections.
-        const double upperBound;
-
-        /// The probability of choosing a vertical bisection versus a horizontal one.
-        const double verticalProbability;
-
-        /// A flag to force the algorithm to alternate between vertical and horizontal bisections. Overrides verticalProbability.
-        const bool alternate;
     };
 }
 
