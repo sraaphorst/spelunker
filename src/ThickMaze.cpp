@@ -16,7 +16,15 @@ namespace spelunker::thickmaze {
 
     const types::CellType ThickMaze::cell(int x, int y) const {
         if (x < 0 || x >= width || y < 0 || y >= height)
-            throw shared::OutOfBoundsCell(x, y);
+            throw shared::OutOfBoundsCell(types::cell(x, y));
         return contents[x][y];
+    }
+
+    const ThickMaze ThickMaze::reverse() const {
+        auto invContents = types::createEmptyThickCellContents(width, height);
+        for (auto y=0; y < height; ++y)
+            for (auto x=0; x < width; ++x)
+                invContents[x][y] = contents[x][y] == types::FLOOR ? types::WALL : types::FLOOR;
+        return ThickMaze(width, height, invContents);
     }
 }

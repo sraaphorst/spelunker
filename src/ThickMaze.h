@@ -46,6 +46,13 @@ namespace spelunker::thickmaze {
 
         const types::CellType cell(int x, int y) const;
 
+        /**
+         * This algorithm swaps walls and floors, not including the border wall. It is useful for cellular
+         * automaton algorithms, which are sometimes more wall-connected than floor-connected.
+         * @return the reverse of the original maze, with walls and floors swapper.
+         */
+        const ThickMaze reverse() const;
+
     private:
         const int width;
         const int height;

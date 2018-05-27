@@ -14,6 +14,8 @@ set(PUBLIC_HEADER_FILES
         AldousBroderMazeGenerator.h
         BFSMazeGenerator.h
         BinaryTreeMazeGenerator.h
+        CellularAutomatonThickMazeGenerator.h
+        CommonMazeAttributes.h
         DefaultRNG.h
         DFSMazeGenerator.h
         EllerMazeGenerator.h
@@ -36,6 +38,7 @@ set(PUBLIC_HEADER_FILES
         StringThickMazeRenderer.h
         ThickMaze.h
         ThickMazeAttributes.h
+        ThickMazeGenerator.h
         ThickMazeRenderer.h
         WilsonMazeGenerator.h
         )
@@ -44,6 +47,7 @@ set(SOURCE_FILES
         AldousBroderMazeGenerator.cpp
         BFSMazeGenerator.cpp
         BinaryTreeMazeGenerator.cpp
+        CellularAutomatonThickMazeGenerator.cpp
         DefaultRNG.cpp
         DFSMazeGenerator.cpp
         DisjointSetHelper.h
@@ -62,6 +66,7 @@ set(SOURCE_FILES
         StringMazeRenderer.cpp
         StringThickMazeRenderer.cpp
         ThickMaze.cpp
+        ThickMazeGenerator.cpp
         WilsonMazeGenerator.cpp
         )
 
