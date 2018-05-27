@@ -50,6 +50,10 @@ Spelunker also defines and contains some typeclasses:
 
 This means that any algorithm used to generate `Maze`s can also be used to generate `ThickMaze`s.
 
+# What will Likely Not be Offered
+
+Generation for non-perfect maze algorithms (apart from cellular automata), braid mazes, etc.
+
 # Requirements
 
 - A C++17 capable compiler (unless you want to go through, nest the namespaces, and remove the variable binding, e.g. `auto [a,b] = <some pair expression>`; however, I suggest you upgrade your GCC to the 7.x branch instead.
