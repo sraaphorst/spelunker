@@ -124,6 +124,14 @@ namespace spelunker::thickmaze {
                     if (num >= 5 && num <= 8 && ct == types::FLOOR) return BORN;
                     return DIE;
                 };
+            case B2S123:
+                // B2/S123
+                // Recommended on: https://english.rejbrand.se/rejbrand/article.asp?ItemIndex=421
+                return [](const int num, const types::CellType ct) {
+                    if (num >= 1 && num <= 3 && ct == types::WALL) return SURVIVE;
+                    if (num == 2 && ct == types::FLOOR) return BORN;
+                    return DIE;
+                };
         }
     }
 
