@@ -31,6 +31,9 @@ namespace spelunker::thickmaze {
      * usually are not, and may contain large, open spaces; however, they are an interesting maze
      * generation technique in and of their own right, and could theoretically be used as starter
      * seeds for other algorithm.
+     *
+     * Note that these algorithms seem to do better if the resultant mazes are reversed via a call
+     * to @see{ThickMaze#reverse}.
      */
     class CellularAutomatonThickMazeGenerator final : ThickMazeGenerator {
     public:
@@ -108,7 +111,7 @@ namespace spelunker::thickmaze {
          * MAZECETRIC, MAZE, VOTE45, or VOTE by using the static fromAlgorithm method.
          */
         struct settings {
-            double probability = 0.5;
+            double probability = 0.1;
             int numGenerations = 10000;
             NeighbourCounter neighbourCounter = fromNeighbourhoodType(MOORE);
             DetermineBehaviour determineBehaviour = fromAlgorithm(MAZE);

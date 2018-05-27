@@ -22,15 +22,6 @@ namespace spelunker::thickmaze {
     protected:
         const int width;
         const int height;
-
-        /// Create an empty set of contents (all FLOOR).
-        inline types::CellContents createEmptyContents() {
-            types::CellContents contents;
-            contents.resize(width);
-            for (auto i=0; i < width; ++i)
-                contents[i].resize(height);
-            return contents;
-        }
     };
 };
 

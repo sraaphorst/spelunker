@@ -133,7 +133,7 @@ namespace spelunker::thickmaze {
 
     const ThickMaze CellularAutomatonThickMazeGenerator::generate() {
         // Create and initialize the cell contents.
-        types::CellContents contents = createEmptyContents();
+        auto contents = types::createEmptyThickCellContents(width, height);
 
         // Create the random initialization.
         for (auto y = 0; y < height; ++y)
@@ -144,7 +144,7 @@ namespace spelunker::thickmaze {
         // Run the algorithm for the desired number of iterations.
         for (auto i = 0; i < st.numGenerations; ++i) {
             // Create a new contents to initialize.
-            types::CellContents newContents = createEmptyContents();
+            auto newContents = types::createEmptyThickCellContents(width, height);
 
             // Iterate over each cell and determine its state.
             for (auto y = 0; y < height; ++y)
