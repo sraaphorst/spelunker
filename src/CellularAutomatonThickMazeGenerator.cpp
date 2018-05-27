@@ -4,15 +4,14 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+#include <list>
+
 #include "CommonMazeAttributes.h"
 #include "RNG.h"
 #include "ThickMaze.h"
 #include "ThickMazeAttributes.h"
 #include "ThickMazeGenerator.h"
 #include "CellularAutomatonThickMazeGenerator.h"
-
-#include <iostream>
-using namespace std;
 
 namespace spelunker::thickmaze {
     static int wrap(int max, int x) {
@@ -135,31 +134,49 @@ namespace spelunker::thickmaze {
         // Create and initialize the cell contents.
         auto contents = types::createEmptyThickCellContents(width, height);
 
+        // The back-check chart.
+        std::list<types::CellContents> prevs;
+
         // Create the random initialization.
         for (auto y = 0; y < height; ++y)
             for (auto x = 0; x < width; ++x)
                 if (math::RNG::randomProbability() < st.probability)
                     contents[x][y] = types::WALL;
+        prevs.emplace_back(contents);
 
-        // Run the algorithm for the desired number of iterations.
-        for (auto i = 0; i < st.numGenerations; ++i) {
+        // Run the algorithm for the desired number of iterations unless stability is first achieved.
+        auto inconsistent = true;
+
+        for (auto i = 0; i < st.numGenerations && inconsistent; ++i) {
             // Create a new contents to initialize.
             auto newContents = types::createEmptyThickCellContents(width, height);
+
+            // Get the old contents from which to work.
+            const auto &oldContents = prevs.back();
 
             // Iterate over each cell and determine its state.
             for (auto y = 0; y < height; ++y)
                 for (auto x = 0; x < width; ++x) {
                     // Count the neighbours for this cell.
-                    int numNbrs = st.neighbourCounter(types::cell(x, y), contents);
+                    int numNbrs = st.neighbourCounter(types::cell(x, y), oldContents);
 
                     // Determine the behaviour of this cell.
                     // As newContents was initialized to all floor, we can ignore death.
-                    Behaviour b = st.determineBehaviour(numNbrs, contents[x][y]);
-                    if (b == SURVIVE) newContents[x][y] = contents[x][y];
+                    Behaviour b = st.determineBehaviour(numNbrs, oldContents[x][y]);
+                    if (b == SURVIVE) newContents[x][y] = oldContents[x][y];
                     else if (b == BORN) newContents[x][y] = types::WALL;
                 }
 
+            for (auto &prev : prevs) {
+                if (newContents == prev) {
+                    inconsistent = false;
+                    break;
+                }
+            }
             contents = newContents;
+            prevs.emplace_back(newContents);
+            while (prevs.size() > st.stabilitySize)
+                prevs.pop_front();
         }
 
         return ThickMaze(width, height, contents);

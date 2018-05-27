@@ -32,7 +32,10 @@ namespace spelunker::thickmaze {
      * generation technique in and of their own right, and could theoretically be used as starter
      * seeds for other algorithm.
      *
-     * Note that these algorithms seem to do better if the resultant mazes are reversed via a call
+     * They tend to achieve stability very quickly, i.e. either reach a constant state that does not
+     * change, or alternate between a small number of states.
+     *
+     * Note that these algorithms sometimes do better if the resultant mazes are reversed via a call
      * to @see{ThickMaze#reverse}.
      */
     class CellularAutomatonThickMazeGenerator final : ThickMazeGenerator {
@@ -73,10 +76,10 @@ namespace spelunker::thickmaze {
          *                   then it survives.
          * 3. Otherwise, the cell dies.
          *
-         * Mazecetric has rule B3/S1234
-         * Maze       has rule B3/S12345
-         * Vote45     has rule B4678/S35678
-         * Vote       has rule B5678/S45678
+         * Mazecetric has rule B3/S1234 and seems to do better when the mazes are reversed
+         * Maze       has rule B3/S12345 and seems to do better when the mazes are NOT reversed
+         * Vote45     has rule B4678/S35678 and is atrocious, seeming to fill up the space entirely
+         * Vote       has rule B5678/S45678 and generates cavernous, toroidal mazes
          */
         enum Algorithm {
             MAZECETRIC,
@@ -95,8 +98,12 @@ namespace spelunker::thickmaze {
          * probability indicates the probability, during random seeding, that a cell should be marked as a wall.
          *    The default value is 0.5.
          *
-         * numGenerations indicates the number of generations after random seeding that the automaton should produce.
-         *    The default value is 10.
+         * numGenerations indicates the maximum number of generations after random seeding that the automaton should
+         *    produce. The default value is 10000. This will seldom be achieved.
+         *
+         *  stabilitySize is the number of previous generations we store in memory to which co compare the current
+         *     generation. If the current generation is equivalent to one of the stored generations, we terminate.
+         *     The default value is 5.
          *
          * neighbourhoodCounter determines how to count the surrounding neighbours of a cell.
          *    The default is using the Moore neighbourhood.
@@ -111,8 +118,9 @@ namespace spelunker::thickmaze {
          * MAZECETRIC, MAZE, VOTE45, or VOTE by using the static fromAlgorithm method.
          */
         struct settings {
-            double probability = 0.1;
+            double probability = 0.5;
             int numGenerations = 10000;
+            int stabilitySize = 5;
             NeighbourCounter neighbourCounter = fromNeighbourhoodType(MOORE);
             DetermineBehaviour determineBehaviour = fromAlgorithm(MAZE);
         };
