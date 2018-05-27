@@ -2,6 +2,8 @@
 
 A C++17 library for generating / solving mazes. (It could be easily adapted for C++14, but this is a learning exercise for me in C++11, 14, and 17.)
 
+# Maze Generation Algorithms
+
 Right now, the library can generate perfect mazes using the following 12 algorithms:
 
 1. Aldous-Broder with random walks.
@@ -28,9 +30,17 @@ Right now, the library can generate perfect mazes using the following 12 algorit
 
 12. Wilson's algorithm.
 
+# Unicursal Mazes / Labyrinths
+
 Furthermore, mazes can be used to construct _unicursal mazes_ - more commonly known as labyrinths - which are mazes without branches, i.e. one long, twisting passageway.
 
-Previously, the library only supported mazes with walls as cell dividers instead of walls as actual cells. Now I have implemented `ThickMaze`, a class where each cell in the maze is either `FLOOR` or `WALL`. This will allow implementation of additional algorithms, such as cellular automata algorithms.
+# "Thick" Mazes and Generation Algorithms
+
+Previously, the library only supported mazes with walls as cell dividers instead of walls as actual cells. Now I have implemented `ThickMaze`, a class where each cell in the maze is either `FLOOR` or `WALL`. This will allow some algorithmic implementations that are unavailable to mazes where walls are cell dividers. Most notably:
+
+1. Cellular automata algorithms: these are offered with Moore and von Neumann extended neighbourhoods, and Maze / Mazecetric / Vote45 / Vote behavioural choosers. These are algorithms that generate a random grid of floor and walls, and then for a time t, use certain rules based on the contents of t-1 to determine the layout. They are known to converge to relatively stable configurations quite quickly, but seldom produce connected (and thus, not perfect) mazes. They are still interesting to study. The implementation allows users to supply their own neighbourhood counting functions and behavioural choosers, as well as max # generations, # generations to store to check for convergence, and probability that a cell is a wall during initialization.
+
+# Typeclasses
 
 Spelunker also defines and contains some typeclasses:
 
@@ -46,11 +56,11 @@ This means that any algorithm used to generate `Maze`s can also be used to gener
 
 - Boost 1.31 or higher (for `disjoint_sets.hpp`); and
 
-- CMake 3.10 or higher.
+- CMake 3.0 or higher.
 
 # Further work
 
-1. Include more maze generation algorithms.
+1. ~~Include more maze generation algorithms.~~ I'm not sure there are any more well-known algorithms. Suggestions are welcome.
 
 2. Add the ability for listeners to subcribe to `MazeGenerator` instances to receive events when a maze is extended. This will allow, say, drawing of a maze as it is being generated to show how the algorithms work.
 
