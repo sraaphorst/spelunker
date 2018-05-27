@@ -19,6 +19,19 @@
 namespace spelunker::thickmaze {
     class ThickMaze;
 
+    /**
+     * Cellular automata populate a grid randomly via a probability distribution, and then cells
+     * go through a number of generations starting at time t=0, wherein the configuration at time
+     * t=n deterministically generates the configuration at time t=n+1 according to a set of rules,
+     * wherein the number of neighbours (for some defined type of neighbourhood) determines the
+     * transition for each cell. Usually, a fairly steady state of stability is reached, perhaps
+     * with some alternating back and forth between a small number of states.
+     *
+     * There is no guarantee that these mazes are perfect, or even connected: in fact, they
+     * usually are not, and may contain large, open spaces; however, they are an interesting maze
+     * generation technique in and of their own right, and could theoretically be used as starter
+     * seeds for other algorithm.
+     */
     class CellularAutomatonThickMazeGenerator final : ThickMazeGenerator {
     public:
         /// A function type that determines the number of living neighbours.
@@ -32,7 +45,7 @@ namespace spelunker::thickmaze {
          */
         enum NeighbourhoodType {
             MOORE,
-            VON_NEUMANN,
+            VON_NEUMANN_EXTENDED,
         };
 
         /// Possible outcomes for a cell at each round depending on the neighbours in its neighbourhood.
@@ -43,7 +56,7 @@ namespace spelunker::thickmaze {
         };
 
         /// A function type that determines the Behaviour of a cell given the number of living neighbours in its neighbourhood.
-        using DetermineBehaviour = std::function<Behaviour(const int)>;
+        using DetermineBehaviour = std::function<Behaviour(const int, const types::CellType)>;
 
         /// Convert one of the NeighbourhoodTypes into a NeighbourCounter.
         static NeighbourCounter fromNeighbourhoodType(NeighbourhoodType n);
@@ -51,16 +64,22 @@ namespace spelunker::thickmaze {
         /**
          * Pre-existing algorithms determining behaviour of a cell.
          * They are to be interpreted as:
-         * 1. Bb1b2b3... = If there are b1, b2, b3, etc. cells alive in the neighbourhood of a cell that does no
+         * 1. Bb1b2b3... = If there are b1, b2, b3, etc. cells alive in the neighbourhood of a cell that does not
          *                   exit, then it is born.
          * 2. Ss1s2s3... = If there are s1, s2, s3, etc. cells alive in the neighbourhood of a cell that exists,
          *                   then it survives.
+         * 3. Otherwise, the cell dies.
+         *
          * Mazecetric has rule B3/S1234
-         * Maze has rule B3/S12345
+         * Maze       has rule B3/S12345
+         * Vote45     has rule B4678/S35678
+         * Vote       has rule B5678/S45678
          */
         enum Algorithm {
             MAZECETRIC,
             MAZE,
+            VOTE45,
+            VOTE,
         };
 
         /// Convert one of the Algorithms into a DetermineBehaviour.
@@ -80,19 +99,19 @@ namespace spelunker::thickmaze {
          *    The default is using the Moore neighbourhood.
          *
          * determineBehaviour determines the behaviour of each cell with regards to the previous generation.
-         *    The default is MAZECETRIC.
+         *    The default is MAZE.
          *
          * The neighbourhoodCounter setting can be manually configured or configured from one of the NeighbourhoodType
-         * values, MOORE or VON_NEUMANN, by using the static fromNeighbourhoodType algorithm.
+         * values, MOORE or VON_NEUMANN_EXTENDED, by using the static fromNeighbourhoodType algorithm.
          *
          * The determineBehaviour setting can be manually configured or configured from one of the Algorithm values,
-         * MAZECETRIC or MAZE, by using the static fromAlgorithm method.
+         * MAZECETRIC, MAZE, VOTE45, or VOTE by using the static fromAlgorithm method.
          */
         struct settings {
             double probability = 0.5;
-            int numGenerations = 1000;
+            int numGenerations = 10000;
             NeighbourCounter neighbourCounter = fromNeighbourhoodType(MOORE);
-            DetermineBehaviour determineBehaviour = fromAlgorithm(MAZECETRIC);
+            DetermineBehaviour determineBehaviour = fromAlgorithm(MAZE);
         };
 
         CellularAutomatonThickMazeGenerator(int w, int h, settings s);

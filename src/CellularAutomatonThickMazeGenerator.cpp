@@ -11,35 +11,40 @@
 #include "ThickMazeGenerator.h"
 #include "CellularAutomatonThickMazeGenerator.h"
 
+#include <iostream>
+using namespace std;
+
 namespace spelunker::thickmaze {
+    static int wrap(int max, int x) {
+        if (x < 0) return max + x + 1;
+        if (x > max) return x % (max + 1);
+        else return x;
+
+    }
     static int moore(const types::Cell c, const types::CellContents &cs) {
         int alive = 0;
         const int maxRow = cs[0].size() - 1;
         const int maxCol = cs.size() - 1;
 
         auto[x, y] = c;
+        const int xm1 = wrap(maxCol, x-1);
+        const int xp1 = wrap(maxCol, x+1);
+        const int ym1 = wrap(maxRow, y-1);
+        const int yp1 = wrap(maxRow, y+1);
 
-        // Covers the entire west column. Assume border structure.
-        if (x > 0) {
-            if (y > 0 && cs[x - 1][y - 1] == types::WALL) ++alive;
-            if (y < maxRow && cs[x - 1][y + 1] == types::WALL) ++alive;
-            if (cs[x - 1][y] == types::WALL) ++alive;
-        } //else alive += 3;
+        // Covers the entire west column. Assume toroidal structure.
+        if (cs[xm1][ym1] == types::WALL) ++alive;
+        if (cs[xm1][y]   == types::WALL) ++alive;
+        if (cs[xm1][yp1] == types::WALL) ++alive;
 
-        // Covers the entire east column. Assume border wall.
-        if (x < maxCol) {
-            if (y > 0 && cs[x + 1][y - 1] == types::WALL) ++alive;
-            if (y < maxRow && cs[x + 1][y + 1] == types::WALL) ++alive;
-            if (cs[x + 1][y] == types::WALL) ++alive;
-        } //else alive += 3;
+        // Covers the entire east column. Assume toroidal structure.
+        if (cs[xp1][ym1] == types::WALL) ++alive;
+        if (cs[xp1][y]   == types::WALL) ++alive;
+        if (cs[xp1][yp1] == types::WALL) ++alive;
 
-        // Now cover the north and south cells. Assume border wall.
-        if (y > 0) {
-            if (cs[x][y - 1] == types::WALL) ++alive;
-        } //else alive += 1;
-        if (y < maxRow) {
-            if (cs[x][y + 1] == types::WALL) ++alive;
-        } //else alive += 1;
+        // Cover the north and south cells.
+        if (cs[x][ym1]   == types::WALL) ++alive;
+        if (cs[x][yp1]   == types::WALL) ++alive;
 
         return alive;
     }
@@ -50,22 +55,30 @@ namespace spelunker::thickmaze {
         const int maxCol = cs.size() - 1;
 
         auto[x, y] = c;
+        const int xm1 = wrap(maxCol, x-1);
+        const int xm2 = wrap(maxCol, x-2);
+        const int xp1 = wrap(maxCol, x+1);
+        const int xp2 = wrap(maxCol, x+2);
+        const int ym1 = wrap(maxRow, y-1);
+        const int ym2 = wrap(maxRow, y-2);
+        const int yp1 = wrap(maxRow, y+1);
+        const int yp2 = wrap(maxRow, y+2);
 
         // West segment.
-        if (x > 1 && cs[x - 2][y] == types::WALL) ++alive;
-        if (x == 0 || cs[x - 1][y] == types::WALL) ++alive;
+        if (cs[xm2][y] == types::WALL) ++alive;
+        if (cs[xm1][y] == types::WALL) ++alive;
 
-        // East segment.
-        if (x < maxCol - 1 && cs[x + 2][y] == types::WALL) ++alive;
-        if (x == maxCol || cs[x + 1][y] == types::WALL) ++alive;
+        // East segment
+        if (cs[xp1][y] == types::WALL) ++alive;
+        if (cs[xp2][y] == types::WALL) ++alive;
 
-        // North segment.
-        if (y > 1 && cs[2][y - 2] == types::WALL) ++alive;
-        if (y == 0 || cs[x][y - 1] == types::WALL) ++alive;
+        // North segment
+        if (cs[x][ym1] == types::WALL) ++alive;
+        if (cs[x][ym2] == types::WALL) ++alive;
 
-        // South segment.
-        if (y < maxRow - 1 && cs[x][y + 2] == types::WALL) ++alive;
-        if (y == maxRow || cs[x][y + 1] == types::WALL) ++alive;
+        // South segment
+        if (cs[x][yp1] == types::WALL) ++alive;
+        if (cs[x][yp2] == types::WALL) ++alive;
 
         return alive;
     }
@@ -74,7 +87,7 @@ namespace spelunker::thickmaze {
         switch (n) {
             case MOORE:
                 return &moore;
-            case VON_NEUMANN:
+            case VON_NEUMANN_EXTENDED:
                 return &vonNeumann;
         }
     }
@@ -83,18 +96,34 @@ namespace spelunker::thickmaze {
     CellularAutomatonThickMazeGenerator::DetermineBehaviour CellularAutomatonThickMazeGenerator::fromAlgorithm(Algorithm a) {
         switch (a) {
             case MAZECETRIC:
-                return [](const int num) {
-                    if (num >= 1 && num <= 4) return SURVIVE;
-                    else if (num == 3)
-                        return BORN;
-                    else return DIE;
+                // B3/S1234
+                return [](const int num, const types::CellType ct) {
+                    if (num >= 1 && num <= 4 && ct == types::WALL) return SURVIVE;
+                    if (num == 3 && ct == types::FLOOR) return BORN;
+                    return DIE;
                 };
             case MAZE:
-                return [](const int num) {
-                    if (num >= 1 && num <= 5) return SURVIVE;
-                    else if (num == 3)
-                        return BORN;
-                    else return DIE;
+                // B3/S12345
+                return [](const int num, const types::CellType ct) {
+                    if (num >= 1 && num <= 5 && ct == types::WALL) return SURVIVE;
+                    if (num == 3 && ct == types::FLOOR) return BORN;
+                    return DIE;
+                };
+            case VOTE45:
+                // B4678/S35678: This algorithm seems flawed, as it fills up.
+                // Recommended on: https://steamcommunity.com/app/357330/discussions/0/618459405722195374
+                return [](const int num, const types::CellType ct) {
+                    if ((num == 3 || (num >=5 && num <=8)) && ct == types::WALL) return SURVIVE;
+                    if (num == 4 || (num >= 6 && num <= 8) && ct == types::FLOOR) return BORN;
+                    return DIE;
+                };
+            case VOTE:
+                // B5678/S45678: This algorithm produces cavernous rooms.
+                // Recommended on: https://steamcommunity.com/app/357330/discussions/0/618459405722195374
+                return [](const int num, const types::CellType ct) {
+                    if (num >= 4 && num <= 8 && ct == types::WALL) return SURVIVE;
+                    if (num >= 5 && num <= 8 && ct == types::FLOOR) return BORN;
+                    return DIE;
                 };
         }
     }
@@ -125,7 +154,7 @@ namespace spelunker::thickmaze {
 
                     // Determine the behaviour of this cell.
                     // As newContents was initialized to all floor, we can ignore death.
-                    Behaviour b = st.determineBehaviour(numNbrs);
+                    Behaviour b = st.determineBehaviour(numNbrs, contents[x][y]);
                     if (b == SURVIVE) newContents[x][y] = contents[x][y];
                     else if (b == BORN) newContents[x][y] = types::WALL;
                 }
