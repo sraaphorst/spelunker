@@ -5,6 +5,9 @@
  *
  * A 2D cellular automaton with specified birth and survival patterns with a given
  * neighbourhood type.
+ *
+ * There is some interesting information here:
+ * https://english.rejbrand.se/rejbrand/article.asp?ItemIndex=421
  */
 
 #ifndef SPELUNKER_CELLULARAUTOMATONTHICKMAZEGENERATOR_H
