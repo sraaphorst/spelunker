@@ -3,7 +3,7 @@
 
 set (SPELUNKER_VERSION_MAJOR 0)
 set (SPELUNKER_VERSION_MINOR 1)
-set (SPELUNKER_VERSION_BUILD 0)
+set (SPELUNKER_VERSION_PATCH 0)
 
 configure_file (
     "SpelunkerConfig.h.in"
