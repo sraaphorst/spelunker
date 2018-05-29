@@ -14,7 +14,9 @@
 
 #include "CommonMazeAttributes.h"
 
-namespace spelunker::types {
+namespace spelunker::thickmaze {
+    using namespace spelunker::types;
+
     /// The different types of contents that a cell may contain.
     enum CellType {
         FLOOR = 0,
@@ -25,8 +27,8 @@ namespace spelunker::types {
     using CellContents = std::vector< std::vector< CellType > >;
 
     /// Create an empty set of contents (all FLOOR).
-    inline types::CellContents createEmptyThickCellContents(int width, int height) {
-        types::CellContents contents;
+    inline CellContents createEmptyThickCellContents(int width, int height) {
+        CellContents contents;
         contents.resize(width);
         for (auto i=0; i < width; ++i)
             contents[i].resize(height);

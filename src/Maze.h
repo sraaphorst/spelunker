@@ -66,7 +66,7 @@ namespace spelunker::maze {
              int h,
              const types::PossibleStartCell &s,
              const types::CellCollection &ends,
-             const types::WallIncidence &walls);
+             const WallIncidence &walls);
 
         /// Creates a maze bounded by width and height, but with no start / end positions.
         /**
@@ -77,9 +77,9 @@ namespace spelunker::maze {
          */
         Maze(int w,
              int h,
-             const types::WallIncidence &walls);
+             const WallIncidence &walls);
 
-        virtual ~Maze() = default;
+        ~Maze() = default;
 
         inline const int getWidth() const noexcept { return width; }
         inline const int getHeight() const noexcept { return height; }
@@ -88,13 +88,13 @@ namespace spelunker::maze {
         inline types::CellCollection getEndingCells() const noexcept { return endingCells; }
 
         /// Create a new maze with the specified starting cell.
-        const Maze withStartingCell(const types::PossibleStartCell &s) const;
+        const Maze withStartingCell(const PossibleStartCell &s) const;
 
         /// Create a new maze with the specified ending cells.
-        const Maze withEndingCells(const types::CellCollection &ends) const;
+        const Maze withEndingCells(const CellCollection &ends) const;
 
         /// For a given position, determine if there is a wall.
-        bool wall(const types::Position &p) const noexcept;
+        bool wall(const Position &p) const noexcept;
 
         /// For a given set of coordinates (x,y) and a direction, determine if there is a wall.
         bool wall(int x, int y, types::Direction d) const noexcept;
@@ -108,7 +108,7 @@ namespace spelunker::maze {
         }
 
         /// Apply a symmetry to this maze to get a new one.
-        const Maze applySymmetry(types::Symmetry s) const;
+        const Maze applySymmetry(Symmetry s) const;
 
         /// Make a perfect maze into a 2w x 2h unicursal maze (aka labyrinth).
         /**
@@ -145,13 +145,13 @@ namespace spelunker::maze {
          * @param d the direction
          * @return the rank of the wall at this position
          */
-        types::WallID rankPosition(const types::Position &p) const;
+        WallID rankPosition(const Position &p) const;
 
         /// A function that maps a cell (x,y) and direction to wall ranks.
-        types::WallID rankPosition(int x, int y, types::Direction d) const;
+        WallID rankPosition(int x, int y, Direction d) const;
 
         /// A static function used by rankPosition, separated out for testing.
-        static types::WallID rankPositionS(int w, int h, int x, int y, types::Direction d);
+        static WallID rankPositionS(int w, int h, int x, int y, Direction d);
 
         /// Check the start and end positions to make sure they appear in valid places.
         void checkCells() const;
@@ -160,7 +160,7 @@ namespace spelunker::maze {
          * Check a cell to make sure it appears in a valid place.
          * @param c the cell to check
          */
-        void checkCell(const types::Cell &c) const;
+        void checkCell(const Cell &c) const;
 
         /// Static auxiliary method to check to see if a cell is valid.
         static void checkCell(int w, int h, int x, int y);
@@ -168,9 +168,9 @@ namespace spelunker::maze {
         const int width;
         const int height;
         const int numWalls;
-        const types::PossibleStartCell startCell;
-        const types::CellCollection endingCells;
-        const types::WallIncidence wallIncidence;
+        const PossibleStartCell startCell;
+        const CellCollection endingCells;
+        const WallIncidence wallIncidence;
 
 #ifndef NDEBUG
     public:
@@ -204,7 +204,7 @@ namespace spelunker::typeclasses {
             const int twidth  = 2 * mwidth - 1;
             const int theight = 2 * mheight - 1;
 
-            auto contents = types::createEmptyThickCellContents(twidth, theight);
+            auto contents = thickmaze::createEmptyThickCellContents(twidth, theight);
 
             // Iterate over the walls of the maze and add them to the thick maze, focusing
             // on the east and the south walls of maze.
@@ -213,23 +213,23 @@ namespace spelunker::typeclasses {
             for (auto x = 0; x < mwidth; ++x)
                 for (auto y = 0; y < mheight; ++y) {
                     // Ignore the last row of maze when adding southern walls.
-                    if (y < mheight-1 && m.wall(x, y, types::SOUTH)) {
+                    if (y < mheight-1 && m.wall(x, y, SOUTH)) {
                         // Find the central position in the thick maze.
                         const int cx = 2 * x;
                         const int cy = 2 * y + 1;
-                        if (cx > 0) contents[cx-1][cy] = types::WALL;
-                        contents[cx][cy] = types::WALL;
-                        if (cx < twidth-1) contents[cx+1][cy] = types::WALL;
+                        if (cx > 0) contents[cx-1][cy] = thickmaze::WALL;
+                        contents[cx][cy] = thickmaze::WALL;
+                        if (cx < twidth-1) contents[cx+1][cy] = thickmaze::WALL;
                     }
 
                     // Ignore the last row of maze when adding eastern walls.
-                    if (x < mwidth - 1 && m.wall(x, y, types::EAST)) {
+                    if (x < mwidth - 1 && m.wall(x, y, EAST)) {
                         // Find the central position in the thick maze.
                         const int cx = 2 * x + 1;
                         const int cy = 2 * y;
-                        if (cy > 0) contents[cx][cy-1] = types::WALL;
-                        contents[cx][cy] = types::WALL;
-                        if (cy < theight-1) contents[cx][cy+1] = types::WALL;
+                        if (cy > 0) contents[cx][cy-1] = thickmaze::WALL;
+                        contents[cx][cy] = thickmaze::WALL;
+                        if (cy < theight-1) contents[cx][cy+1] = thickmaze::WALL;
                     }
                 }
             return thickmaze::ThickMaze(twidth, theight, contents);

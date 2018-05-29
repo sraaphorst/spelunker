@@ -25,7 +25,7 @@ namespace spelunker::thickmaze {
             for (auto x = -1; x <= width; ++x) {
                 if (x == -1 || x == width
                     || y == -1 || y == height
-                    || tm.cell(x, y) == types::WALL)
+                    || tm.cellIs(x, y) == WALL)
                     out << "██";
                 else out << "  ";
 

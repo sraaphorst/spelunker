@@ -22,9 +22,9 @@ namespace spelunker::maze {
     class KruskalMazeGenerator final : public MazeGenerator {
     public:
         KruskalMazeGenerator(int w, int h);
-        virtual ~KruskalMazeGenerator() = default;
+        ~KruskalMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
     };
 }
 #endif //SPELUNKER_RANDOMIZEDKRUSKALMAZE_H

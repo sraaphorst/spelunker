@@ -19,7 +19,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        CellIndicator ci(width, CellRowIndicator(height, false));
 
         // Pick a cell at random.
         const int startX = math::RNG::randomRange(width);
@@ -27,8 +27,8 @@ namespace spelunker::maze {
 
         // Create a wall list, add the walls of the start cell to it, and mark
         // the start cell as visited.
-        types::WallCollection walls;
-        addCellWalls(types::cell(startX, startY), walls, wi);
+        WallCollection walls;
+        addCellWalls(cell(startX, startY), walls, wi);
         ci[startX][startY] = true;
         // We also need to be able to unrank walls.
         auto unrank = createUnrankWallMap();
@@ -62,26 +62,26 @@ namespace spelunker::maze {
         return Maze(width, height, wi);
     }
 
-    void PrimMazeGenerator::addCellWalls(const types::Cell &c,
-                                                   types::WallCollection &wallList,
-                                                   const types::WallIncidence &wi) {
+    void PrimMazeGenerator::addCellWalls(const Cell &c,
+                                                   WallCollection &wallList,
+                                                   const WallIncidence &wi) {
         // Check each of the four walls to make sure they are valid and not a boundary wall.
         const auto [x, y] = c;
 
         // Convenience method to add existing walls to the list.
-        auto adder = [this, &wi, &wallList](const int nx, const int ny, const types::Direction d) {
-            const types::WallID rk = rankPos(types::pos(nx, ny, d));
+        auto adder = [this, &wi, &wallList](const int nx, const int ny, const Direction d) {
+            const WallID rk = rankPos(pos(nx, ny, d));
             if (rk >= 0 && wi[rk]) wallList.emplace_back(rk);
         };
 
         // To avoid unnecessary unranking, check we aren't trying to add a boundary wall here.
         if (x - 1 >= 0)
-            adder(x, y, types::WEST);
+            adder(x, y, WEST);
         if (x + 1 < width)
-            adder(x, y, types::EAST);
+            adder(x, y, EAST);
         if (y - 1 >= 0)
-            adder(x, y, types::NORTH);
+            adder(x, y, NORTH);
         if (y + 1 < height)
-            adder(x, y, types::SOUTH);
+            adder(x, y, SOUTH);
     }
 }

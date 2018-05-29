@@ -21,9 +21,9 @@ namespace spelunker::maze {
         SidewinderMazeGenerator(int w, int h, double p);
         SidewinderMazeGenerator(int w, int h);
 
-        ~SidewinderMazeGenerator() = default;
+        ~SidewinderMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
 
     private:
         const double probabilityEast;

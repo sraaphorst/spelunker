@@ -12,6 +12,9 @@ namespace spelunker::thickmaze {
 
     class ThickMazeRenderer {
     public:
+        ThickMazeRenderer() = default;
+        virtual ~ThickMazeRenderer() = default;
+
         virtual void render(const ThickMaze &m) = 0;
     };
 }

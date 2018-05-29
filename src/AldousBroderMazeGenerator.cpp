@@ -19,7 +19,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // Keep track of which cells have and have not been visited.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        CellIndicator ci(width, CellRowIndicator(height, false));
 
         // Pick a random starting position.
         auto currX = spelunker::math::RNG::randomRange(width);
@@ -32,7 +32,7 @@ namespace spelunker::maze {
 
         while (numCellsVisited < maxCells) {
             // Get all the neighbours of the current cell and move to one at random.
-            const auto nbrs = allNeighbours(types::cell(currX, currY));
+            const auto nbrs = allNeighbours(cell(currX, currY));
             const auto nbr  = math::RNG::randomElement(nbrs);
             currX = nbr.first.first;
             currY = nbr.first.second;

@@ -22,11 +22,11 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        CellIndicator ci(width, CellRowIndicator(height, false));
 
         // Create the stack and pick a starting cell.
-        std::stack<types::Cell> stack;
-        stack.push(types::cell(math::RNG::randomRange(width), math::RNG::randomRange(height)));
+        std::stack<Cell> stack;
+        stack.push(cell(math::RNG::randomRange(width), math::RNG::randomRange(height)));
 
         while (!stack.empty()) {
             // Marking c visited will occur multiple times, but we don't care.

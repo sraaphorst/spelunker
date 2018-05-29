@@ -14,7 +14,7 @@
 #include "MazeAttributes.h"
 #include "Show.h"
 
-namespace spelunker::shared {
+namespace spelunker::types {
     /// The root of all non-STL exceptions throwable by this library.
     class Exception : public std::logic_error {
     protected:

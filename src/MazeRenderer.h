@@ -12,6 +12,9 @@ namespace spelunker::maze {
 
     class MazeRenderer {
     public:
+        MazeRenderer() = default;
+        virtual ~MazeRenderer() = default;
+
         virtual void render(const Maze &m) = 0;
     };
 }

@@ -46,7 +46,7 @@ namespace spelunker::maze {
             // then we get any cell in the range, but we want to omit the last row
             // or column since all walls will be E or S.
             const auto upperCell = vertical ? area.w : area.h;
-            const auto pos = math::RNG::randomRange(upperCell-1);
+            const auto p         = math::RNG::randomRange(upperCell-1);
 
             // Now we need a random gap in the wall.
             const auto gap = math::RNG::randomRange(vertical ? area.h : area.w);
@@ -58,19 +58,19 @@ namespace spelunker::maze {
                     continue;
 
                 if (vertical)
-                    wi[rankPos(types::pos(area.x + pos, area.y + i, types::EAST))] = true;
+                    wi[rankPos(pos(area.x + p, area.y + i, EAST))] = true;
                 else
-                    wi[rankPos(types::pos(area.x + i, area.y + pos, types::SOUTH))] = true;
+                    wi[rankPos(pos(area.x + i, area.y + p, SOUTH))] = true;
             }
             
             // Now split into two areas. Since we are always adding walls on the E and S,
             // we must do this carefully.
             if (vertical) {
-                areas.push(rectangle(area.x, area.y, pos + 1, area.h));
-                areas.push(rectangle(area.x + pos + 1, area.y, area.w - pos - 1, area.h));
+                areas.push(rectangle(area.x, area.y, p + 1, area.h));
+                areas.push(rectangle(area.x + p + 1, area.y, area.w - p - 1, area.h));
             } else {
-                areas.push(rectangle(area.x, area.y, area.w, pos + 1));
-                areas.push(rectangle(area.x, area.y + pos + 1, area.w, area.h - pos - 1));
+                areas.push(rectangle(area.x, area.y, area.w, p + 1));
+                areas.push(rectangle(area.x, area.y + p + 1, area.w, area.h - p - 1));
             }
         }
 

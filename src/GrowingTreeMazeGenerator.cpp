@@ -25,11 +25,11 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        CellIndicator ci(width, CellRowIndicator(height, false));
 
         // Create the cell collection and pick a starting cell.
-        types::CellCollection C;
-        C.emplace_back(types::cell(math::RNG::randomRange(width), math::RNG::randomRange(height)));
+        CellCollection C;
+        C.emplace_back(cell(math::RNG::randomRange(width), math::RNG::randomRange(height)));
 
         while (!C.empty()) {
             // Select the element c using the selector.
@@ -60,10 +60,10 @@ namespace spelunker::maze {
 
     GrowingTreeMazeGenerator::Selector GrowingTreeMazeGenerator::getSelector(const CellSelectionStrategy css) {
         switch (css) {
-            case OLDEST: return [](const types::CellCollection &c) { return 0; };
-            case NEWEST: return [](const types::CellCollection &c) { return c.size() - 1; };
-            case MIDDLE: return [](const types::CellCollection &c) { return c.size() / 2; };
-            case RANDOM: return [](const types::CellCollection &c) { return math::RNG::randomRange(c.size()); };
+            case OLDEST: return [](const CellCollection &c) { return 0; };
+            case NEWEST: return [](const CellCollection &c) { return c.size() - 1; };
+            case MIDDLE: return [](const CellCollection &c) { return c.size() / 2; };
+            case RANDOM: return [](const CellCollection &c) { return math::RNG::randomRange(c.size()); };
         }
     }
 }

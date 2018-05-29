@@ -40,31 +40,31 @@ namespace spelunker::maze {
          * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
          * @return an "empty" layout
          */
-        types::WallIncidence initializeEmptyLayout(bool walls);
+        WallIncidence initializeEmptyLayout(bool walls);
 
         /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
-        const types::UnrankWallMap createUnrankWallMap() const;
+        const UnrankWallMap createUnrankWallMap() const;
 
         /// A static function used by unrankWallID, separated out for testing.
-        static const types::UnrankWallMap createUnrankWallMapS(int w, int h);
+        static const UnrankWallMap createUnrankWallMapS(int w, int h);
 
         /// A function that maps Position to the corresponding ID of the wall in the maze.
-        const types::WallID rankPos(const types::Position &p) const;
+        const WallID rankPos(const Position &p) const;
 
         /// Rank a cell.
         const inline int rankCell(const int x, const int y) { return y * width + x; }
 
         /// Unrank a cell.
-        const inline types::Cell unrankCell(const int rk) { return types::cell(rk % width, rk / width); }
+        const inline Cell unrankCell(const int rk) { return cell(rk % width, rk / width); }
 
         /// Find all of the unvisited neighbours of a cell.
-        const types::Neighbours unvisitedNeighbours(const types::Cell &c, const types::CellIndicator &ci) const;
+        const Neighbours unvisitedNeighbours(const Cell &c, const CellIndicator &ci) const;
 
         /// Find all of the visited neighbours of a cell.
-        const types::Neighbours visitedNeighbours(const types::Cell &c, const types::CellIndicator &ci) const;
+        const Neighbours visitedNeighbours(const Cell &c, const CellIndicator &ci) const;
 
         /// Find all of the valid neighbours of a cell.
-        const types::Neighbours allNeighbours(const types::Cell &c) const;
+        const Neighbours allNeighbours(const Cell &c) const;
 
     private:
         /// Auxiliary helper function for generating lists of neighbours.
@@ -75,7 +75,7 @@ namespace spelunker::maze {
          * @param filter a filter to filter the neighbours
          * @return a list of the neighbours of c where the filter is true
          */
-        const types::Neighbours neighbours(const types::Cell &c,
+        const Neighbours neighbours(const Cell &c,
                                            std::function<bool(const int, const int)> filter) const;
 
 #ifndef NDEBUG

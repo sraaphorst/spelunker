@@ -36,9 +36,9 @@ namespace spelunker::maze {
     public:
         BinaryTreeMazeGenerator(int w, int h, double p);
         BinaryTreeMazeGenerator(int w, int h);
-        virtual ~BinaryTreeMazeGenerator() = default;
+        ~BinaryTreeMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
 
     private:
         const double eastProbability;

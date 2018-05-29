@@ -33,9 +33,9 @@ namespace spelunker::maze {
     class DFSMazeGenerator final : public MazeGenerator {
     public:
         DFSMazeGenerator(int w, int h);
-        virtual ~DFSMazeGenerator() = default;
+        ~DFSMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
     };
 };
 
