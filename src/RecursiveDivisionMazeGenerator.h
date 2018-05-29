@@ -19,9 +19,9 @@ namespace spelunker::maze {
     class RecursiveDivisionMazeGenerator final : public MazeGenerator {
     public:
         RecursiveDivisionMazeGenerator(int w, int h);
-        ~RecursiveDivisionMazeGenerator() = default;
+        ~RecursiveDivisionMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
     private:
         /// A rectangle struct we use to represent sections of the maze to complete, to avoid recursion.
         struct rectangle {

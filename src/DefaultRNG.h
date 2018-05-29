@@ -23,12 +23,12 @@ namespace spelunker::math {
     class DefaultRNG final : public RNG {
     public:
         DefaultRNG();
-        virtual ~DefaultRNG() = default;
+        ~DefaultRNG() final = default;
 
     protected:
-        virtual int randomRangeImpl(int lower, int upper) noexcept override;
+        int randomRangeImpl(int lower, int upper) noexcept final;
 
-        virtual double randomProbabilityImpl() noexcept override;
+        double randomProbabilityImpl() noexcept final;
 
     private:
         std::random_device rd;

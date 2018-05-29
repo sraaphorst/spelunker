@@ -21,13 +21,13 @@ namespace spelunker::maze {
     class PrimMazeGenerator final : public MazeGenerator {
     public:
         PrimMazeGenerator(int w, int h);
-        virtual ~PrimMazeGenerator() = default;
+        ~PrimMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
 
     private:
         /// Add the non-exterior walls of a cell to the wall list, with one possible omission.
-        void addCellWalls(const types::Cell &c, types::WallCollection &wallList, const types::WallIncidence &wi);
+        void addCellWalls(const Cell &c, WallCollection &wallList, const WallIncidence &wi);
     };
 };
 

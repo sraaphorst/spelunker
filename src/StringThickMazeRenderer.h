@@ -21,10 +21,10 @@ namespace spelunker::thickmaze {
      */
     class StringThickMazeRenderer final : public ThickMazeRenderer {
     public:
-        StringThickMazeRenderer(std::ostream &o);
-        ~StringThickMazeRenderer() = default;
+        explicit StringThickMazeRenderer(std::ostream &o);
+        ~StringThickMazeRenderer() final = default;
 
-        void render(const ThickMaze &tm) override;
+        void render(const ThickMaze &tm) final;
 
     private:
         std::ostream &out;

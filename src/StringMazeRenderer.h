@@ -27,8 +27,8 @@ namespace spelunker::maze {
      */
     class StringMazeRenderer final : public MazeRenderer {
     public:
-        StringMazeRenderer(std::ostream &o);
-        ~StringMazeRenderer() = default;
+        explicit StringMazeRenderer(std::ostream &o);
+        ~StringMazeRenderer() final = default;
 
         void render(const Maze &m) override;
 
@@ -36,7 +36,7 @@ namespace spelunker::maze {
         std::ostream &out;
 
         /// A quick and dirty extractor to get a wall status from a Maze, returning false for illegal coordinates.
-        static bool wall(const Maze &m, int x, int y, types::Direction d);
+        static bool wall(const Maze &m, int x, int y, Direction d);
 
         /// The characters used in the box form of the maze representation. There has to be a better way to do this.
         static const std::vector<std::string> boxchars;

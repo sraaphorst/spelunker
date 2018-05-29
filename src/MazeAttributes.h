@@ -15,7 +15,7 @@
 #include "Show.h"
 #include "CommonMazeAttributes.h"
 
-namespace spelunker::types {
+namespace spelunker::maze {
     using namespace spelunker::types;
 
     /// The ID for a wall. Walls are ranked to ints.

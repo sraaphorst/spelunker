@@ -16,6 +16,8 @@
 #include "EllerMazeGenerator.h"
 
 namespace spelunker::maze {
+    using namespace boost;
+
     EllerMazeGenerator::EllerMazeGenerator(const int w, const int h, const double p, const double d)
             : MazeGenerator(w, h), probability(p), density(d) {}
 
@@ -60,7 +62,7 @@ namespace spelunker::maze {
                 const auto &set2 = dsets.find_set(elements[rankCell(x + 1, y)]);
 
                 if (set1 != set2 && (y == height - 1 || math::RNG::randomProbability() < probability)) {
-                    wi[rankPos(types::pos(x, y, types::EAST))] = false;
+                    wi[rankPos(pos(x, y, EAST))] = false;
                     dsets.link(set1, set2);
                 }
             }
@@ -103,7 +105,7 @@ namespace spelunker::maze {
                         cells.pop_back();
 
                         const auto cell = unrankCell(sRk);
-                        wi[rankPos(types::pos(cell.first, cell.second, types::SOUTH))] = false;
+                        wi[rankPos(pos(cell.first, cell.second, SOUTH))] = false;
 
                         // Add the cell to this set in the partition.
                         const auto &setDown = dsets.find_set(elements[rankCell(cell.first, cell.second + 1)]);

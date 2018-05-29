@@ -44,7 +44,7 @@ namespace spelunker::thickmaze {
     class CellularAutomatonThickMazeGenerator final : ThickMazeGenerator {
     public:
         /// A function type that determines the number of living neighbours.
-        using NeighbourCounter = std::function<int(const types::Cell, const types::CellContents&)>;
+        using NeighbourCounter = std::function<int(const Cell, const CellContents&)>;
 
         /// The type of neighbourhood to use for the cellular automaton.
         /**
@@ -65,7 +65,7 @@ namespace spelunker::thickmaze {
         };
 
         /// A function type that determines the Behaviour of a cell given the number of living neighbours in its neighbourhood.
-        using DetermineBehaviour = std::function<Behaviour(const int, const types::CellType)>;
+        using DetermineBehaviour = std::function<Behaviour(const int, const CellType)>;
 
         /// Convert one of the NeighbourhoodTypes into a NeighbourCounter.
         static NeighbourCounter fromNeighbourhoodType(NeighbourhoodType n);
@@ -131,9 +131,9 @@ namespace spelunker::thickmaze {
         };
 
         CellularAutomatonThickMazeGenerator(int w, int h, settings s);
-        ~CellularAutomatonThickMazeGenerator() = default;
+        ~CellularAutomatonThickMazeGenerator() final = default;
 
-        const ThickMaze generate() override;
+        const ThickMaze generate() final;
     private:
         /// The settings for the cellular automaton.
         settings st;

@@ -33,9 +33,9 @@ namespace spelunker::maze {
     class WilsonMazeGenerator final : public MazeGenerator {
     public:
         WilsonMazeGenerator(int w, int h);
-        virtual ~WilsonMazeGenerator() = default;
+        ~WilsonMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
     };
 };
 

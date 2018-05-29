@@ -26,9 +26,9 @@ namespace spelunker::maze {
 
     private:
         /// Add the unvisited neighbours of a cell to the list to process.
-        void addUnivisitedNeighbourCells(const types::Cell &c,
-                                         types::CellCollection &cells,
-                                         const types::CellIndicator &ci);
+        void addUnivisitedNeighbourCells(const Cell &c,
+                                         CellCollection &cells,
+                                         const CellIndicator &ci);
     };
 };
 

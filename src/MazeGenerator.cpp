@@ -12,27 +12,27 @@
 
 namespace spelunker::maze {
     MazeGenerator::MazeGenerator(const int w, const int h)
-            : width(w), height(h), numWalls(types::calculateNumWalls(w, h)) {}
+            : width(w), height(h), numWalls(calculateNumWalls(w, h)) {}
 
-    types::WallIncidence MazeGenerator::initializeEmptyLayout(bool walls) {
+    WallIncidence MazeGenerator::initializeEmptyLayout(bool walls) {
         // This involves just setting the wall incidences to true or false.
-        return types::WallIncidence(numWalls, walls);
+        return WallIncidence(numWalls, walls);
     }
 
-    const types::UnrankWallMap MazeGenerator::createUnrankWallMap() const {
+    const UnrankWallMap MazeGenerator::createUnrankWallMap() const {
         return createUnrankWallMapS(width, height);
     }
 
-    const types::UnrankWallMap MazeGenerator::createUnrankWallMapS(const int w, const int h) {
-        types::UnrankWallMap umap;
+    const UnrankWallMap MazeGenerator::createUnrankWallMapS(const int w, const int h) {
+        UnrankWallMap umap;
 
         // The easiest way to do this is the inefficient way: iterate over all possible positions and collect
         // up their wall ranks. We need a vector to do this, which we will turn into a pair since there should
         // be two or a failure has occurred.
-        std::map<types::WallID, std::vector<types::Position> > unrankings;
+        std::map<WallID, std::vector<Position> > unrankings;
         for (auto x = 0; x < w; ++x)
             for (auto y = 0; y < h; ++y) {
-                for (auto d : types::directions()) {
+                for (auto d : directions()) {
                     const int rk = Maze::rankPositionS(w, h, x, y, d);
                     if (rk != -1)
                         unrankings[rk].emplace_back(pos(x, y, d));
@@ -51,39 +51,39 @@ namespace spelunker::maze {
         return umap;
     }
 
-    const types::WallID MazeGenerator::rankPos(const types::Position &p) const {
+    const WallID MazeGenerator::rankPos(const Position &p) const {
         return Maze::rankPositionS(width, height, p.first.first, p.first.second, p.second);
     }
 
-    const types::Neighbours MazeGenerator::unvisitedNeighbours(const types::Cell &c,
-                                                               const types::CellIndicator &ci) const {
+    const Neighbours MazeGenerator::unvisitedNeighbours(const Cell &c,
+                                                               const CellIndicator &ci) const {
         return neighbours(c, [&ci](const int x, const int y) { return !ci[x][y]; });
     }
 
-    const types::Neighbours MazeGenerator::visitedNeighbours(const types::Cell &c,
-                                                             const types::CellIndicator &ci) const {
+    const Neighbours MazeGenerator::visitedNeighbours(const Cell &c,
+                                                             const CellIndicator &ci) const {
         return neighbours(c, [&ci](const int x, const int y) { return ci[x][y]; });
     }
 
-    const types::Neighbours MazeGenerator::allNeighbours(const types::Cell &c) const {
+    const Neighbours MazeGenerator::allNeighbours(const Cell &c) const {
         return neighbours(c, [](const int, const int) { return true; });
     }
 
-    const types::Neighbours MazeGenerator::neighbours(const types::Cell &c,
+    const Neighbours MazeGenerator::neighbours(const Cell &c,
                                                       std::function<bool(const int, const int)> filter) const {
-        types::Neighbours nbrs;
+        Neighbours nbrs;
 
         const auto [x, y] = c;
 
         // Note we have to SWITCH the directions here because we want the direction in which we come INTO that node.
         if (x - 1 >= 0 && filter(x-1,y))
-            nbrs.emplace_back(types::pos(x - 1, y, types::EAST));
+            nbrs.emplace_back(pos(x - 1, y, EAST));
         if (y - 1 >= 0 && filter(x,y-1))
-            nbrs.emplace_back(types::pos(x, y - 1, types::SOUTH));
+            nbrs.emplace_back(pos(x, y - 1, SOUTH));
         if (x + 1 < width && filter(x+1,y))
-            nbrs.emplace_back(types::pos(x + 1, y, types::WEST));
+            nbrs.emplace_back(pos(x + 1, y, WEST));
         if (y + 1 < height && filter(x,y+1))
-            nbrs.emplace_back(types::pos(x, y + 1, types::NORTH));
+            nbrs.emplace_back(pos(x, y + 1, NORTH));
         return nbrs;
     }
 

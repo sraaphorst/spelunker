@@ -68,9 +68,9 @@ namespace spelunker::maze {
          */
         EllerMazeGenerator(int w, int h);
 
-        virtual ~EllerMazeGenerator() = default;
+        ~EllerMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
 
     private:
         const double probability;

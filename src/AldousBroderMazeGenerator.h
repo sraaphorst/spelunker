@@ -39,9 +39,9 @@ namespace spelunker::maze {
     class AldousBroderMazeGenerator final : public MazeGenerator {
     public:
         AldousBroderMazeGenerator(int w, int h);
-        virtual ~AldousBroderMazeGenerator() = default;
+        ~AldousBroderMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
     };
 }
 

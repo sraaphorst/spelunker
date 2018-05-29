@@ -53,7 +53,7 @@ namespace spelunker::maze {
      */
     class GrowingTreeMazeGenerator final : public MazeGenerator {
     public:
-        using Selector = std::function<int(const types::CellCollection&)>;
+        using Selector = std::function<int(const CellCollection&)>;
         /// The predetermined cell selection strategies.
         enum CellSelectionStrategy {
             OLDEST = 0,
@@ -81,9 +81,9 @@ namespace spelunker::maze {
          */
         GrowingTreeMazeGenerator(int w, int h, Selector sel);
 
-        ~GrowingTreeMazeGenerator() = default;
+        ~GrowingTreeMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
 
     private:
         /// The selection function. Should return an index of the CellCollection. Only called if it contains elements.

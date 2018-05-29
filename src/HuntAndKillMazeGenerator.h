@@ -7,6 +7,7 @@
 #ifndef SPELUNKER_HUNTANDKILLMAZEGENERATOR_H
 #define SPELUNKER_HUNTANDKILLMAZEGENERATOR_H
 
+#include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -26,12 +27,12 @@ namespace spelunker::maze {
     class HuntAndKillMazeGenerator final : public MazeGenerator {
     public:
         HuntAndKillMazeGenerator(int w, int h);
-        ~HuntAndKillMazeGenerator() = default;
+        ~HuntAndKillMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
 
     private:
-        void randomPathCarving(int startX, int startY, types::CellIndicator &ci, types::WallIncidence &wi) const noexcept;
+        void randomPathCarving(int startX, int startY, CellIndicator &ci, WallIncidence &wi) const noexcept;
     };
 };
 

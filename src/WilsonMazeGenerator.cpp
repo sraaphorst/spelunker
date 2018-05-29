@@ -21,7 +21,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check which cells are part of the maze.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        CellIndicator ci(width, CellRowIndicator(height, false));
 
         // Pick a starting cell at random and add it to the maze.
         const int startX = math::RNG::randomRange(width);
@@ -51,10 +51,10 @@ namespace spelunker::maze {
             // Generate a random walk. We do this by continuously choosing a
             // neighbour and storing the position we entered this neighbour.
             // prevcell and x and y should always represent the previous cell.
-            std::map<int, types::Direction> walk;
+            std::map<int, Direction> walk;
             for (;;) {
                 // Find the neighbours and pick one at random.
-                auto nbrs = allNeighbours(types::cell(x, y));
+                auto nbrs = allNeighbours(cell(x, y));
                 auto nbr = math::RNG::randomElement(nbrs);
 
                 // Now update the map to say we reached nbr by the given
@@ -62,7 +62,7 @@ namespace spelunker::maze {
                 const auto [nextCell, dir] = nbr;
 
                 // We flip the direction so we are coming into nextCell instead of leaving it.
-                walk[rankCell(x, y)] = types::flip(dir);
+                walk[rankCell(x, y)] = flip(dir);
 
                 // Advance in our walk.
                 x = nextCell.first;
@@ -84,19 +84,19 @@ namespace spelunker::maze {
                 ci[x][y] = true;
                 auto rk = rankCell(x, y);
                 const auto dir = walk[rk];
-                wi[rankPos(types::pos(x, y, dir))] = false;
+                wi[rankPos(pos(x, y, dir))] = false;
 
                 switch (dir) {
-                    case types::NORTH:
+                    case NORTH:
                         y -= 1;
                         break;
-                    case types::EAST:
+                    case EAST:
                         x += 1;
                         break;
-                    case types::SOUTH:
+                    case SOUTH:
                         y += 1;
                         break;
-                    case types::WEST:
+                    case WEST:
                         x -= 1;
                         break;
                 }

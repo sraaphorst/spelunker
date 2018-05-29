@@ -26,17 +26,17 @@ namespace spelunker::maze {
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x) {
                 // Determine the directions (south / east) we can head from this cell.
-                types::Direction d;
+                Direction d;
                 if (x + 1 < width && y + 1 < height)
-                    d = math::RNG::randomProbability() < eastProbability ? types::EAST : types::SOUTH;
+                    d = math::RNG::randomProbability() < eastProbability ? EAST : SOUTH;
                 else if (x + 1 < width)
-                    d = types::EAST;
+                    d = EAST;
                 else if (y + 1 < height)
-                    d = types::SOUTH;
+                    d = SOUTH;
                 else
                     continue;
 
-                const auto idx = rankPos(types::pos(x, y, d));
+                const auto idx = rankPos(pos(x, y, d));
                 wi[idx] = false;
             }
 

@@ -38,13 +38,13 @@ namespace spelunker::thickmaze {
          * @param h the height of the maze, minus boundary walls
          * @param c the contents of the maze, minus boundary walls
          */
-        ThickMaze(int w, int h, const types::CellContents &c);
+        ThickMaze(int w, int h, const CellContents &c);
         virtual ~ThickMaze() = default;
 
         inline const int getWidth() const noexcept { return width; }
         inline const int getHeight() const noexcept { return height; }
 
-        const types::CellType cell(int x, int y) const;
+        const CellType cellIs(int x, int y) const;
 
         /**
          * This algorithm swaps walls and floors, not including the border wall. It is useful for cellular
@@ -56,7 +56,7 @@ namespace spelunker::thickmaze {
     private:
         const int width;
         const int height;
-        const types::CellContents contents;
+        const CellContents contents;
     };
 }
 

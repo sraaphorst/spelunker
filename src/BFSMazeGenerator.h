@@ -34,9 +34,9 @@ namespace spelunker::maze {
     class BFSMazeGenerator final : public MazeGenerator{
     public:
         BFSMazeGenerator(int w, int h);
-        ~BFSMazeGenerator() = default;
+        ~BFSMazeGenerator() final = default;
 
-        const Maze generate() override;
+        const Maze generate() final;
     };
 }
 

@@ -15,6 +15,8 @@
 #include "KruskalMazeGenerator.h"
 
 namespace spelunker::maze {
+    using namespace boost;
+
     KruskalMazeGenerator::KruskalMazeGenerator(const int w, const int h)
             : MazeGenerator(w, h) {}
 
