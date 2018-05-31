@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"

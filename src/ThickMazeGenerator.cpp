@@ -4,7 +4,6 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include "ThickMaze.h"
 #include "ThickMazeGenerator.h"
 
 namespace spelunker::thickmaze {

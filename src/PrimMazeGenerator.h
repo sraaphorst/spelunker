@@ -11,6 +11,7 @@
 #ifndef SPELUNKER_RANDOMIZEDPRIMMAZEGENERATOR_H
 #define SPELUNKER_RANDOMIZEDPRIMMAZEGENERATOR_H
 
+#include "CommonMazeAttributes.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -27,7 +28,7 @@ namespace spelunker::maze {
 
     private:
         /// Add the non-exterior walls of a cell to the wall list, with one possible omission.
-        void addCellWalls(const Cell &c, WallCollection &wallList, const WallIncidence &wi);
+        void addCellWalls(const types::Cell &c, WallCollection &wallList, const WallIncidence &wi);
     };
 };
 

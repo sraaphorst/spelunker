@@ -11,6 +11,7 @@
 #ifndef SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H
 #define SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H
 
+#include "CommonMazeAttributes.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -26,9 +27,9 @@ namespace spelunker::maze {
 
     private:
         /// Add the unvisited neighbours of a cell to the list to process.
-        void addUnivisitedNeighbourCells(const Cell &c,
-                                         CellCollection &cells,
-                                         const CellIndicator &ci);
+        void addUnivisitedNeighbourCells(const types::Cell &c,
+                                         types::CellCollection &cells,
+                                         const types::CellIndicator &ci);
     };
 };
 

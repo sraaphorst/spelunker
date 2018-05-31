@@ -7,14 +7,12 @@
 #include <algorithm>
 #include <queue>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 #include "RNG.h"
 #include "RecursiveDivisionMazeGenerator.h"
-
-#include <iostream>
-using namespace std;
 
 namespace spelunker::maze {
     RecursiveDivisionMazeGenerator::RecursiveDivisionMazeGenerator(int w, int h)
@@ -58,9 +56,9 @@ namespace spelunker::maze {
                     continue;
 
                 if (vertical)
-                    wi[rankPos(pos(area.x + p, area.y + i, EAST))] = true;
+                    wi[rankPos(types::pos(area.x + p, area.y + i, types::EAST))] = true;
                 else
-                    wi[rankPos(pos(area.x + i, area.y + p, SOUTH))] = true;
+                    wi[rankPos(types::pos(area.x + i, area.y + p, types::SOUTH))] = true;
             }
             
             // Now split into two areas. Since we are always adding walls on the E and S,

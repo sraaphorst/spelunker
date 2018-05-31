@@ -10,9 +10,10 @@
 #include <ostream>
 #include <string>
 
-#include "StringMazeRenderer.h"
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
+#include "StringMazeRenderer.h"
 
 namespace spelunker::maze {
     const std::vector<std::string> StringMazeRenderer::boxchars = { " ","╶","╷","┌","╴","─","┐","┬","╵","└","│","├","┘","┴","┤","┼" };

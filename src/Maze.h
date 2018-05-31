@@ -13,6 +13,7 @@
 #include <optional>
 #include <sstream>
 
+#include "CommonMazeAttributes.h"
 #include "Homomorphism.h"
 #include "MazeAttributes.h"
 #include "Show.h"
@@ -88,13 +89,13 @@ namespace spelunker::maze {
         inline types::CellCollection getEndingCells() const noexcept { return endingCells; }
 
         /// Create a new maze with the specified starting cell.
-        const Maze withStartingCell(const PossibleStartCell &s) const;
+        const Maze withStartingCell(const types::PossibleStartCell &s) const;
 
         /// Create a new maze with the specified ending cells.
-        const Maze withEndingCells(const CellCollection &ends) const;
+        const Maze withEndingCells(const types::CellCollection &ends) const;
 
         /// For a given position, determine if there is a wall.
-        bool wall(const Position &p) const noexcept;
+        bool wall(const types::Position &p) const noexcept;
 
         /// For a given set of coordinates (x,y) and a direction, determine if there is a wall.
         bool wall(int x, int y, types::Direction d) const noexcept;
@@ -108,7 +109,7 @@ namespace spelunker::maze {
         }
 
         /// Apply a symmetry to this maze to get a new one.
-        const Maze applySymmetry(Symmetry s) const;
+        const Maze applySymmetry(types::Symmetry s) const;
 
         /// Make a perfect maze into a 2w x 2h unicursal maze (aka labyrinth).
         /**
@@ -145,13 +146,13 @@ namespace spelunker::maze {
          * @param d the direction
          * @return the rank of the wall at this position
          */
-        WallID rankPosition(const Position &p) const;
+        WallID rankPosition(const types::Position &p) const;
 
         /// A function that maps a cell (x,y) and direction to wall ranks.
-        WallID rankPosition(int x, int y, Direction d) const;
+        WallID rankPosition(int x, int y, types::Direction d) const;
 
         /// A static function used by rankPosition, separated out for testing.
-        static WallID rankPositionS(int w, int h, int x, int y, Direction d);
+        static WallID rankPositionS(int w, int h, int x, int y, types::Direction d);
 
         /// Check the start and end positions to make sure they appear in valid places.
         void checkCells() const;
@@ -160,7 +161,7 @@ namespace spelunker::maze {
          * Check a cell to make sure it appears in a valid place.
          * @param c the cell to check
          */
-        void checkCell(const Cell &c) const;
+        void checkCell(const types::Cell &c) const;
 
         /// Static auxiliary method to check to see if a cell is valid.
         static void checkCell(int w, int h, int x, int y);
@@ -168,8 +169,8 @@ namespace spelunker::maze {
         const int width;
         const int height;
         const int numWalls;
-        const PossibleStartCell startCell;
-        const CellCollection endingCells;
+        const types::PossibleStartCell startCell;
+        const types::CellCollection endingCells;
         const WallIncidence wallIncidence;
 
 #ifndef NDEBUG

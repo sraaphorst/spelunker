@@ -6,6 +6,7 @@
 
 #include <cassert>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -29,10 +30,10 @@ namespace spelunker::maze {
         // The easiest way to do this is the inefficient way: iterate over all possible positions and collect
         // up their wall ranks. We need a vector to do this, which we will turn into a pair since there should
         // be two or a failure has occurred.
-        std::map<WallID, std::vector<Position> > unrankings;
+        std::map<WallID, std::vector<types::Position> > unrankings;
         for (auto x = 0; x < w; ++x)
             for (auto y = 0; y < h; ++y) {
-                for (auto d : directions()) {
+                for (auto d : types::directions()) {
                     const int rk = Maze::rankPositionS(w, h, x, y, d);
                     if (rk != -1)
                         unrankings[rk].emplace_back(pos(x, y, d));
@@ -51,39 +52,39 @@ namespace spelunker::maze {
         return umap;
     }
 
-    const WallID MazeGenerator::rankPos(const Position &p) const {
+    const WallID MazeGenerator::rankPos(const types::Position &p) const {
         return Maze::rankPositionS(width, height, p.first.first, p.first.second, p.second);
     }
 
-    const Neighbours MazeGenerator::unvisitedNeighbours(const Cell &c,
-                                                               const CellIndicator &ci) const {
+    const types::Neighbours MazeGenerator::unvisitedNeighbours(const types::Cell &c,
+                                                               const types::CellIndicator &ci) const {
         return neighbours(c, [&ci](const int x, const int y) { return !ci[x][y]; });
     }
 
-    const Neighbours MazeGenerator::visitedNeighbours(const Cell &c,
-                                                             const CellIndicator &ci) const {
+    const types::Neighbours MazeGenerator::visitedNeighbours(const types::Cell &c,
+                                                             const types::CellIndicator &ci) const {
         return neighbours(c, [&ci](const int x, const int y) { return ci[x][y]; });
     }
 
-    const Neighbours MazeGenerator::allNeighbours(const Cell &c) const {
+    const types::Neighbours MazeGenerator::allNeighbours(const types::Cell &c) const {
         return neighbours(c, [](const int, const int) { return true; });
     }
 
-    const Neighbours MazeGenerator::neighbours(const Cell &c,
+    const types::Neighbours MazeGenerator::neighbours(const types::Cell &c,
                                                       std::function<bool(const int, const int)> filter) const {
-        Neighbours nbrs;
+        types::Neighbours nbrs;
 
         const auto [x, y] = c;
 
         // Note we have to SWITCH the directions here because we want the direction in which we come INTO that node.
         if (x - 1 >= 0 && filter(x-1,y))
-            nbrs.emplace_back(pos(x - 1, y, EAST));
+            nbrs.emplace_back(types::pos(x - 1, y, types::EAST));
         if (y - 1 >= 0 && filter(x,y-1))
-            nbrs.emplace_back(pos(x, y - 1, SOUTH));
+            nbrs.emplace_back(types::pos(x, y - 1, types::SOUTH));
         if (x + 1 < width && filter(x+1,y))
-            nbrs.emplace_back(pos(x + 1, y, WEST));
+            nbrs.emplace_back(types::pos(x + 1, y, types::WEST));
         if (y + 1 < height && filter(x,y+1))
-            nbrs.emplace_back(pos(x, y + 1, NORTH));
+            nbrs.emplace_back(types::pos(x, y + 1, types::NORTH));
         return nbrs;
     }
 

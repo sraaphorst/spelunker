@@ -44,7 +44,7 @@ namespace spelunker::thickmaze {
     class CellularAutomatonThickMazeGenerator final : ThickMazeGenerator {
     public:
         /// A function type that determines the number of living neighbours.
-        using NeighbourCounter = std::function<int(const Cell, const CellContents&)>;
+        using NeighbourCounter = std::function<int(const types::Cell, const CellContents&)>;
 
         /// The type of neighbourhood to use for the cellular automaton.
         /**
@@ -57,6 +57,10 @@ namespace spelunker::thickmaze {
             VON_NEUMANN_EXTENDED,
         };
 
+        /// A function type that determines the Behaviour of a cell given the number of living neighbours in its neighbourhood.
+        /// Convert one of the NeighbourhoodTypes into a NeighbourCounter.
+        static NeighbourCounter fromNeighbourhoodType(NeighbourhoodType n);
+
         /// Possible outcomes for a cell at each round depending on the neighbours in its neighbourhood.
         enum Behaviour {
             BORN,
@@ -64,11 +68,7 @@ namespace spelunker::thickmaze {
             DIE,
         };
 
-        /// A function type that determines the Behaviour of a cell given the number of living neighbours in its neighbourhood.
         using DetermineBehaviour = std::function<Behaviour(const int, const CellType)>;
-
-        /// Convert one of the NeighbourhoodTypes into a NeighbourCounter.
-        static NeighbourCounter fromNeighbourhoodType(NeighbourhoodType n);
 
         /**
          * Pre-existing algorithms determining behaviour of a cell.
@@ -125,12 +125,12 @@ namespace spelunker::thickmaze {
         struct settings {
             double probability = 0.5;
             int numGenerations = 10000;
-            int stabilitySize = 5;
+            int stabilitySize = 10;
             NeighbourCounter neighbourCounter = fromNeighbourhoodType(MOORE);
             DetermineBehaviour determineBehaviour = fromAlgorithm(B2S123);
         };
 
-        CellularAutomatonThickMazeGenerator(int w, int h, settings s);
+        CellularAutomatonThickMazeGenerator(int w, int h, settings &s);
         ~CellularAutomatonThickMazeGenerator() final = default;
 
         const ThickMaze generate() final;

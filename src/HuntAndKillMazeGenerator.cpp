@@ -4,6 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -22,7 +23,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         // Get a starting cell.
         auto currX = math::RNG::randomRange(width);
@@ -44,7 +45,7 @@ namespace spelunker::maze {
                 // If unvisited, check to see if visited nbrs.
                 // If a visited nbr, break out of this loop.
                 if (!ci[nextX][nextY]) {
-                    const auto nbrs = visitedNeighbours(cell(nextX, nextY), ci);
+                    const auto nbrs = visitedNeighbours(types::cell(nextX, nextY), ci);
                     if (!nbrs.empty()) {
                         const auto nbr = math::RNG::randomElement(nbrs);
                         wi[rankPos(nbr)] = false;
@@ -65,7 +66,7 @@ namespace spelunker::maze {
 
     void HuntAndKillMazeGenerator::randomPathCarving(const int startX,
                                                      const int startY,
-                                                     CellIndicator &ci,
+                                                     types::CellIndicator &ci,
                                                      WallIncidence &wi) const noexcept  {
         int x = startX;
         int y = startY;
@@ -75,7 +76,7 @@ namespace spelunker::maze {
             ci[x][y] = true;
             
             // Continuously carve to an adjacent unvisited cell.
-            const auto nbrs = unvisitedNeighbours(cell(x, y), ci);
+            const auto nbrs = unvisitedNeighbours(types::cell(x, y), ci);
             if (nbrs.empty()) break;
             const auto nbr = math::RNG::randomElement(nbrs);
             wi[rankPos(nbr)] = false;

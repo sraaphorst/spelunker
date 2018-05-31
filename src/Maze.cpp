@@ -12,6 +12,7 @@
 #include <tuple>
 #include <vector>
 
+#include "CommonMazeAttributes.h"
 #include "Exceptions.h"
 #include "MazeAttributes.h"
 #include "Maze.h"
@@ -19,35 +20,35 @@
 namespace spelunker::maze {
     Maze::Maze(const int w,
                const int h,
-               const PossibleStartCell &s,
-               const CellCollection &ends,
+               const types::PossibleStartCell &s,
+               const types::CellCollection &ends,
                const WallIncidence &walls)
             : width(w), height(h), numWalls(calculateNumWalls(w, h)),
               startCell(s), endingCells(ends), wallIncidence(walls) {
         if (width < 1 || height < 1)
-            throw IllegalDimensions(width, height);
+            throw types::IllegalDimensions(width, height);
         checkCells();
     }
 
     Maze::Maze(const int w,
                const int h,
                const WallIncidence &walls)
-            : Maze(w, h, {}, CellCollection(), walls) {}
+            : Maze(w, h, {}, types::CellCollection(), walls) {}
 
-    const Maze Maze::withStartingCell(const PossibleStartCell &s) const {
+    const Maze Maze::withStartingCell(const types::PossibleStartCell &s) const {
         return Maze(width, height, s, endingCells, wallIncidence);
     }
 
-    const Maze Maze::withEndingCells(const CellCollection &ends) const {
+    const Maze Maze::withEndingCells(const types::CellCollection &ends) const {
         return Maze(width, height, startCell, ends, wallIncidence);
     }
 
-    bool Maze::wall(const Position &p) const noexcept {
+    bool Maze::wall(const types::Position &p) const noexcept {
         const int rk = rankPosition(p);
         return rk == -1 || wallIncidence[rk];
     }
 
-    bool Maze::wall(int x, int y, Direction d) const noexcept {
+    bool Maze::wall(int x, int y, types::Direction d) const noexcept {
         const int rk = rankPosition(x, y, d);
         return rk == -1 || wallIncidence[rk];
     }
@@ -61,69 +62,69 @@ namespace spelunker::maze {
         return wallIncidence == other.wallIncidence;
     }
 
-    const Maze Maze::applySymmetry(Symmetry s) const {
+    const Maze Maze::applySymmetry(types::Symmetry s) const {
         // Get the symmetry map corresponding to the symmetry.
-        std::function<WallID(const Position&)> mp;
+        std::function<WallID(const types::Position&)> mp;
 
         switch (s) {
-            case ROTATION_BY_90:
-                mp = [this, s](const Position &p) {
+            case types::ROTATION_BY_90:
+                mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
-                    return Maze::rankPositionS(height, width, height - y - 1, x, applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(height, width, height - y - 1, x, types::applySymmetryToDirection(s, d));
                 };
                 break;
-            case ROTATION_BY_180:
-                mp =  [this, s](const Position &p) {
+            case types::ROTATION_BY_180:
+                mp =  [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
                     return Maze::rankPositionS(width, height, width - x - 1, height - y - 1,
-                                               applySymmetryToDirection(s, d));
+                                               types::applySymmetryToDirection(s, d));
                 };
                 break;
-            case ROTATION_BY_270:
-                mp = [this, s](const Position &p) {
+            case types::ROTATION_BY_270:
+                mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
-                    return Maze::rankPositionS(height, width, y, width - x - 1, applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(height, width, y, width - x - 1, types::applySymmetryToDirection(s, d));
                 };
                 break;
-            case REFLECTION_IN_X:
-                mp = [this, s](const Position &p) {
+            case types::REFLECTION_IN_X:
+                mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
-                    return Maze::rankPositionS(width, height, x, height - y - 1, applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(width, height, x, height - y - 1, types::applySymmetryToDirection(s, d));
                 };
                 break;
-            case REFLECTION_IN_Y:
-                mp = [this, s](const Position &p) {
+            case types::REFLECTION_IN_Y:
+                mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
-                    return Maze::rankPositionS(width, height, width - x - 1, y, applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(width, height, width - x - 1, y, types::applySymmetryToDirection(s, d));
                 };
                 break;
-            case REFLECTION_IN_NWSE:
-                if (width != height) throw IllegalGroupOperation(width, height, s);
-                mp = [this, s](const Position &p) {
+            case types::REFLECTION_IN_NWSE:
+                if (width != height) throw types::IllegalGroupOperation(width, height, s);
+                mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
-                    return Maze::rankPositionS(height, width, y, x, applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(height, width, y, x, types::applySymmetryToDirection(s, d));
                 };
                 break;
-            case REFLECTION_IN_NESW:
-                if (width != height) throw IllegalGroupOperation(width, height, s);
-                mp = [this, s](const Position &p) {
+            case types::REFLECTION_IN_NESW:
+                if (width != height) throw types::IllegalGroupOperation(width, height, s);
+                mp = [this, s](const types::Position &p) {
                     auto[c, d] = p;
                     auto[x, y] = c;
                     return Maze::rankPositionS(height, width, height - y - 1, width - x - 1,
-                                               applySymmetryToDirection(s, d));
+                                               types::applySymmetryToDirection(s, d));
                 };
                 break;
         }
 
         // Determine the new width / height and create the wall incidence.
         int nWidth, nHeight;
-        if (s == ROTATION_BY_180 || s == REFLECTION_IN_X || s == REFLECTION_IN_Y) {
+        if (s == types::ROTATION_BY_180 || s == types::REFLECTION_IN_X || s == types::REFLECTION_IN_Y) {
             nWidth = width;
             nHeight = height;
         } else {
@@ -131,12 +132,12 @@ namespace spelunker::maze {
             nHeight = width;
         }
 
-        const auto dirs = directions();
+        const auto dirs = types::directions();
         auto nwi = WallIncidence(numWalls, true);
         for (auto x = 0; x < width; ++x)
             for (auto y = 0; y < height; ++y)
                 for (auto d : dirs) {
-                    auto p = pos(x, y, d);
+                    auto p = types::pos(x, y, d);
                     auto rk = rankPosition(p);
                     if (rk == -1) continue;
 
@@ -163,7 +164,7 @@ namespace spelunker::maze {
         const int lastrow  = height - 1;
 
         // Shorten ranking for new maze.
-        auto ranker = [uw,uh](const int x, const int y, const Direction d) { return rankPositionS(uw, uh, x, y, d); };
+        auto ranker = [uw,uh](const int x, const int y, const types::Direction d) { return rankPositionS(uw, uh, x, y, d); };
 
         for (auto y = 0; y < height; ++y) {
             auto y2 = 2 * y;
@@ -171,85 +172,85 @@ namespace spelunker::maze {
                 auto x2 = 2 * x;
 
                 // Get the four walls of the original cell.
-                const bool n = wall(x, y, NORTH);
-                const bool e = wall(x, y, EAST);
-                const bool s = wall(x, y, SOUTH);
-                const bool w = wall(x, y, WEST);
+                const bool n = wall(x, y, types::NORTH);
+                const bool e = wall(x, y, types::EAST);
+                const bool s = wall(x, y, types::SOUTH);
+                const bool w = wall(x, y, types::WEST);
 
                 // Process if the cell has a north wall.
                 if (n) {
                     if (y != firstrow) {
-                                        wi[ranker(  x2,   y2, NORTH)] = true;
-                                        wi[ranker(x2+1,   y2, NORTH)] = true;
+                                        wi[ranker(  x2,   y2, types::NORTH)] = true;
+                                        wi[ranker(x2+1,   y2, types::NORTH)] = true;
                     }
-                    if (!w)             wi[ranker(  x2, y2+1, NORTH)] = true;
-                    if (!e)             wi[ranker(x2+1, y2+1, NORTH)] = true;
-                    if (!(e || s || w)) wi[ranker(  x2, y2+1, EAST)]  = true;
+                    if (!w)             wi[ranker(  x2, y2+1, types::NORTH)] = true;
+                    if (!e)             wi[ranker(x2+1, y2+1, types::NORTH)] = true;
+                    if (!(e || s || w)) wi[ranker(  x2, y2+1, types::EAST)]  = true;
                 }
 
                 // Process if the cell has a south wall.
                 if (s) {
                     if (y != lastrow) {
-                                        wi[ranker(  x2, y2+1, SOUTH)] = true;
-                                        wi[ranker(x2+1, y2+1, SOUTH)] = true;
+                                        wi[ranker(  x2, y2+1, types::SOUTH)] = true;
+                                        wi[ranker(x2+1, y2+1, types::SOUTH)] = true;
                     }
-                    if (!w)             wi[ranker(  x2,   y2, SOUTH)] = true;
-                    if (!e)             wi[ranker(x2+1,   y2, SOUTH)] = true;
-                    if (!(n || e || w)) wi[ranker(  x2,   y2, EAST)]  = true;
+                    if (!w)             wi[ranker(  x2,   y2, types::SOUTH)] = true;
+                    if (!e)             wi[ranker(x2+1,   y2, types::SOUTH)] = true;
+                    if (!(n || e || w)) wi[ranker(  x2,   y2, types::EAST)]  = true;
                 }
 
                 // Process if the cell has a west wall.
                 if (w) {
                     if (x != firstcol) {
-                                        wi[ranker(  x2,   y2, WEST)]  = true;
-                                        wi[ranker(  x2, y2+1, WEST)]  = true;
+                                        wi[ranker(  x2,   y2, types::WEST)]  = true;
+                                        wi[ranker(  x2, y2+1, types::WEST)]  = true;
                     }
-                    if (!n)             wi[ranker(x2+1,   y2, WEST)]  = true;
-                    if (!s)             wi[ranker(x2+1, y2+1, WEST)]  = true;
-                    if (!(n || e || s)) wi[ranker(x2+1,   y2, SOUTH)] = true;
+                    if (!n)             wi[ranker(x2+1,   y2, types::WEST)]  = true;
+                    if (!s)             wi[ranker(x2+1, y2+1, types::WEST)]  = true;
+                    if (!(n || e || s)) wi[ranker(x2+1,   y2, types::SOUTH)] = true;
                 }
 
                 // Process if the cell has an east wall.
                 // Process if the cell has a west wall.
                 if (e) {
                     if (x != lastcol) {
-                                        wi[ranker(x2+1,   y2, EAST)]  = true;
-                                        wi[ranker(x2+1, y2+1, EAST)]  = true;
+                                        wi[ranker(x2+1,   y2, types::EAST)]  = true;
+                                        wi[ranker(x2+1, y2+1, types::EAST)]  = true;
                     }
-                    if (!n)             wi[ranker(  x2,   y2, EAST)]  = true;
-                    if (!s)             wi[ranker(  x2, y2+1, EAST)]  = true;
-                    if (!(n || s || w)) wi[ranker(  x2,   y2, SOUTH)] = true;
+                    if (!n)             wi[ranker(  x2,   y2, types::EAST)]  = true;
+                    if (!s)             wi[ranker(  x2, y2+1, types::EAST)]  = true;
+                    if (!(n || s || w)) wi[ranker(  x2,   y2, types::SOUTH)] = true;
                 }
 
                 // If no walls, put a cross in the middle.
                 if (!(n || e || s || w)) {
-                    wi[ranker(  x2,   y2, EAST)]  = true;
-                    wi[ranker(  x2,   y2, SOUTH)] = true;
-                    wi[ranker(x2+1, y2+1, WEST)]  = true;
-                    wi[ranker(x2+1, y2+1, NORTH)] = true;
+                    wi[ranker(  x2,   y2, types::EAST)]  = true;
+                    wi[ranker(  x2,   y2, types::SOUTH)] = true;
+                    wi[ranker(x2+1, y2+1, types::WEST)]  = true;
+                    wi[ranker(x2+1, y2+1, types::NORTH)] = true;
                 }
             }
         }
 
         // If the original maze had an entrance, on a border, we make this the entrance + exit.
-        PossibleStartCell uStart = {};
+        types::PossibleStartCell uStart = {};
 
         if (startCell.has_value()) {
             auto [sx, sy] = startCell.value();
             if (sx == 0 || sx == lastcol) {
-                wi[ranker(sx, sy, EAST)]  = true;
-                uStart = { cell(sx, sy) };
+                wi[ranker(sx, sy, types::EAST)]  = true;
+                uStart = { types::cell(sx, sy) };
             }
             else if (sy == 0 || sy == lastrow) {
-                wi[ranker(sx, sy, SOUTH)] = true;
-                uStart = { cell(sx, sy) };
+                wi[ranker(sx, sy, types::SOUTH)] = true;
+                uStart = { types::cell(sx, sy) };
             }
         }
 
-        return Maze(uw, uh, uStart, CellCollection(), wi);
+        return Maze(uw, uh, uStart, types::CellCollection(), wi);
     }
 
-    WallID Maze::rankPosition(const Position &p) const {
+    WallID Maze::rankPosition(const types::Position &p) const {
         const auto &cell = p.first;
         const auto x = cell.first;
         const auto y = cell.second;
@@ -258,7 +259,7 @@ namespace spelunker::maze {
         return rankPositionS(width, height, x, y, d);
     };
 
-    WallID Maze::rankPosition(int x, int y, Direction d) const {
+    WallID Maze::rankPosition(int x, int y, types::Direction d) const {
         return rankPositionS(width, height, x, y, d);
     }
 
@@ -266,27 +267,27 @@ namespace spelunker::maze {
                                       const int h,
                                       const int x,
                                       const int y,
-                                      const Direction d) {
+                                      const types::Direction d) {
         // Check the position for validity.
         checkCell(w, h, x, y);
 
         // Get rid of all the boundary cases first to simplify, as these are easy to identify.
-        if (x == 0 && d == WEST) return -1;
-        if (x == (w - 1) && d == EAST) return -1;
-        if (y == 0 && d == NORTH) return -1;
-        if (y == (h - 1) && d == SOUTH) return -1;
+        if (x == 0 && d == types::WEST) return -1;
+        if (x == (w - 1) && d == types::EAST) return -1;
+        if (y == 0 && d == types::NORTH) return -1;
+        if (y == (h - 1) && d == types::SOUTH) return -1;
 
         // Handle north / south walls first.
-        if (d == SOUTH)
+        if (d == types::SOUTH)
             return y * w + x;
-        if (d == NORTH)
+        if (d == types::NORTH)
             return (y - 1) * w + x;
 
         // Now handle east / west walls.
         const auto offset = w * (h - 1);
-        if (d == EAST)
+        if (d == types::EAST)
             return x * h + y + offset;
-        if (d == WEST)
+        if (d == types::WEST)
             return (x - 1) * h + y + offset;
 
     }
@@ -298,13 +299,13 @@ namespace spelunker::maze {
             checkCell(p);
     }
 
-    void Maze::checkCell(const Cell &c) const {
+    void Maze::checkCell(const types::Cell &c) const {
         return checkCell(width, height, c.first, c.second);
     }
 
     void Maze::checkCell(const int w, const int h, const int x, const int y) {
         if (x < 0 || x > w || y < 0 || y >= h)
-            throw OutOfBoundsCell(Cell(x, y));
+            throw types::OutOfBoundsCell(types::Cell(x, y));
     }
 
 #ifndef NDEBUG
@@ -315,14 +316,14 @@ namespace spelunker::maze {
 
         for (auto x = 0; x < w; ++x)
             for (auto y = 0; y < h; ++y) {
-                for (auto d: directions()) {
+                for (auto d: types::directions()) {
                     const auto r = rankPositionS(w, h, x, y, d);
                     if (r != -1) ranks.insert(r);
                 }
                 if (y > 0 && y < h - 1)
-                    assert(rankPositionS(w, h, x, y, NORTH) == rankPositionS(w, h, x, y - 1, SOUTH));
+                    assert(rankPositionS(w, h, x, y, types::NORTH) == rankPositionS(w, h, x, y - 1, types::SOUTH));
                 if (x > 0 && x < w - 1)
-                    assert(rankPositionS(w, h, x - 1, y, EAST) == rankPositionS(w, h, x, y, WEST));
+                    assert(rankPositionS(w, h, x - 1, y, types::EAST) == rankPositionS(w, h, x, y, types::WEST));
             }
 
         for (auto i = 0; i < numwalls; ++i)

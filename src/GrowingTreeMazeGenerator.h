@@ -13,6 +13,7 @@
 
 #include <functional>
 
+#include "CommonMazeAttributes.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -53,7 +54,7 @@ namespace spelunker::maze {
      */
     class GrowingTreeMazeGenerator final : public MazeGenerator {
     public:
-        using Selector = std::function<int(const CellCollection&)>;
+        using Selector = std::function<int(const types::CellCollection&)>;
         /// The predetermined cell selection strategies.
         enum CellSelectionStrategy {
             OLDEST = 0,

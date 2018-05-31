@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -26,13 +27,13 @@ namespace spelunker::maze {
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x) {
                 // Determine the directions (south / east) we can head from this cell.
-                Direction d;
+                types::Direction d;
                 if (x + 1 < width && y + 1 < height)
-                    d = math::RNG::randomProbability() < eastProbability ? EAST : SOUTH;
+                    d = math::RNG::randomProbability() < eastProbability ? types::EAST : types::SOUTH;
                 else if (x + 1 < width)
-                    d = EAST;
+                    d = types::EAST;
                 else if (y + 1 < height)
-                    d = SOUTH;
+                    d = types::SOUTH;
                 else
                     continue;
 

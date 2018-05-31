@@ -6,6 +6,7 @@
 
 #include <algorithm>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -21,7 +22,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         // Pick a start cell at random.
         const int startX = math::RNG::randomRange(width);
@@ -30,8 +31,8 @@ namespace spelunker::maze {
         // Create a list of cells. We add the unvisited cells adjacent to cells
         // we have visited to it.
         ci[startX][startY] = true;
-        CellCollection cells;
-        addUnivisitedNeighbourCells(cell(startX, startY), cells, ci);
+        types::CellCollection cells;
+        addUnivisitedNeighbourCells(types::cell(startX, startY), cells, ci);
 
         while (!cells.empty()) {
             // Pick a random cell from the list.
@@ -64,17 +65,17 @@ namespace spelunker::maze {
         return Maze(width, height, wi);
     }
 
-    void Prim2MazeGenerator::addUnivisitedNeighbourCells(const Cell &c,
-                                                         CellCollection &cells,
-                                                         const CellIndicator &ci) {
+    void Prim2MazeGenerator::addUnivisitedNeighbourCells(const types::Cell &c,
+                                                         types::CellCollection &cells,
+                                                         const types::CellIndicator &ci) {
         const auto[x, y] = c;
         if (x - 1 >= 0 && !ci[x - 1][y])
-            cells.emplace_back(cell(x - 1, y));
+            cells.emplace_back(types::cell(x - 1, y));
         if (x + 1 < width && !ci[x + 1][y])
-            cells.emplace_back(cell(x + 1, y));
+            cells.emplace_back(types::cell(x + 1, y));
         if (y - 1 >= 0 && !ci[x][y - 1])
-            cells.emplace_back(cell(x, y - 1));
+            cells.emplace_back(types::cell(x, y - 1));
         if (y + 1 < height && !ci[x][y + 1])
-            cells.emplace_back(cell(x, y + 1));
+            cells.emplace_back(types::cell(x, y + 1));
     }
 }

@@ -13,6 +13,7 @@
 #include "ThickMazeRenderer.h"
 
 namespace spelunker::thickmaze {
+    class ThickMaze;
 
     /// A simple maze renderer to an ostream. We use this to define the Show type class for ThickMaze.
     /**

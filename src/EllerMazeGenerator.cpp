@@ -8,6 +8,7 @@
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
+#include "CommonMazeAttributes.h"
 #include "DisjointSetHelper.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
@@ -29,19 +30,19 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // Create a vector of all elements.
-        std::vector<Element> elements;
+        std::vector<types::Element> elements;
         elements.reserve(width * height);
         for (auto x = 0; x < width; ++x)
             for (auto y = 0; y < height; ++y)
-                elements.emplace_back(Element(rankCell(x, y)));
+                elements.emplace_back(types::Element(rankCell(x, y)));
 
         for (auto i = 0; i < elements.size(); ++i)
             elements[i].dsID = i;
 
         // Create disjoint singleton sets.
-        Rank rank(elements);
-        Parent parent(elements);
-        boost::disjoint_sets<Rank *, Parent *> dsets(&rank, &parent);
+        types::Rank rank(elements);
+        types::Parent parent(elements);
+        boost::disjoint_sets<types::Rank *, types::Parent *> dsets(&rank, &parent);
         for (auto &e: elements)
             dsets.make_set(e);
 
@@ -62,7 +63,7 @@ namespace spelunker::maze {
                 const auto &set2 = dsets.find_set(elements[rankCell(x + 1, y)]);
 
                 if (set1 != set2 && (y == height - 1 || math::RNG::randomProbability() < probability)) {
-                    wi[rankPos(pos(x, y, EAST))] = false;
+                    wi[rankPos(types::pos(x, y, types::EAST))] = false;
                     dsets.link(set1, set2);
                 }
             }
@@ -105,7 +106,7 @@ namespace spelunker::maze {
                         cells.pop_back();
 
                         const auto cell = unrankCell(sRk);
-                        wi[rankPos(pos(cell.first, cell.second, SOUTH))] = false;
+                        wi[rankPos(types::pos(cell.first, cell.second, types::SOUTH))] = false;
 
                         // Add the cell to this set in the partition.
                         const auto &setDown = dsets.find_set(elements[rankCell(cell.first, cell.second + 1)]);

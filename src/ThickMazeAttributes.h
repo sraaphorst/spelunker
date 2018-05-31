@@ -15,8 +15,6 @@
 #include "CommonMazeAttributes.h"
 
 namespace spelunker::thickmaze {
-    using namespace spelunker::types;
-
     /// The different types of contents that a cell may contain.
     enum CellType {
         FLOOR = 0,

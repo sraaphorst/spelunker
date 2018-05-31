@@ -7,9 +7,9 @@
 #include <ostream>
 #include <string>
 
-#include "StringThickMazeRenderer.h"
 #include "ThickMaze.h"
 #include "ThickMazeAttributes.h"
+#include "StringThickMazeRenderer.h"
 
 namespace spelunker::thickmaze {
     StringThickMazeRenderer::StringThickMazeRenderer(std::ostream &o) : out(o) {}
