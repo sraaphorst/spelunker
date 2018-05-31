@@ -50,10 +50,6 @@ Spelunker also defines and contains some typeclasses:
 
 This means that any algorithm used to generate `Maze`s can also be used to generate `ThickMaze`s.
 
-# What will Likely Not be Offered
-
-Generation for non-perfect maze algorithms (apart from cellular automata), braid mazes, etc.
-
 # Requirements
 
 - A C++17 capable compiler (unless you want to go through, nest the namespaces, and remove the variable binding, e.g. `auto [a,b] = <some pair expression>`; however, I suggest you upgrade your GCC to the 7.x branch instead.
@@ -76,7 +72,7 @@ Generation for non-perfect maze algorithms (apart from cellular automata), braid
 
 5. Write a Qt UI (as a binary independent of the library) to display all these features (maze step-by-step generation, maze step-by-step solving, etc) in a visually pleasant way.
 
-6. Be able to somehow serialize mazes, preferably in JSON?
+6. Be able to somehow serialize mazes, possibly in JSON using https://github.com/nlohmann/json.
 
 # Example
 
