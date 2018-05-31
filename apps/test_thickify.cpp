@@ -7,11 +7,11 @@
 #include <iostream>
 using namespace std;
 
-#include "DFSMazeGenerator.h"
-#include "ThickMaze.h"
-#include "Maze.h"
-#include "Homomorphism.h"
-#include "Show.h"
+#include "maze/DFSMazeGenerator.h"
+#include "thickmaze/ThickMaze.h"
+#include "maze/Maze.h"
+#include "typeclasses/Homomorphism.h"
+#include "typeclasses/Show.h"
 
 int main(int argc, char *argv[]) {
     spelunker::maze::DFSMazeGenerator dfs(20, 15);

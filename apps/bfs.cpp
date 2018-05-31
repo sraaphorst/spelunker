@@ -7,7 +7,7 @@
  */
 
 #include "Executor.h"
-#include "BFSMazeGenerator.h"
+#include "maze/BFSMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::BFSMazeGenerator>::generateAndDisplayMaze(argc, argv);

@@ -10,9 +10,9 @@
 
 #include <iostream>
 
-#include "Maze.h"
-#include "Show.h"
-#include "GrowingTreeMazeGenerator.h"
+#include "maze/Maze.h"
+#include "typeclasses/Show.h"
+#include "maze/GrowingTreeMazeGenerator.h"
 #include "Utils.h"
 
 int main(int argc, char *argv[]) {

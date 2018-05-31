@@ -7,7 +7,7 @@
  */
 
 #include "Executor.h"
-#include "PrimMazeGenerator.h"
+#include "maze/PrimMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::PrimMazeGenerator>::generateAndDisplayMaze(argc, argv);

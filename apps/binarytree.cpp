@@ -7,7 +7,7 @@
  */
 
 #include "ProbabilisticExecutor.h"
-#include "BinaryTreeMazeGenerator.h"
+#include "maze/BinaryTreeMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return ProbabilisticExecutor<spelunker::maze::BinaryTreeMazeGenerator>::generateAndDisplayMaze(argc, argv);

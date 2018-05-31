@@ -8,9 +8,9 @@
 
 #include <iostream>
 
-#include "CellularAutomatonThickMazeGenerator.h"
-#include "Show.h"
-#include "ThickMaze.h"
+#include "thickmaze/CellularAutomatonThickMazeGenerator.h"
+#include "typeclasses/Show.h"
+#include "thickmaze/ThickMaze.h"
 using namespace spelunker::thickmaze;
 
 int main(int argc, char *argv[]) {

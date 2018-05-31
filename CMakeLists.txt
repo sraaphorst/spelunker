@@ -1,3 +1,6 @@
+# CMakeLists.txt
+# By Sebastian Raaphorst, 2018.
+
 cmake_minimum_required(VERSION 3.10)
 project(spelunker
   VERSION 0.1.0
