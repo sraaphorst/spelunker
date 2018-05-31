@@ -14,7 +14,7 @@ using namespace std;
 #include "typeclasses/Show.h"
 
 int main(int argc, char *argv[]) {
-    spelunker::maze::DFSMazeGenerator dfs(20, 15);
+    spelunker::maze::DFSMazeGenerator dfs(25, 20);
     spelunker::maze::Maze m = dfs.generate();
     std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
 
