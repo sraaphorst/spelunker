@@ -6,6 +6,7 @@
 
 #include <map>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -21,7 +22,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check which cells are part of the maze.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         // Pick a starting cell at random and add it to the maze.
         const int startX = math::RNG::randomRange(width);
@@ -51,10 +52,10 @@ namespace spelunker::maze {
             // Generate a random walk. We do this by continuously choosing a
             // neighbour and storing the position we entered this neighbour.
             // prevcell and x and y should always represent the previous cell.
-            std::map<int, Direction> walk;
+            std::map<int, types::Direction> walk;
             for (;;) {
                 // Find the neighbours and pick one at random.
-                auto nbrs = allNeighbours(cell(x, y));
+                auto nbrs = allNeighbours(types::cell(x, y));
                 auto nbr = math::RNG::randomElement(nbrs);
 
                 // Now update the map to say we reached nbr by the given
@@ -84,19 +85,19 @@ namespace spelunker::maze {
                 ci[x][y] = true;
                 auto rk = rankCell(x, y);
                 const auto dir = walk[rk];
-                wi[rankPos(pos(x, y, dir))] = false;
+                wi[rankPos(types::pos(x, y, dir))] = false;
 
                 switch (dir) {
-                    case NORTH:
+                    case types::NORTH:
                         y -= 1;
                         break;
-                    case EAST:
+                    case types::EAST:
                         x += 1;
                         break;
-                    case SOUTH:
+                    case types::SOUTH:
                         y += 1;
                         break;
-                    case WEST:
+                    case types::WEST:
                         x -= 1;
                         break;
                 }

@@ -13,7 +13,7 @@
 #include <vector>
 #include <boost/pending/property.hpp>
 
-namespace boost {
+namespace spelunker::types {
     /// Element of a set of disjoint sets, represented by an int. Do a lookup into a vector if necessary.
     struct Element final {
     public:
@@ -53,12 +53,18 @@ namespace boost {
 
         std::vector<Element> &mElements;
     };
+}
 
+// This is an annoying workaround to a GCC problem:
+// https://stackoverflow.com/questions/25594644/warning-specialization-of-template-in-different-namespace
+namespace boost {
     template<>
-    struct property_traits<Rank *> {
+    struct property_traits<spelunker::types::Rank *> {
         typedef size_t value_type;
     };
+}
 
+namespace spelunker::types {
     inline Element const &
     get(Parent *pa, Element const &k) {
         return pa->mElements.at(k.dsParent);

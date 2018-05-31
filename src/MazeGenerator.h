@@ -11,6 +11,7 @@
 
 #include <functional>
 
+#include "CommonMazeAttributes.h"
 #include "MazeAttributes.h"
 
 namespace spelunker::maze {
@@ -49,22 +50,22 @@ namespace spelunker::maze {
         static const UnrankWallMap createUnrankWallMapS(int w, int h);
 
         /// A function that maps Position to the corresponding ID of the wall in the maze.
-        const WallID rankPos(const Position &p) const;
+        const WallID rankPos(const types::Position &p) const;
 
         /// Rank a cell.
         const inline int rankCell(const int x, const int y) { return y * width + x; }
 
         /// Unrank a cell.
-        const inline Cell unrankCell(const int rk) { return cell(rk % width, rk / width); }
+        const inline types::Cell unrankCell(const int rk) { return types::cell(rk % width, rk / width); }
 
         /// Find all of the unvisited neighbours of a cell.
-        const Neighbours unvisitedNeighbours(const Cell &c, const CellIndicator &ci) const;
+        const types::Neighbours unvisitedNeighbours(const types::Cell &c, const types::CellIndicator &ci) const;
 
         /// Find all of the visited neighbours of a cell.
-        const Neighbours visitedNeighbours(const Cell &c, const CellIndicator &ci) const;
+        const types::Neighbours visitedNeighbours(const types::Cell &c, const types::CellIndicator &ci) const;
 
         /// Find all of the valid neighbours of a cell.
-        const Neighbours allNeighbours(const Cell &c) const;
+        const types::Neighbours allNeighbours(const types::Cell &c) const;
 
     private:
         /// Auxiliary helper function for generating lists of neighbours.
@@ -75,7 +76,7 @@ namespace spelunker::maze {
          * @param filter a filter to filter the neighbours
          * @return a list of the neighbours of c where the filter is true
          */
-        const Neighbours neighbours(const Cell &c,
+        const types::Neighbours neighbours(const types::Cell &c,
                                            std::function<bool(const int, const int)> filter) const;
 
 #ifndef NDEBUG

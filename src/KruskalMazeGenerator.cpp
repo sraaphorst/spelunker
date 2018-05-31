@@ -7,6 +7,7 @@
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
+#include "CommonMazeAttributes.h"
 #include "DisjointSetHelper.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
@@ -37,19 +38,19 @@ namespace spelunker::maze {
         // To do so efficiently, we use Boost's disjoint_sets with some helper classes and methods.
 
         // Create a vector of all elements.
-        std::vector<Element> elements;
+        std::vector<types::Element> elements;
         elements.reserve(width * height);
         for (auto x = 0; x < width; ++x)
             for (auto y = 0; y < height; ++y)
-                elements.emplace_back(Element(rankCell(x, y)));
+                elements.emplace_back(types::Element(rankCell(x, y)));
 
         for (auto i = 0; i < elements.size(); ++i)
             elements[i].dsID = i;
 
         // Create disjoint singleton sets.
-        Rank rank(elements);
-        Parent parent(elements);
-        boost::disjoint_sets<Rank *, Parent *> dsets(&rank, &parent);
+        types::Rank rank(elements);
+        types::Parent parent(elements);
+        boost::disjoint_sets<types::Rank *, types::Parent *> dsets(&rank, &parent);
         for (auto &e: elements)
             dsets.make_set(e);
 

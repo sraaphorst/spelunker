@@ -6,6 +6,7 @@
 
 #include <queue>
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -21,15 +22,15 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         // Pick a random starting cell, mark it, and add its neighbours to a queue.
         const auto startX = math::RNG::randomRange(width);
         const auto startY = math::RNG::randomRange(height);
         ci[startX][startY] = true;
 
-        std::queue<Cell> queue;
-        const auto startNbrs = unvisitedNeighbours(cell(startX, startY), ci);
+        std::queue<types::Cell> queue;
+        const auto startNbrs = unvisitedNeighbours(types::cell(startX, startY), ci);
         for (auto startNbr : startNbrs)
             queue.push(startNbr.first);
 

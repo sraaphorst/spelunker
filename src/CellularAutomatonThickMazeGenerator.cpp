@@ -6,6 +6,7 @@
 
 #include <list>
 
+#include "CommonMazeAttributes.h"
 #include "RNG.h"
 #include "ThickMaze.h"
 #include "ThickMazeAttributes.h"
@@ -19,16 +20,16 @@ namespace spelunker::thickmaze {
         else return x;
 
     }
-    static int moore(const Cell c, const CellContents &cs) {
+    static int moore(const types::Cell c, const CellContents &cs) {
         int alive = 0;
-        const int maxRow = cs[0].size() - 1;
-        const int maxCol = cs.size() - 1;
+        const auto maxRow = cs[0].size() - 1;
+        const auto maxCol = cs.size() - 1;
 
         auto[x, y] = c;
-        const int xm1 = wrap(maxCol, x-1);
-        const int xp1 = wrap(maxCol, x+1);
-        const int ym1 = wrap(maxRow, y-1);
-        const int yp1 = wrap(maxRow, y+1);
+        const auto xm1 = wrap(maxCol, x-1);
+        const auto xp1 = wrap(maxCol, x+1);
+        const auto ym1 = wrap(maxRow, y-1);
+        const auto yp1 = wrap(maxRow, y+1);
 
         // Covers the entire west column. Assume toroidal structure.
         if (cs[xm1][ym1] == WALL) ++alive;
@@ -47,20 +48,20 @@ namespace spelunker::thickmaze {
         return alive;
     }
 
-    static int vonNeumann(const Cell c, const CellContents &cs) {
+    static int vonNeumann(const types::Cell c, const CellContents &cs) {
         int alive = 0;
-        const int maxRow = cs[0].size() - 1;
-        const int maxCol = cs.size() - 1;
+        const auto maxRow = cs[0].size() - 1;
+        const auto maxCol = cs.size() - 1;
 
         auto[x, y] = c;
-        const int xm1 = wrap(maxCol, x-1);
-        const int xm2 = wrap(maxCol, x-2);
-        const int xp1 = wrap(maxCol, x+1);
-        const int xp2 = wrap(maxCol, x+2);
-        const int ym1 = wrap(maxRow, y-1);
-        const int ym2 = wrap(maxRow, y-2);
-        const int yp1 = wrap(maxRow, y+1);
-        const int yp2 = wrap(maxRow, y+2);
+        const auto xm1 = wrap(maxCol, x-1);
+        const auto xm2 = wrap(maxCol, x-2);
+        const auto xp1 = wrap(maxCol, x+1);
+        const auto xp2 = wrap(maxCol, x+2);
+        const auto ym1 = wrap(maxRow, y-1);
+        const auto ym2 = wrap(maxRow, y-2);
+        const auto yp1 = wrap(maxRow, y+1);
+        const auto yp2 = wrap(maxRow, y+2);
 
         // West segment.
         if (cs[xm2][y] == WALL) ++alive;
@@ -134,7 +135,7 @@ namespace spelunker::thickmaze {
         }
     }
 
-    CellularAutomatonThickMazeGenerator::CellularAutomatonThickMazeGenerator(int w, int h, settings s)
+    CellularAutomatonThickMazeGenerator::CellularAutomatonThickMazeGenerator(int w, int h, settings &s)
             : ThickMazeGenerator(w, h), st(s) {}
 
     const ThickMaze CellularAutomatonThickMazeGenerator::generate() {
@@ -165,7 +166,7 @@ namespace spelunker::thickmaze {
             for (auto y = 0; y < height; ++y)
                 for (auto x = 0; x < width; ++x) {
                     // Count the neighbours for this cell.
-                    int numNbrs = st.neighbourCounter(cell(x, y), oldContents);
+                    int numNbrs = st.neighbourCounter(types::cell(x, y), oldContents);
 
                     // Determine the behaviour of this cell.
                     // As newContents was initialized to all floor, we can ignore death.

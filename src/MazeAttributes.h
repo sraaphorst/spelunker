@@ -16,8 +16,6 @@
 #include "CommonMazeAttributes.h"
 
 namespace spelunker::maze {
-    using namespace spelunker::types;
-
     /// The ID for a wall. Walls are ranked to ints.
     using WallID = int;
 
@@ -33,7 +31,7 @@ namespace spelunker::maze {
     using WallCollection = std::vector<WallID>;
 
     /// Used to reverse wall ranking, i.e. a map that takes a wall rank and gives the two cells it separates.
-    using UnrankWallMap = std::map<WallID, std::pair<Position, Position> >;
+    using UnrankWallMap = std::map<WallID, std::pair<types::Position, types::Position> >;
 
     /// Calculates the number of possible internal (non-boundary) walls in a maze of width w and height h.
     inline const int calculateNumWalls(const int w, const int h) {

@@ -4,6 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+#include "CommonMazeAttributes.h"
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -19,7 +20,7 @@ namespace spelunker::maze {
         auto wi = initializeEmptyLayout(true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        CellIndicator ci(width, CellRowIndicator(height, false));
+        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
 
         // Pick a cell at random.
         const int startX = math::RNG::randomRange(width);
@@ -28,7 +29,7 @@ namespace spelunker::maze {
         // Create a wall list, add the walls of the start cell to it, and mark
         // the start cell as visited.
         WallCollection walls;
-        addCellWalls(cell(startX, startY), walls, wi);
+        addCellWalls(types::cell(startX, startY), walls, wi);
         ci[startX][startY] = true;
         // We also need to be able to unrank walls.
         auto unrank = createUnrankWallMap();
@@ -62,26 +63,26 @@ namespace spelunker::maze {
         return Maze(width, height, wi);
     }
 
-    void PrimMazeGenerator::addCellWalls(const Cell &c,
-                                                   WallCollection &wallList,
-                                                   const WallIncidence &wi) {
+    void PrimMazeGenerator::addCellWalls(const types::Cell &c,
+                                         WallCollection &wallList,
+                                         const WallIncidence &wi) {
         // Check each of the four walls to make sure they are valid and not a boundary wall.
         const auto [x, y] = c;
 
         // Convenience method to add existing walls to the list.
-        auto adder = [this, &wi, &wallList](const int nx, const int ny, const Direction d) {
-            const WallID rk = rankPos(pos(nx, ny, d));
+        auto adder = [this, &wi, &wallList](const int nx, const int ny, const types::Direction d) {
+            const WallID rk = rankPos(types::pos(nx, ny, d));
             if (rk >= 0 && wi[rk]) wallList.emplace_back(rk);
         };
 
         // To avoid unnecessary unranking, check we aren't trying to add a boundary wall here.
         if (x - 1 >= 0)
-            adder(x, y, WEST);
+            adder(x, y, types::WEST);
         if (x + 1 < width)
-            adder(x, y, EAST);
+            adder(x, y, types::EAST);
         if (y - 1 >= 0)
-            adder(x, y, NORTH);
+            adder(x, y, types::NORTH);
         if (y + 1 < height)
-            adder(x, y, SOUTH);
+            adder(x, y, types::SOUTH);
     }
 }
