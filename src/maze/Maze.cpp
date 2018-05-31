@@ -11,6 +11,7 @@
 #include <set>
 #include <tuple>
 #include <vector>
+#include <math/RNG.h>
 
 #include "types/CommonMazeAttributes.h"
 #include "types/Exceptions.h"
@@ -248,6 +249,38 @@ namespace spelunker::maze {
         }
 
         return Maze(uw, uh, uStart, types::CellCollection(), wi);
+    }
+
+    const Maze Maze::braid() const {
+        // We start off with a copy of this maze's wall incidence.
+        auto wi = wallIncidence;
+
+        // Now iterate over all cells, and check if they are dead ends. If they are, remove an interior-facing
+        // wall at random.
+        for (auto y = 0; y < height; ++y) {
+            for (auto x = 0; x < width; ++x) {
+                auto wallsForCell = 0;
+                std::vector<int> removableWalls;
+                for (auto d: types::directions()) {
+                    const auto p = types::pos(x, y, d);
+                    const auto rk = rankPosition(p);
+
+                    if (rk == -1) ++wallsForCell;
+                    else if (wallIncidence[rk]) {
+                        ++wallsForCell;
+                        removableWalls.emplace_back(rk);
+                    }
+                }
+
+                if (wallsForCell == 3) {
+                    // Remove a random wall.
+                    const auto rk = math::RNG::randomElement(removableWalls);
+                    wi[rk] = false;
+                }
+            }
+        }
+
+        return Maze(width, height, startCell, endingCells, wi);
     }
 
     WallID Maze::rankPosition(const types::Position &p) const {

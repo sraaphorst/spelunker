@@ -135,6 +135,9 @@ namespace spelunker::maze {
          */
         const Maze makeUnicursal() const;
 
+        /// Make this maze into a braid maze.
+        const Maze braid() const;
+
     private:
         /// A function that maps positions to wall ranks.
         /**
