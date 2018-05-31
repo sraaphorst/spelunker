@@ -7,7 +7,7 @@
  */
 
 #include "ProbabilisticExecutor.h"
-#include "SidewinderMazeGenerator.h"
+#include "maze/SidewinderMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return ProbabilisticExecutor<spelunker::maze::SidewinderMazeGenerator>::generateAndDisplayMaze(argc, argv);

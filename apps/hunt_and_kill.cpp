@@ -7,7 +7,7 @@
  */
 
 #include "Executor.h"
-#include "HuntAndKillMazeGenerator.h"
+#include "maze/HuntAndKillMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::HuntAndKillMazeGenerator>::generateAndDisplayMaze(argc, argv);

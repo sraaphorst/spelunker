@@ -7,7 +7,7 @@
  */
 
 #include "Executor.h"
-#include "KruskalMazeGenerator.h"
+#include "maze/KruskalMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::KruskalMazeGenerator>::generateAndDisplayMaze(argc, argv);

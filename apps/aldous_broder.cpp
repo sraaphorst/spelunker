@@ -8,7 +8,7 @@
  */
 
 #include "Executor.h"
-#include "AldousBroderMazeGenerator.h"
+#include "maze/AldousBroderMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::AldousBroderMazeGenerator>::generateAndDisplayMaze(argc, argv);

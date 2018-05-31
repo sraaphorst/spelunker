@@ -9,9 +9,9 @@
 #include <iostream>
 
 #include "Executor.h"
-#include "Maze.h"
-#include "Show.h"
-#include "RecursiveDivisionMazeGenerator.h"
+#include "maze/Maze.h"
+#include "typeclasses/Show.h"
+#include "maze/RecursiveDivisionMazeGenerator.h"
 #include "Utils.h"
 
 int main(int argc, char *argv[]) {

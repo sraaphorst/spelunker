@@ -1,3 +1,6 @@
+# CMakeLists.txt
+# By Sebastian Raaphorst, 2018.
+
 # Find includes in corresponding build directories.
 set(CMAKE_INCLUDE_CURRENT_DIR  ON)
 

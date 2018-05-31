@@ -1,73 +1,69 @@
 # CMakeLists.txt
 # By Sebastian Raaphorst, 2018.
 
-set (SPELUNKER_VERSION_MAJOR 0)
-set (SPELUNKER_VERSION_MINOR 1)
-set (SPELUNKER_VERSION_BUILD 0)
-
 configure_file (
-    "SpelunkerConfig.h.in"
-    "SpelinkerConfig.h"
+    "types/SpelunkerConfig.h.in"
+    "types/SpelinkerConfig.h"
     )
 
 set(PUBLIC_HEADER_FILES
-        AldousBroderMazeGenerator.h
-        BFSMazeGenerator.h
-        BinaryTreeMazeGenerator.h
-        CellularAutomatonThickMazeGenerator.h
-        CommonMazeAttributes.h
-        DefaultRNG.h
-        DFSMazeGenerator.h
-        EllerMazeGenerator.h
-        Exceptions.h
-        GrowingTreeMazeGenerator.h
-        Homomorphism.h
-        HuntAndKillMazeGenerator.h
-        KruskalMazeGenerator.h
-        Maze.h
-        MazeAttributes.h
-        MazeGenerator.h
-        MazeRenderer.h
-        PrimMazeGenerator.h
-        Prim2MazeGenerator.h
-        RecursiveDivisionMazeGenerator.h
-        RNG.h
-        SidewinderMazeGenerator.h
-        SpelunkerConfig.h
-        StringMazeRenderer.h
-        StringThickMazeRenderer.h
-        ThickMaze.h
-        ThickMazeAttributes.h
-        ThickMazeGenerator.h
-        ThickMazeRenderer.h
-        WilsonMazeGenerator.h
+        maze/AldousBroderMazeGenerator.h
+        maze/BFSMazeGenerator.h
+        maze/BinaryTreeMazeGenerator.h
+        thickmaze/CellularAutomatonThickMazeGenerator.h
+        types/CommonMazeAttributes.h
+        math/DefaultRNG.h
+        maze/DFSMazeGenerator.h
+        maze/EllerMazeGenerator.h
+        types/Exceptions.h
+        maze/GrowingTreeMazeGenerator.h
+        typeclasses/Homomorphism.h
+        maze/HuntAndKillMazeGenerator.h
+        maze/KruskalMazeGenerator.h
+        maze/Maze.h
+        maze/MazeAttributes.h
+        maze/MazeGenerator.h
+        maze/MazeRenderer.h
+        maze/PrimMazeGenerator.h
+        maze/Prim2MazeGenerator.h
+        maze/RecursiveDivisionMazeGenerator.h
+        math/RNG.h
+        maze/SidewinderMazeGenerator.h
+        types/SpelunkerConfig.h
+        maze/StringMazeRenderer.h
+        thickmaze/StringThickMazeRenderer.h
+        thickmaze/ThickMaze.h
+        thickmaze/ThickMazeAttributes.h
+        thickmaze/ThickMazeGenerator.h
+        thickmaze/ThickMazeRenderer.h
+        maze/WilsonMazeGenerator.h
         )
 
 set(SOURCE_FILES
-        AldousBroderMazeGenerator.cpp
-        BFSMazeGenerator.cpp
-        BinaryTreeMazeGenerator.cpp
-        CellularAutomatonThickMazeGenerator.cpp
-        DefaultRNG.cpp
-        DFSMazeGenerator.cpp
-        DisjointSetHelper.h
-        EllerMazeGenerator.cpp
-        GrowingTreeMazeGenerator.cpp
-        HuntAndKillMazeGenerator.cpp
-        KruskalMazeGenerator.cpp
-        Maze.cpp
-        MazeGenerator.cpp
-        PrimMazeGenerator.cpp
-        Prim2MazeGenerator.cpp
-        RecursiveDivisionMazeGenerator.cpp
-        RNG.cpp
-        Show.h
-        SidewinderMazeGenerator.cpp
-        StringMazeRenderer.cpp
-        StringThickMazeRenderer.cpp
-        ThickMaze.cpp
-        ThickMazeGenerator.cpp
-        WilsonMazeGenerator.cpp
+        maze/AldousBroderMazeGenerator.cpp
+        maze/BFSMazeGenerator.cpp
+        maze/BinaryTreeMazeGenerator.cpp
+        thickmaze/CellularAutomatonThickMazeGenerator.cpp
+        math/DefaultRNG.cpp
+        maze/DFSMazeGenerator.cpp
+        types/DisjointSetHelper.h
+        maze/EllerMazeGenerator.cpp
+        maze/GrowingTreeMazeGenerator.cpp
+        maze/HuntAndKillMazeGenerator.cpp
+        maze/KruskalMazeGenerator.cpp
+        maze/Maze.cpp
+        maze/MazeGenerator.cpp
+        maze/PrimMazeGenerator.cpp
+        maze/Prim2MazeGenerator.cpp
+        maze/RecursiveDivisionMazeGenerator.cpp
+        math/RNG.cpp
+        typeclasses/Show.h
+        maze/SidewinderMazeGenerator.cpp
+        maze/StringMazeRenderer.cpp
+        thickmaze/StringThickMazeRenderer.cpp
+        thickmaze/ThickMaze.cpp
+        thickmaze/ThickMazeGenerator.cpp
+        maze/WilsonMazeGenerator.cpp
         )
 
 add_library(spelunker SHARED
@@ -76,7 +72,7 @@ add_library(spelunker SHARED
         )
 
 set(TYPECLASS_HEADER_FILES
-        Show.h
+        typeclasses/Show.h
         )
 
 install(TARGETS spelunker

@@ -10,9 +10,9 @@
 
 #include <iostream>
 
-#include "Maze.h"
-#include "Show.h"
-#include "EllerMazeGenerator.h"
+#include "maze/Maze.h"
+#include "typeclasses/Show.h"
+#include "maze/EllerMazeGenerator.h"
 #include "Utils.h"
 
 int main(int argc, char *argv[]) {

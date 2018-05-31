@@ -7,9 +7,9 @@
 #include <iostream>
 using namespace std;
 
-#include "DFSMazeGenerator.h"
-#include "Maze.h"
-#include "Show.h"
+#include "maze/DFSMazeGenerator.h"
+#include "maze/Maze.h"
+#include "typeclasses/Show.h"
 
 int main(int argc, char *argv[]) {
     spelunker::maze::DFSMazeGenerator dfs(10, 8);
