@@ -79,7 +79,7 @@ namespace spelunker::math {
             auto r = getRNG();
 
             const auto maxPos = c.size() - 1;
-            for (int i=0; i < maxPos; ++i) {
+            for (auto i=0; i < maxPos; ++i) {
                 // Find a random element and swap it with begin.
                 const auto idx = randomRange(i, c.size());
                 std::swap(c[i], c[idx]);
