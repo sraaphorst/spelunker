@@ -13,9 +13,6 @@
 #include <tuple>
 #include <vector>
 
-#include <iostream>
-using namespace std;
-
 #include "types/CommonMazeAttributes.h"
 #include "types/Exceptions.h"
 #include "MazeAttributes.h"
@@ -287,13 +284,12 @@ namespace spelunker::maze {
             // Create a list of the wall ranks pointing to the valid cells with the most walls.
             std::vector<WallID > candidates;
             auto maxWalls = 0;
-
             for (auto d: types::directions()) {
                 const auto pos = types::pos(c, d);
                 const auto rk  = rankPosition(pos);
 
                 // We need to actually have a wall to remove.
-                if (rk < 0 || !wi[rankPosition(pos)])
+                if (rk < 0 || !wi[rk])
                     continue;
 
                 const auto nbrOpt = evaluatePosition(pos);
@@ -303,7 +299,6 @@ namespace spelunker::maze {
                 // We have a valid neighbour.
                 const auto nbr = nbrOpt.value();
                 const auto nbrWalls = numCellWallsInWI(nbr, wi);
-
                 if (nbrWalls < maxWalls)
                     continue;
 
@@ -326,9 +321,12 @@ namespace spelunker::maze {
         checkCell(c);
 
         int num = 0;
-        for (auto d: types::directions())
-            if (wall(types::pos(c, d)))
+        for (auto d: types::directions()) {
+            // Note that we can't use any of the wall methods here because those will work with the wrong WallIncidence.
+            const auto rk = rankPosition(types::pos(c, d));
+            if (rk < 0 || wi[rk])
                 ++num;
+        }
         return num;
     }
 
