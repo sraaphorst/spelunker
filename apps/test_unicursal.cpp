@@ -21,4 +21,5 @@ int main(int argc, char *argv[]) {
 
     spelunker::maze::Maze mu2 = mu.makeUnicursal();
     std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(mu2);
+    return 0;
 }

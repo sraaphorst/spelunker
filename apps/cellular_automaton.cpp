@@ -18,4 +18,5 @@ int main(int argc, char *argv[]) {
     CellularAutomatonThickMazeGenerator gen(50, 40, s);
     ThickMaze tm = gen.generate();//.reverse();
     std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
+    return 0;
 }

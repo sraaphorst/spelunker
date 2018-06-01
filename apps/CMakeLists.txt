@@ -46,6 +46,9 @@ target_link_libraries(sidewinder LINK_PUBLIC spelunker)
 add_executable(wilson wilson.cpp Executor.h Utils.h)
 target_link_libraries(wilson LINK_PUBLIC spelunker)
 
+add_executable(test_braid test_braid.cpp)
+target_link_libraries(test_braid LINK_PUBLIC spelunker)
+
 add_executable(test_thickify test_thickify.cpp)
 target_link_libraries(test_thickify LINK_PUBLIC spelunker)
 

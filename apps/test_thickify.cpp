@@ -20,4 +20,5 @@ int main(int argc, char *argv[]) {
 
     spelunker::thickmaze::ThickMaze tm = spelunker::typeclasses::Homomorphism<spelunker::maze::Maze, spelunker::thickmaze::ThickMaze>::morph(m);
     std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
+    return 0;
 }

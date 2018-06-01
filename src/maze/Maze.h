@@ -65,7 +65,7 @@ namespace spelunker::maze {
          */
         Maze(int w,
              int h,
-             const types::PossibleStartCell &s,
+             const types::PossibleCell &s,
              const types::CellCollection &ends,
              const WallIncidence &walls);
 
@@ -85,11 +85,11 @@ namespace spelunker::maze {
         inline const int getWidth() const noexcept { return width; }
         inline const int getHeight() const noexcept { return height; }
 
-        inline types::PossibleStartCell getStartingCell() const noexcept { return startCell; }
+        inline types::PossibleCell getStartingCell() const noexcept { return startCell; }
         inline types::CellCollection getEndingCells() const noexcept { return endingCells; }
 
         /// Create a new maze with the specified starting cell.
-        const Maze withStartingCell(const types::PossibleStartCell &s) const;
+        const Maze withStartingCell(const types::PossibleCell &s) const;
 
         /// Create a new maze with the specified ending cells.
         const Maze withEndingCells(const types::CellCollection &ends) const;
@@ -107,6 +107,9 @@ namespace spelunker::maze {
         bool operator!=(const Maze &other) const {
             return !(*this == other);
         }
+
+        /// Determine the number of walls a cell has.
+        int numCellWalls(const types::Cell &c) const;
 
         /// Apply a symmetry to this maze to get a new one.
         const Maze applySymmetry(types::Symmetry s) const;
@@ -135,7 +138,47 @@ namespace spelunker::maze {
          */
         const Maze makeUnicursal() const;
 
+        /// Make a maze into a braid maze, clearing dead ends with the given probability.
+        /**
+         * A braid maze is a maze with no dead ends: it will necessarily contain loops, and thus not be perfect.
+         *
+         * This method takes the current maze, and begins by creating a list of all the dead ends.
+         * The list is then shuffled, and one-by-one, the algorithm considers each dead end cell and does the following:
+         * 1. Determine if it is still indeed a dead end cell, as one of its walls may have already been removed.
+         * 2. Use probability to determine if we apply braid to this cell.
+         * 3. Amongst the three neighbouring cells sharing a wall with this cell, pick one of the neighbours that
+         *    has the largest number of walls. Ties are broken randomly.
+         * 4. Delete the wall between this cell and the selected neighbour.
+         *
+         * The reason for step (3) is because this allows us to minimize wall reduction, attempting to possibly
+         * fix two dead ends at the same time (this cell, and the neighbour cell).
+         *
+         * @param probability the probability of fixing a given dead end.
+         * @return
+         */
+        const Maze braid(double probability = 1.0) const;
+
     private:
+        /// Determine the number of walls a cell has for an instance of WallIncidence.
+        /**
+         * Determine the number of walls a cell has for an instance of WallIncidence.
+         * We allow a WallIncidence to be supplied for operations like {@see braid}, where we want to
+         * be working on an intermediate new WallIncidence.
+         * @param c the cell of interest
+         * @param wi the WallIncidence to use in counting
+         * @return the number of cell walls of c in wi
+         */
+        int numCellWallsInWI(const types::Cell &c, const WallIncidence &wi) const;
+
+        /// Take a Position and map it to the neighbouring cell that it faces, or nothing if out of bounds.
+        /**
+         * Given a position, find the cell that the position is facing if one is in bounds.
+         * If there is no such cell, i.e. the position faces the border, a value of none is returned.
+         * @param p the position to evaluate
+         * @return a value if the cell exists, and nothing otherwise
+         */
+        const types::PossibleCell evaluatePosition(const types::Position &p) const noexcept;
+
         /// A function that maps positions to wall ranks.
         /**
          * A position is a current location in the maze, which corresponds to a cell (x,y) and the direction
@@ -169,7 +212,7 @@ namespace spelunker::maze {
         const int width;
         const int height;
         const int numWalls;
-        const types::PossibleStartCell startCell;
+        const types::PossibleCell startCell;
         const types::CellCollection endingCells;
         const WallIncidence wallIncidence;
 

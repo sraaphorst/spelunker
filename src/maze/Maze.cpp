@@ -9,18 +9,24 @@
 #include <map>
 #include <optional>
 #include <set>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
+
+#include <iostream>
+using namespace std;
 
 #include "types/CommonMazeAttributes.h"
 #include "types/Exceptions.h"
 #include "MazeAttributes.h"
+#include "math/RNG.h"
 #include "Maze.h"
+#include "MazeGenerator.h"
 
 namespace spelunker::maze {
     Maze::Maze(const int w,
                const int h,
-               const types::PossibleStartCell &s,
+               const types::PossibleCell &s,
                const types::CellCollection &ends,
                const WallIncidence &walls)
             : width(w), height(h), numWalls(calculateNumWalls(w, h)),
@@ -35,7 +41,7 @@ namespace spelunker::maze {
                const WallIncidence &walls)
             : Maze(w, h, {}, types::CellCollection(), walls) {}
 
-    const Maze Maze::withStartingCell(const types::PossibleStartCell &s) const {
+    const Maze Maze::withStartingCell(const types::PossibleCell &s) const {
         return Maze(width, height, s, endingCells, wallIncidence);
     }
 
@@ -62,7 +68,11 @@ namespace spelunker::maze {
         return wallIncidence == other.wallIncidence;
     }
 
-    const Maze Maze::applySymmetry(types::Symmetry s) const {
+    int Maze::numCellWalls(const spelunker::types::Cell &c) const {
+        return numCellWallsInWI(c, wallIncidence);
+    }
+
+    const Maze Maze::applySymmetry(const types::Symmetry s) const {
         // Get the symmetry map corresponding to the symmetry.
         std::function<WallID(const types::Position&)> mp;
 
@@ -233,7 +243,7 @@ namespace spelunker::maze {
         }
 
         // If the original maze had an entrance, on a border, we make this the entrance + exit.
-        types::PossibleStartCell uStart = {};
+        types::PossibleCell uStart {};
 
         if (startCell.has_value()) {
             auto [sx, sy] = startCell.value();
@@ -248,6 +258,105 @@ namespace spelunker::maze {
         }
 
         return Maze(uw, uh, uStart, types::CellCollection(), wi);
+    }
+
+    const Maze Maze::braid(const double probability) const {
+        if (probability < 0 || probability > 1)
+            throw std::invalid_argument("Probability " + std::to_string(probability) + " is not in [0,1].");
+
+        // Create a copy of the wall incidence for this maze for the new maze.
+        WallIncidence wi = wallIncidence;
+
+        // Find all the dead ends and store them.
+        types::CellCollection deadends;
+        for (auto y = 0; y < height; ++y) {
+            for (auto x = 0; x < width; ++x) {
+                const auto c = types::cell(x, y);
+                if (numCellWalls(c) == 3)
+                    deadends.emplace_back(c);
+            }
+        }
+
+        // Shuffle the collection of dead ends and then process them.
+        math::RNG::shuffle(deadends);
+        for (auto c: deadends) {
+            // Check that the probability succeeds and that this cell is still a dead end.
+            if (math::RNG::randomProbability() > probability || numCellWallsInWI(c, wi) < 3)
+                continue;
+
+            // Create a list of the wall ranks pointing to the valid cells with the most walls.
+            std::vector<WallID > candidates;
+            auto maxWalls = 0;
+
+            for (auto d: types::directions()) {
+                const auto pos = types::pos(c, d);
+                const auto rk  = rankPosition(pos);
+
+                // We need to actually have a wall to remove.
+                if (rk < 0 || !wi[rankPosition(pos)])
+                    continue;
+
+                const auto nbrOpt = evaluatePosition(pos);
+                if (!nbrOpt.has_value())
+                    continue;
+
+                // We have a valid neighbour.
+                const auto nbr = nbrOpt.value();
+                const auto nbrWalls = numCellWallsInWI(nbr, wi);
+
+                if (nbrWalls < maxWalls)
+                    continue;
+
+                if (nbrWalls > maxWalls) {
+                    candidates.clear();
+                    maxWalls = nbrWalls;
+                }
+                candidates.emplace_back(rk);
+            }
+
+            // Now pick a random neighbour.
+            const auto nbr = math::RNG::randomElement(candidates);
+            wi[nbr] = false;
+        }
+
+        return Maze(width, height, startCell, endingCells, wi);
+    }
+
+    int Maze::numCellWallsInWI(const spelunker::types::Cell &c, const spelunker::maze::WallIncidence &wi) const {
+        checkCell(c);
+
+        int num = 0;
+        for (auto d: types::directions())
+            if (wall(types::pos(c, d)))
+                ++num;
+        return num;
+    }
+
+    const types::PossibleCell Maze::evaluatePosition(const types::Position &p) const noexcept {
+        const auto [c,d]  = p;
+        const auto [x,y]  = c;
+        int newX = x;
+        int newY = y;
+
+        switch (d) {
+            case types::NORTH:
+                --newY;
+                break;
+            case types::EAST:
+                ++newX;
+                break;
+            case types::SOUTH:
+                ++newY;
+                break;
+            case types::WEST:
+                --newX;
+                break;
+        }
+
+        if (newX < 0 || newX >= width || newY < 0 || newY >= height)
+            return {};
+        else
+            return types::cell(newX, newY);
     }
 
     WallID Maze::rankPosition(const types::Position &p) const {

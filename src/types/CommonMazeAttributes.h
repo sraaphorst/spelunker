@@ -45,8 +45,8 @@ namespace spelunker::types {
         }
     }
 
-    /// The type of a starting cell: it may be defined, or not.
-    using PossibleStartCell = std::optional<Cell>;
+    /// A possible cell: it may be defined, or not.
+    using PossibleCell = std::optional<Cell>;
 
     /// A list of all Directions for iteration.
     inline const std::vector<Direction> directions() {
