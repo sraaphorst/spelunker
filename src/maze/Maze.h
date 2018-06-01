@@ -145,7 +145,7 @@ namespace spelunker::maze {
          * This method takes the current maze, and begins by creating a list of all the dead ends.
          * The list is then shuffled, and one-by-one, the algorithm considers each dead end cell and does the following:
          * 1. Determine if it is still indeed a dead end cell, as one of its walls may have already been removed.
-         * 2. Use probability to determine if we apply braid to this cell.
+         * 2. Use probability to determine if we apply braiding to this cell.
          * 3. Amongst the three neighbouring cells sharing a wall with this cell, pick one of the neighbours that
          *    has the largest number of walls. Ties are broken randomly.
          * 4. Delete the wall between this cell and the selected neighbour.
@@ -153,10 +153,18 @@ namespace spelunker::maze {
          * The reason for step (3) is because this allows us to minimize wall reduction, attempting to possibly
          * fix two dead ends at the same time (this cell, and the neighbour cell).
          *
-         * @param probability the probability of fixing a given dead end.
-         * @return
+         * @param probability the probability of fixing a given dead end
+         * @return a new maze with walls removed to decrease the number of dead ends
          */
         const Maze braid(double probability = 1.0) const;
+
+        /// Find the dead ends for this maze.
+        /**
+         * Find a collection of all the dead ends for this maze.
+         * A cell is considered a "dead end" if it has exactly three walls.
+         * @return a collection of the dead end cells
+         */
+        const types::CellCollection findDeadEnds() const noexcept;
 
     private:
         /// Determine the number of walls a cell has for an instance of WallIncidence.
