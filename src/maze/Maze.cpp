@@ -16,6 +16,7 @@
 #include "types/CommonMazeAttributes.h"
 #include "types/Exceptions.h"
 #include "MazeAttributes.h"
+#include "math/MathUtils.h"
 #include "math/RNG.h"
 #include "Maze.h"
 #include "MazeGenerator.h"
@@ -258,31 +259,22 @@ namespace spelunker::maze {
     }
 
     const Maze Maze::braid(const double probability) const {
-        if (probability < 0 || probability > 1)
-            throw std::invalid_argument("Probability " + std::to_string(probability) + " is not in [0,1].");
+        math::MathUtils::checkProbability(probability);
 
         // Create a copy of the wall incidence for this maze for the new maze.
         WallIncidence wi = wallIncidence;
 
-        // Find all the dead ends and store them.
-        types::CellCollection deadends;
-        for (auto y = 0; y < height; ++y) {
-            for (auto x = 0; x < width; ++x) {
-                const auto c = types::cell(x, y);
-                if (numCellWalls(c) == 3)
-                    deadends.emplace_back(c);
-            }
-        }
-
-        // Shuffle the collection of dead ends and then process them.
+        // Find all the dead ends and store them, shuffle them, and process.
+        types::CellCollection deadends = findDeadEnds();
         math::RNG::shuffle(deadends);
+
         for (auto c: deadends) {
             // Check that the probability succeeds and that this cell is still a dead end.
             if (math::RNG::randomProbability() > probability || numCellWallsInWI(c, wi) < 3)
                 continue;
 
             // Create a list of the wall ranks pointing to the valid cells with the most walls.
-            std::vector<WallID > candidates;
+            std::vector<WallID> candidates;
             auto maxWalls = 0;
             for (auto d: types::directions()) {
                 const auto pos = types::pos(c, d);
@@ -315,6 +307,18 @@ namespace spelunker::maze {
         }
 
         return Maze(width, height, startCell, endingCells, wi);
+    }
+
+    const types::CellCollection Maze::findDeadEnds() const noexcept {
+        types::CellCollection deadends;
+        for (auto y = 0; y < height; ++y) {
+            for (auto x = 0; x < width; ++x) {
+                const auto c = types::cell(x, y);
+                if (numCellWalls(c) == 3)
+                    deadends.emplace_back(c);
+            }
+        }
+        return deadends;
     }
 
     int Maze::numCellWallsInWI(const spelunker::types::Cell &c, const spelunker::maze::WallIncidence &wi) const {
