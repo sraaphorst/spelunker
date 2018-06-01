@@ -94,7 +94,7 @@ namespace spelunker::thickmaze {
 
     CellularAutomatonThickMazeGenerator::DetermineBehaviour CellularAutomatonThickMazeGenerator::fromAlgorithm(Algorithm a) {
         switch (a) {
-            case MAZECETRIC:
+            case MAZECTRIC:
                 // B3/S1234
                 return [](const int num, const CellType ct) {
                     if (num >= 1 && num <= 4 && ct == WALL) return SURVIVE;

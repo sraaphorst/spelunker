@@ -79,14 +79,14 @@ namespace spelunker::thickmaze {
          *                   then it survives.
          * 3. Otherwise, the cell dies.
          *
-         * MAZECETRIC has rule B3/S1234 and seems to do better when the mazes are reversed
-         * MAZE       has rule B3/S12345 and seems to do better when the mazes are NOT reversed
-         * VOTE45     has rule B4678/S35678 and is atrocious, seeming to fill up the space entirely
-         * VOTE       has rule B5678/S45678 and generates cavernous, toroidal mazes
-         * B2S123     has rule B2/S123 and generates actually quite decent mazes.
+         * MAZECTRIC has rule B3/S1234 and seems to do better when the mazes are reversed
+         * MAZE      has rule B3/S12345 and seems to do better when the mazes are NOT reversed
+         * VOTE45    has rule B4678/S35678 and is atrocious, seeming to fill up the space entirely
+         * VOTE      has rule B5678/S45678 and generates cavernous, toroidal mazes
+         * B2S123    has rule B2/S123 and generates actually quite decent mazes.
          */
         enum Algorithm {
-            MAZECETRIC,
+            MAZECTRIC,
             MAZE,
             VOTE45,
             VOTE,
