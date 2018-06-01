@@ -108,7 +108,7 @@ namespace spelunker::thickmaze {
         for (auto y = 0; y < height; ++y) {
             for (auto x = 0; x < width; ++x) {
                 const auto c = types::cell(x, y);
-                if (numCellWalls(c) == 3)
+                if (contents[x][y] == FLOOR && numCellWalls(c) == 3)
                     deadends.emplace_back(c);
             }
         }
