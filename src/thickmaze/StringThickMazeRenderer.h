@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_STRINGTHICKMAZERENDERER_H
-#define SPELUNKER_STRINGTHICKMAZERENDERER_H
+#pragma once
 
 #include <ostream>
 #include <string>
@@ -31,5 +30,3 @@ namespace spelunker::thickmaze {
         std::ostream &out;
     };
 }
-
-#endif //SPELUNKER_STRINGTHICKMAZERENDERER_H

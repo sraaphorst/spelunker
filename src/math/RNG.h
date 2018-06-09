@@ -10,8 +10,7 @@
 #include <memory>
 #include <stdexcept>
 
-#ifndef SPELUNKER_RNG_H
-#define SPELUNKER_RNG_H
+#pragma once
 
 namespace spelunker::math {
     /**
@@ -109,5 +108,3 @@ namespace spelunker::math {
         static std::shared_ptr<RNG> rng;
     };
 };
-
-#endif //SPELUNKER_RNG_H

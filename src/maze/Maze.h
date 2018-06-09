@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_MAZE_H
-#define SPELUNKER_MAZE_H
+#pragma once
 
 #include <iostream>
 #include <algorithm>
@@ -292,4 +291,4 @@ namespace spelunker::typeclasses {
         using type = thickmaze::ThickMaze;
     };
 }
-#endif //SPELUNKER_MAZE_H
+

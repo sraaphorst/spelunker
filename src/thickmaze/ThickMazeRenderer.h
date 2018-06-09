@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_THICKMAZERENDERER_H
-#define SPELUNKER_THICKMAZERENDERER_H
+#pragma once
 
 namespace spelunker::thickmaze {
     class ThickMaze;
@@ -18,5 +17,3 @@ namespace spelunker::thickmaze {
         virtual void render(const ThickMaze &m) = 0;
     };
 }
-
-#endif //SPELUNKER_THICKMAZERENDERER_H

@@ -6,8 +6,7 @@
  * Attributes specific to Mazes.
  */
 
-#ifndef SPELUNKER_MAZEATTRIBUTES_H
-#define SPELUNKER_MAZEATTRIBUTES_H
+#pragma once
 
 #include <map>
 #include <vector>
@@ -63,5 +62,3 @@ namespace spelunker::typeclasses {
         using type = Direction;
     };
 }
-
-#endif //SPELUNKER_MAZEATTRIBUTES_H

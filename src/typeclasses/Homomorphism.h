@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_HOMOMORPHISM_H
-#define SPELUNKER_HOMOMORPHISM_H
+#pragma once
 
 namespace spelunker::typeclasses {
     /**
@@ -20,4 +19,3 @@ namespace spelunker::typeclasses {
          using type = T;
      };
 }
-#endif //SPELUNKER_HOMOMORPHISM_H

@@ -6,8 +6,7 @@
  * A maze generator using a randomized breadth-first search algorithm.
  */
 
-#ifndef SPELUNKER_BFSMAZEGENERATOR_H
-#define SPELUNKER_BFSMAZEGENERATOR_H
+#pragma once
 
 #include "MazeGenerator.h"
 
@@ -39,5 +38,3 @@ namespace spelunker::maze {
         const Maze generate() final;
     };
 }
-
-#endif //SPELUNKER_BFSMAZEGENERATOR_H

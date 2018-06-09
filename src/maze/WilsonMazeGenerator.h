@@ -8,8 +8,7 @@
  * Wilson algorithm.</a>
  */
 
-#ifndef SPELUNKER_WILSONMAZEGENERATOR_H
-#define SPELUNKER_WILSONMAZEGENERATOR_H
+#pragma once
 
 #include "maze/MazeGenerator.h"
 
@@ -38,5 +37,3 @@ namespace spelunker::maze {
         const Maze generate() final;
     };
 };
-
-#endif //SPELUNKER_WILSONMAZEGENERATOR_H

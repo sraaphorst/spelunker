@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_SHOW_H
-#define SPELUNKER_SHOW_H
+#pragma once
 
 #include <string>
 #include <tuple>
@@ -70,6 +69,3 @@ namespace spelunker::typeclasses {
         using type = std::pair<A, B>;
     };
 }
-
-
-#endif //SPELUNKER_SHOW_H

@@ -6,8 +6,7 @@
  * ThickMaze represents a maze where the walls have thickness, i.e. take up a grid square.
  */
 
-#ifndef SPELUNKER_THICKMAZE_H
-#define SPELUNKER_THICKMAZE_H
+#pragma once
 
 #include <sstream>
 #include <string>
@@ -119,4 +118,3 @@ namespace spelunker::typeclasses {
         }
     };
 }
-#endif //SPELUNKER_THICKMAZE_H

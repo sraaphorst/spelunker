@@ -6,8 +6,7 @@
  * Uses the simplistic binary tree approach to generating a maze.
  */
 
-#ifndef SPELUNKER_BINARYTREEMAZEGENERATOR_H
-#define SPELUNKER_BINARYTREEMAZEGENERATOR_H
+#pragma once
 
 #include "MazeGenerator.h"
 
@@ -45,4 +44,3 @@ namespace spelunker::maze {
     };
 }
 
-#endif //SPELUNKER_BINARYTREEMAZEGENERATOR_H

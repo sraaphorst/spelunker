@@ -6,8 +6,7 @@
  * Attributes specific to ThickMazes.
  */
 
-#ifndef SPELUNKER_THICKMAZEATTRIBUTES_H
-#define SPELUNKER_THICKMAZEATTRIBUTES_H
+#pragma once
 
 #include <tuple>
 #include <vector>
@@ -33,5 +32,3 @@ namespace spelunker::thickmaze {
         return contents;
     }
 }
-
-#endif //SPELUNKER_THICKMAZEATTRIBUTES_H

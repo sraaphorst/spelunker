@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_EXCEPTIONS_H
-#define SPELUNKER_EXCEPTIONS_H
+#pragma once
 
 #include <stdexcept>
 #include <string>
@@ -62,5 +61,3 @@ namespace spelunker::types {
         }
     };
 }
-
-#endif //SPELUNKER_EXCEPTIONS_H

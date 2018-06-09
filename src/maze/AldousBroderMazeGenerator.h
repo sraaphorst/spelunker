@@ -10,8 +10,7 @@
  * Note this is a highly inefficient maze generation algorithm.
  */
 
-#ifndef SPELUNKER_ALDOUSBRODERMAZEGENERATOR_H
-#define SPELUNKER_ALDOUSBRODERMAZEGENERATOR_H
+#pragma once
 
 #include "MazeGenerator.h"
 
@@ -45,4 +44,3 @@ namespace spelunker::maze {
     };
 }
 
-#endif //SPELUNKER_ALDOUSBRODERMAZEGENERATOR_H

@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_UTILS_H
-#define SPELUNKER_UTILS_H
+#pragma once
 
 #include <cstdlib>
 #include <functional>
@@ -34,6 +33,3 @@ public:
         return parse<double>([](const char *s, char **temp) { return std::strtold(s, temp); }, str);
     }
 };
-
-
-#endif //SPELUNKER_UTILS_H

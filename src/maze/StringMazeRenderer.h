@@ -7,8 +7,7 @@
  * https://www.vidarholen.net/~vidar/generatemaze.py
  */
 
-#ifndef SPELUNKER_ASCIIMAZERENDERER_H
-#define SPELUNKER_ASCIIMAZERENDERER_H
+#pragma once
 
 #include <ostream>
 #include <string>
@@ -43,6 +42,3 @@ namespace spelunker::maze {
         static const std::vector<std::string> boxchars;
     };
 }
-
-
-#endif //SPELUNKER_ASCIIMAZERENDERER_H

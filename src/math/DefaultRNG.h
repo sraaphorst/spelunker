@@ -6,8 +6,7 @@
  * The default random number generator using a Mersenne twister
  */
 
-#ifndef SPELUNKER_DEFAULTRNG_H
-#define SPELUNKER_DEFAULTRNG_H
+#pragma once
 
 #include <random>
 
@@ -35,5 +34,3 @@ namespace spelunker::math {
         std::mt19937 g;
     };
 };
-
-#endif //SPELUNKER_DEFAULTRNG_H

@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_HUNTANDKILLMAZEGENERATOR_H
-#define SPELUNKER_HUNTANDKILLMAZEGENERATOR_H
+#pragma once
 
 #include "types/CommonMazeAttributes.h"
 #include "MazeAttributes.h"
@@ -37,4 +36,3 @@ namespace spelunker::maze {
     };
 };
 
-#endif //SPELUNKER_HUNTANDKILLMAZEGENERATOR_H

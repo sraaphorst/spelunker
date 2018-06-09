@@ -6,8 +6,7 @@
  * Generalized method of reading parameters, creating a random maze, and outputting the result.
  */
 
-#ifndef SPELUNKER_GENERATETEMPLATE_H
-#define SPELUNKER_GENERATETEMPLATE_H
+#pragma once
 
 #include <iostream>
 
@@ -56,4 +55,3 @@ public:
     }
 };
 
-#endif //SPELUNKER_GENERATETEMPLATE_H

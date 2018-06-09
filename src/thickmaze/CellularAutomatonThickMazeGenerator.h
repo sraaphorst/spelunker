@@ -10,8 +10,7 @@
  * https://english.rejbrand.se/rejbrand/article.asp?ItemIndex=421
  */
 
-#ifndef SPELUNKER_CELLULARAUTOMATONTHICKMAZEGENERATOR_H
-#define SPELUNKER_CELLULARAUTOMATONTHICKMAZEGENERATOR_H
+#pragma once
 
 #include <functional>
 
@@ -139,5 +138,3 @@ namespace spelunker::thickmaze {
         settings st;
     };
 };
-
-#endif //SPELUNKER_CELLULARAUTOMATONTHICKMAZEGENERATOR_H

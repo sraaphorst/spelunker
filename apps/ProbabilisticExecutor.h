@@ -7,8 +7,7 @@
  * Accept one probability factor.
  */
 
-#ifndef SPELUNKER_PROBABILISTICEXECUTOR_H
-#define SPELUNKER_PROBABILISTICEXECUTOR_H
+#pragma once
 
 #include <iostream>
 
@@ -67,4 +66,3 @@ public:
     }
 };
 
-#endif //SPELUNKER_PROBABILISTICEXECUTOR_H

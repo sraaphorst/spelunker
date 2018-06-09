@@ -7,8 +7,7 @@
  * \author Alejandro Mallea <janoma@gmail.com>
  */
 
-#ifndef SPELUNKER_DISJOINTSETHELPER_H
-#define SPELUNKER_DISJOINTSETHELPER_H
+#pragma once
 
 #include <vector>
 #include <boost/pending/property.hpp>
@@ -95,4 +94,3 @@ namespace spelunker::types {
         return lhs.someInt() < rhs.someInt();
     }
 }
-#endif //SPELUNKER_DISJOINTSETHELPER_H

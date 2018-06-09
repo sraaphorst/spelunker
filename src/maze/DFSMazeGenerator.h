@@ -8,8 +8,7 @@
  * depth-first search algorithm.</a>
  */
 
-#ifndef SPELUNKER_RANDOMIZEDDFSMAZEGENERATOR_H
-#define SPELUNKER_RANDOMIZEDDFSMAZEGENERATOR_H
+#pragma once
 
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
@@ -39,4 +38,3 @@ namespace spelunker::maze {
     };
 };
 
-#endif //SPELUNKER_RANDOMIZEDDFSMAZEGENERATOR_H
