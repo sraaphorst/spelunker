@@ -8,8 +8,7 @@
  * Randomized Prim's algorithm.</a>
  */
 
-#ifndef SPELUNKER_RANDOMIZEDPRIMMAZEGENERATOR_H
-#define SPELUNKER_RANDOMIZEDPRIMMAZEGENERATOR_H
+#pragma once
 
 #include "types/CommonMazeAttributes.h"
 #include "MazeAttributes.h"
@@ -31,5 +30,3 @@ namespace spelunker::maze {
         void addCellWalls(const types::Cell &c, WallCollection &wallList, const WallIncidence &wi);
     };
 };
-
-#endif //SPELUNKER_RANDOMIZEDPRIMMAZEGENERATOR_H

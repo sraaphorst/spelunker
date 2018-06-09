@@ -8,8 +8,7 @@
  * Randomized Kruskal's algorithm.</a>
  */
 
-#ifndef SPELUNKER_RANDOMIZEDKRUSKALMAZE_H
-#define SPELUNKER_RANDOMIZEDKRUSKALMAZE_H
+#pragma once
 
 #include <vector>
 
@@ -27,4 +26,4 @@ namespace spelunker::maze {
         const Maze generate() final;
     };
 }
-#endif //SPELUNKER_RANDOMIZEDKRUSKALMAZE_H
+

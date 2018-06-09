@@ -8,8 +8,7 @@
  * growing tree algorithm.</a>
  */
 
-#ifndef SPELUNKER_GROWINGTREEMAZEGENERATOR_H
-#define SPELUNKER_GROWINGTREEMAZEGENERATOR_H
+#pragma once
 
 #include <functional>
 
@@ -95,5 +94,3 @@ namespace spelunker::maze {
     };
 }
 
-
-#endif //SPELUNKER_GROWINGTREEMAZEGENERATOR_H

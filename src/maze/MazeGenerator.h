@@ -6,8 +6,7 @@
  * The superclass of all maze generators.
  */
 
-#ifndef SPELUNKER_MAZEGENERATOR_H
-#define SPELUNKER_MAZEGENERATOR_H
+#pragma once
 
 #include <functional>
 
@@ -87,4 +86,3 @@ namespace spelunker::maze {
     };
 };
 
-#endif //SPELUNKER_MAZEGENERATOR_H

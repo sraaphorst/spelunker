@@ -6,8 +6,7 @@
  * Superclass of algorithms unique to @see{ThickMaze}s.
  */
 
-#ifndef SPELUNKER_THICKMAZEGENERATOR_H
-#define SPELUNKER_THICKMAZEGENERATOR_H
+#pragma once
 
 namespace spelunker::thickmaze {
     class ThickMaze;
@@ -24,5 +23,3 @@ namespace spelunker::thickmaze {
         const int height;
     };
 };
-
-#endif //SPELUNKER_THICKMAZEGENERATOR_H

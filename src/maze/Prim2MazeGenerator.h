@@ -8,8 +8,7 @@
  * Modified Prim's algorithm.</a>
  */
 
-#ifndef SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H
-#define SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H
+#pragma once
 
 #include "types/CommonMazeAttributes.h"
 #include "MazeAttributes.h"
@@ -32,5 +31,3 @@ namespace spelunker::maze {
                                          const types::CellIndicator &ci);
     };
 };
-
-#endif //SPELUNKER_RANDOMIZEDPRIM2MAZEGENERATOR_H

@@ -6,8 +6,7 @@
  * Attributes common to both regular and thick mazes.
  */
 
-#ifndef SPELUNKER_COMMONMAZEATTRIBUTES_H
-#define SPELUNKER_COMMONMAZEATTRIBUTES_H
+#pragma once
 
 #include <optional>
 #include <string>
@@ -163,5 +162,3 @@ namespace spelunker::types {
         }
     }
 }
-
-#endif //SPELUNKER_COMMONMAZEATTRIBUTES_H

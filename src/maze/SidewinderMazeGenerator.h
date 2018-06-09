@@ -8,8 +8,7 @@
  * sidewinder algorithm.</a>
  */
 
-#ifndef SPELUNKER_SIDEWINDERMAZEGENERATOR_H
-#define SPELUNKER_SIDEWINDERMAZEGENERATOR_H
+#pragma once
 
 #include "MazeGenerator.h"
 
@@ -29,5 +28,3 @@ namespace spelunker::maze {
         const double probabilityEast;
     };
 }
-
-#endif //SPELUNKER_SIDEWINDERMAZEGENERATOR_H

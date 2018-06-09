@@ -8,8 +8,7 @@
  * Eller's algorithm.</a>
  */
 
-#ifndef SPELUNKER_ELLERMAZEGENERATOR_H
-#define SPELUNKER_ELLERMAZEGENERATOR_H
+#pragma once
 
 #include "MazeGenerator.h"
 
@@ -77,5 +76,3 @@ namespace spelunker::maze {
         const double density;
     };
 };
-
-#endif //SPELUNKER_ELLERMAZEGENERATOR_H

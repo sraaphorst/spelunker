@@ -4,8 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#ifndef SPELUNKER_MAZERENDERER_H
-#define SPELUNKER_MAZERENDERER_H
+#pragma once
 
 namespace spelunker::maze {
     class Maze;
@@ -18,5 +17,3 @@ namespace spelunker::maze {
         virtual void render(const Maze &m) = 0;
     };
 }
-
-#endif //SPELUNKER_MAZERENDERER_H

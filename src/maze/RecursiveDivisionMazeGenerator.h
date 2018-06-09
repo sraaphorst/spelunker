@@ -8,8 +8,7 @@
  * recursive division algorithm.</a>
  */
 
-#ifndef SPELUNKER_RECURSIVEDIVISIONMAZEGENERATOR_H
-#define SPELUNKER_RECURSIVEDIVISIONMAZEGENERATOR_H
+#pragma once
 
 #include "MazeGenerator.h"
 
@@ -30,5 +29,3 @@ namespace spelunker::maze {
         };
     };
 }
-
-#endif //SPELUNKER_RECURSIVEDIVISIONMAZEGENERATOR_H

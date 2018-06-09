@@ -6,8 +6,7 @@
  * Utilities to simplify some mathematical functions and value handling.
  */
 
-#ifndef SPELUNKER_MATHUTILS_H
-#define SPELUNKER_MATHUTILS_H
+#pragma once
 
 namespace spelunker::math {
     /**
@@ -27,5 +26,3 @@ namespace spelunker::math {
         static void checkProbability(double probability);
     };
 }
-
-#endif //SPELUNKER_MATHUTILS_H
