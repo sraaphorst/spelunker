@@ -8,12 +8,14 @@ set(_MATH_PUBLIC_HEADER_FILES
 
 set(_MATH_PRIVATE_HEADER_FILES
         DefaultRNG.h
+        Partition.h
         )
 
 set(_MATH_SOURCE_FILES
-        MathUtils.cpp
-        RNG.cpp
         DefaultRNG.cpp
+        MathUtils.cpp
+        Partition.cpp
+        RNG.cpp
         )
 
 src_dir_filelist("${_MATH_PUBLIC_HEADER_FILES}" outlst)

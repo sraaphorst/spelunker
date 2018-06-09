@@ -3,6 +3,7 @@
 
 set(_THICKMAZE_PUBLIC_HEADER_FILES
         CellularAutomatonThickMazeGenerator.h
+        GridColouring.h
         StringThickMazeRenderer.h
         ThickMaze.h
         ThickMazeAttributes.h
@@ -15,6 +16,7 @@ set(_THICKMAZE_PRIVATE_HEADER_FILES
 
 set(_THICKMAZE_SOURCE_FILES
         CellularAutomatonThickMazeGenerator.cpp
+        GridColouring.cpp
         StringThickMazeRenderer.cpp
         ThickMaze.cpp
         ThickMazeGenerator.cpp
