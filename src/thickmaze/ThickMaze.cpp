@@ -28,7 +28,7 @@ namespace spelunker::thickmaze {
     }
 
     const ThickMaze ThickMaze::reverse() const {
-        auto invContents = createEmptyThickCellContents(width, height);
+        auto invContents = createThickMazeCellContents(width, height);
         for (auto y=0; y < height; ++y)
             for (auto x=0; x < width; ++x)
                 invContents[x][y] = contents[x][y] == FLOOR ? WALL : FLOOR;

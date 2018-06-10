@@ -57,3 +57,6 @@ target_link_libraries(test_thickify LINK_PUBLIC spelunker)
 
 add_executable(test_unicursal test_unicursal.cpp)
 target_link_libraries(test_unicursal LINK_PUBLIC spelunker)
+
+add_executable(grid_colouring grid_colouring.cpp)
+target_link_libraries(grid_colouring LINK_PUBLIC spelunker)

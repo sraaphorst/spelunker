@@ -255,7 +255,7 @@ namespace spelunker::typeclasses {
             const int twidth  = 2 * mwidth - 1;
             const int theight = 2 * mheight - 1;
 
-            auto contents = thickmaze::createEmptyThickCellContents(twidth, theight);
+            auto contents = thickmaze::createThickMazeCellContents(twidth, theight);
 
             // Iterate over the walls of the maze and add them to the thick maze, focusing
             // on the east and the south walls of maze.
