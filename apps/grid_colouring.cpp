@@ -60,8 +60,10 @@ int main(int argc, char *argv[]) {
 
     auto candidates = gc.wallCandidates();
     for (auto i=0; i < candidates.size(); ++i) {
-        std::cout << "************* CANDIDATE " << i << " **********" << std:: endl;
-        auto candidate = gc.wallCandidates()[i];
+        auto candidate = candidates[i];
+        std::cout << "************* CANDIDATE " << i << " (" <<
+                  spelunker::typeclasses::Show<spelunker::thickmaze::GridColouring::CandidateConfiguration>::show(candidate) <<
+                  ") **********" << std:: endl;
         spelunker::thickmaze::GridColouringThickMazeGenerator gen(width, height, gc, candidate);
         spelunker::thickmaze::ThickMaze tm = gen.generate();
         std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
