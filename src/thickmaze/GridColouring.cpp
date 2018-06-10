@@ -9,7 +9,10 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <set>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #ifdef DEBUG
@@ -17,6 +20,7 @@
 using namespace std;
 #endif
 
+#include "typeclasses/Show.h"
 #include "types/CommonMazeAttributes.h"
 #include "math/Partition.h"
 #include "GridColouring.h"
@@ -87,6 +91,13 @@ namespace spelunker::thickmaze {
                                                                                      GridColouring::AbortPrematurely &aborter) const {
         // Brute-force all possibilities, of which there are many.
         std::vector<CandidateConfiguration> configurations;
+
+        // We want to keep track of ones we've already seen and not produce them again.
+        // There's probably a better way to do this than construct strings, but at least
+        // strings allow us larger number of colours than would otherwise be available
+        // to us through bitwise operations. Right now we use a base=64 representation
+        // implemented in the Show<CandidateConfiguration> typeclass.
+        std::set<std::string> seen;
 
         // Iterate over the candidates for room colour.
         bool aborted = false;
@@ -237,7 +248,13 @@ namespace spelunker::thickmaze {
                     }
                     cout << endl;
 #endif
+                    // Create the configuration, convert it to a string format, and skip it if we've already seen it.
                     CandidateConfiguration c{room, walls};
+                    auto str = typeclasses::Show<CandidateConfiguration>::show(c);
+                    if (seen.find(str) != seen.end())
+                        continue;
+                    seen.insert(str);
+
                     configurations.emplace_back(c);
                     if (aborter(c)) {
                         aborted = true;

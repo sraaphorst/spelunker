@@ -192,7 +192,7 @@ namespace spelunker::thickmaze {
             }
         }
 
-        assert(rooms.size() > 0 && rooms.size() <= 2);
+        //assert(rooms.size() > 0 && rooms.size() <= 2);
         return rooms;
     }
 

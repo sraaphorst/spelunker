@@ -10,11 +10,14 @@
 
 #include <functional>
 #include <map>
+#include <sstream>
+#include <string>
 #include <tuple>
 #include <vector>
 
 #include <types/CommonMazeAttributes.h>
 #include "math/Partition.h"
+#include "typeclasses/Show.h"
 
 namespace spelunker::thickmaze {
     class GridColouring final {
@@ -172,5 +175,24 @@ namespace spelunker::thickmaze {
          * @return true if the cells are contiguous, and false otherwise.
          */
         bool isContiguous(const ColourCollection &colours) const;
+    };
+}
+
+namespace spelunker::typeclasses {
+    template<>
+    struct Show<thickmaze::GridColouring::CandidateConfiguration> {
+        // Encode in base-64.
+        static constexpr int base = 64;
+        static constexpr char nums[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        static std::string show(const thickmaze::GridColouring::CandidateConfiguration &c) {
+            std::ostringstream out;
+            out << nums[c.roomColour % base];
+            for (auto i=0; i < c.walls.size(); ++i) {
+                for (auto r: c.walls[i])
+                    out << nums[r % base];
+                if (i < c.walls.size()-1) out << "|";
+            }
+            return out.str();
+        }
     };
 }
