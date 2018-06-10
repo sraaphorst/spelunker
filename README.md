@@ -230,6 +230,8 @@ Spelunker also defines and contains some typeclasses and will likely offer more:
 
 3. https://en.wikipedia.org/wiki/Maze_solving_algorithm
 
-4. http://weblog.jamisbuck.org/2010/12/29/maze-generation-eller-s-algorithm
+4. http://www.jamisbuck.org/mazes/
 
 5. Jamis Buck. Mazes for Programmers. The Pragmatic Programmers, July 2015. http://mazesforprogrammers.com
+
+6. https://www.gamasutra.com/blogs/HermanTulleken/20161005/282629/Algorithms_for_making_more_interesting_mazes.php
