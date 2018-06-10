@@ -5,7 +5,6 @@
  */
 
 #include <iostream>
-using namespace std;
 
 #include "maze/DFSMazeGenerator.h"
 #include "thickmaze/ThickMaze.h"

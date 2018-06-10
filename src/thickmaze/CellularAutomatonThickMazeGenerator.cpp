@@ -140,7 +140,7 @@ namespace spelunker::thickmaze {
 
     const ThickMaze CellularAutomatonThickMazeGenerator::generate() {
         // Create and initialize the cell contents.
-        auto contents = createEmptyThickCellContents(width, height);
+        auto contents = createThickMazeCellContents(width, height);
 
         // The back-check chart.
         std::list<CellContents> prevs;
@@ -157,7 +157,7 @@ namespace spelunker::thickmaze {
 
         for (auto i = 0; i < st.numGenerations && inconsistent; ++i) {
             // Create a new contents to initialize.
-            auto newContents = createEmptyThickCellContents(width, height);
+            auto newContents = createThickMazeCellContents(width, height);
 
             // Get the old contents from which to work.
             const auto &oldContents = prevs.back();
