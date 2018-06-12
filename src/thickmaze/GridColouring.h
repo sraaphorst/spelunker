@@ -95,7 +95,7 @@ namespace spelunker::thickmaze {
          * @return a list of viable CandidateConfigurations
          */
         CandidateConfigurationCollection wallCandidates(int maxSize = -1,
-                                                        AbortPrematurely &aborter = neverStop) const;
+                                                        AbortPrematurely &aborter = stopAfterRoom0) const;
 
         /**
          * Return the colour of the cell (x,y).
