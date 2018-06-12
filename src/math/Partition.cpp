@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-#include "partition.h"
+#include "Partition.h"
 
 namespace spelunker::math {
     partition::iterator::

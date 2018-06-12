@@ -183,8 +183,9 @@ namespace spelunker::typeclasses {
     struct Show<thickmaze::GridColouring::CandidateConfiguration> {
         // Encode in base-64.
         static constexpr int base = 64;
-        static constexpr char nums[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         static std::string show(const thickmaze::GridColouring::CandidateConfiguration &c) {
+            // This doesn't seem to like to be static in the struct so while it's loathsome, put it here.
+            constexpr char nums[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
             std::ostringstream out;
             out << nums[c.roomColour % base];
             for (auto i=0; i < c.walls.size(); ++i) {

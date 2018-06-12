@@ -113,7 +113,7 @@ namespace spelunker::thickmaze {
                 // Recommended on: https://steamcommunity.com/app/357330/discussions/0/618459405722195374
                 return [](const int num, const CellType ct) {
                     if ((num == 3 || (num >=5 && num <=8)) && ct == WALL) return SURVIVE;
-                    if (num == 4 || (num >= 6 && num <= 8) && ct == FLOOR) return BORN;
+                    if ((num == 4 || (num >= 6 && num <= 8)) && ct == FLOOR) return BORN;
                     return DIE;
                 };
             case VOTE:
