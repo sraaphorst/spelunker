@@ -7,8 +7,10 @@
 #include <iostream>
 
 #include "maze/DFSMazeGenerator.h"
-#include "thickmaze/ThickMaze.h"
 #include "maze/Maze.h"
+#include "maze/MazeTypeclasses.h"
+#include "thickmaze/ThickMaze.h"
+#include "thickmaze/ThickMazeTypeclasses.h"
 #include "typeclasses/Homomorphism.h"
 #include "typeclasses/Show.h"
 

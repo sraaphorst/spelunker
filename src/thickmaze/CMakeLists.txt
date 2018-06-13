@@ -10,6 +10,7 @@ set(_THICKMAZE_PUBLIC_HEADER_FILES
         ThickMazeAttributes.h
         ThickMazeGenerator.h
         ThickMazeRenderer.h
+        ThickMazeTypeclasses.h
         )
 
 set(_THICKMAZE_PRIVATE_HEADER_FILES

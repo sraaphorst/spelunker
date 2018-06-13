@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "maze/Maze.h"
+#include "maze/MazeTypeclasses.h"
 #include "typeclasses/Show.h"
 #include "Utils.h"
 

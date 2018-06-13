@@ -88,7 +88,7 @@ namespace spelunker::maze {
         return nbrs;
     }
 
-#ifndef NDEBUG
+#ifndef DEBUG
     void MazeGenerator::test_createUnrankWallMapS(const int w, const int h) {
         const auto m = createUnrankWallMapS(w, h);
         for (auto kv : m) {
