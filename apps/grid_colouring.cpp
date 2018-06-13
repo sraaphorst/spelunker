@@ -9,6 +9,7 @@
 #include "thickmaze/GridColouring.h"
 #include "thickmaze/GridColouringThickMazeGenerator.h"
 #include "thickmaze/ThickMaze.h"
+#include "thickmaze/ThickMazeTypeclasses.h"
 #include "typeclasses/Show.h"
 #include "Utils.h"
 

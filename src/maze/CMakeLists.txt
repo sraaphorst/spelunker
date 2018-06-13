@@ -14,6 +14,7 @@ set(_MAZE_PUBLIC_HEADER_FILES
         MazeAttributes.h
         MazeGenerator.h
         MazeRenderer.h
+        MazeTypeclasses.h
         PrimMazeGenerator.h
         Prim2MazeGenerator.h
         RecursiveDivisionMazeGenerator.h

@@ -9,6 +9,7 @@ configure_file(
 )
 
 set(SUBDIRS
+        graphmaze
         math
         maze
         thickmaze
@@ -20,6 +21,7 @@ foreach(d ${SUBDIRS})
 endforeach()
 
 set(PUBLIC_HEADER_FILES
+        ${GRIDMAZE_PUBLIC_HEADER_FILES}
         ${MATH_PUBLIC_HEADER_FILES}
         ${MAZE_PUBLIC_HEADER_FILES}
         ${THICKMAZE_PUBLIC_HEADER_FILES}
@@ -29,6 +31,7 @@ set(PUBLIC_HEADER_FILES
         )
 
 set(PRIVATE_HEADER_FILES
+        ${GRIDMAZE_PRIVATE_HEADER_FILES}
         ${MATH_PRIVATE_HEADER_FILES}
         ${MAZE_PRIVATE_HEADER_FILES}
         ${THICKMAZE_PRIVATE_HEADER_FILES}
@@ -37,6 +40,7 @@ set(PRIVATE_HEADER_FILES
         )
 
 set(SOURCE_FILES
+        ${GRIDMAZE_SOURCE_FILES}
         ${MATH_SOURCE_FILES}
         ${MAZE_SOURCE_FILES}
         ${TYPES_SOURCE_FILES}

@@ -11,6 +11,7 @@
 #include "thickmaze/CellularAutomatonThickMazeGenerator.h"
 #include "typeclasses/Show.h"
 #include "thickmaze/ThickMaze.h"
+#include "thickmaze/ThickMazeTypeclasses.h"
 using namespace spelunker::thickmaze;
 
 int main(int argc, char *argv[]) {

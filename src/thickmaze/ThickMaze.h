@@ -11,9 +11,7 @@
 #include <sstream>
 #include <string>
 
-#include "typeclasses/Show.h"
 #include "ThickMazeAttributes.h"
-#include "StringThickMazeRenderer.h"
 
 namespace spelunker::thickmaze {
     /**
@@ -104,17 +102,5 @@ namespace spelunker::thickmaze {
         const int width;
         const int height;
         const CellContents contents;
-    };
-}
-
-namespace spelunker::typeclasses {
-    template<>
-    struct Show<thickmaze::ThickMaze> {
-        static std::string show(const thickmaze::ThickMaze &tm) {
-            std::ostringstream out;
-            thickmaze::StringThickMazeRenderer r(out);
-            r.render(tm);
-            return out.str();
-        }
     };
 }

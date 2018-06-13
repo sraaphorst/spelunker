@@ -78,7 +78,7 @@ namespace spelunker::maze {
         const types::Neighbours neighbours(const types::Cell &c,
                                            std::function<bool(const int, const int)> filter) const;
 
-#ifndef NDEBUG
+#ifndef DEBUG
     public:
         /// Static test case for the createUnrankWallMapS function.
         static void test_createUnrankWallMapS(int w, int h);

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -33,6 +34,24 @@ namespace spelunker::types {
         SOUTH,
         WEST,
     };
+
+    /// Determine what direction two adjacent cells are apart.
+    inline Direction cellDirection(const Cell &c1, const Cell &c2) {
+        auto [x1, y1] = c1;
+        auto [x2, y2] = c2;
+
+        if (x1 - x2 == -1 && y1 == y2)
+            return EAST;
+        if (x1 - x2 ==  1 && y1 == y2)
+            return WEST;
+        if (y1 - y2 == -1 && x1 == x2)
+            return SOUTH;
+        if (y1 - y2 ==  1 && x1 == x2)
+            return NORTH;
+
+        // If we reach this point, the cells aren't adjacent.
+        throw std::domain_error("Vertices are not adjacent");
+    }
 
     /// Flip a direction.
     inline Direction flip(const Direction d) {

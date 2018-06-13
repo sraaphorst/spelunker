@@ -9,6 +9,7 @@ using namespace std;
 
 #include "maze/DFSMazeGenerator.h"
 #include "maze/Maze.h"
+#include "maze/MazeTypeclasses.h"
 #include "typeclasses/Show.h"
 
 int main(int argc, char *argv[]) {

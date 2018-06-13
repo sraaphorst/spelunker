@@ -422,7 +422,7 @@ namespace spelunker::maze {
             throw types::OutOfBoundsCell(types::Cell(x, y));
     }
 
-#ifndef NDEBUG
+#ifdef DEBUG
 
     void Maze::test_rankPositionS(const int w, const int h) {
         std::set<int> ranks;
