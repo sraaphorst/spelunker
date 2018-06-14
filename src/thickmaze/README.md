@@ -114,7 +114,7 @@ and is shown by the area bounded by the black box.
 
 ![Lookup table and coloured grid](../../examples/gridmaze1.png)
 
-Now, pick any colour `c` (in our example, white) to be the _rooms_ of the maze. In the randomized Prim's algorithm, the walls are single cells. The idea in this modification is to instead allow walls to assume different shapes consisting of one or more contiguous cells. We do this as follows: find a partition of the remaining `K-1` colours into two or three partition classes, say `{W<sub>1</sub>, W<sub>2</sub>}` or `{W<sub>1</sub>, W<sub>2</sub>, P}` subject to the properties below. The idea is that `W<sub>1</sub>` will represent one wall type, `W<sub>2</sub>` will represent another wall type, and `P` will represent the _pillars_ of our maze (i.e. fixed walls).
+Now, pick any colour `c` (in our example, white) to be the _rooms_ of the maze. In the randomized Prim's algorithm, the walls are single cells. The idea in this modification is to instead allow walls to assume different shapes consisting of one or more contiguous cells. We do this as follows: find a partition of the remaining `K-1` colours into two or three partition classes, say <code>{W<sub>1</sub>, W<sub>2</sub>}</code> or <code>{W<sub>1</sub>, W<sub>2</sub>, P}</code> subject to the properties below. The idea is that <code>W<sub>1</sub></code> will represent one wall type, <code>W<sub>2</sub></code> will represent another wall type, and `P` will represent the _pillars_ of our maze (i.e. fixed walls).
 
 1. <code>W<sub>1</sub></code> and <code>W<sub>2</sub></code> are both nonempty. (Note that `P` can be empty.)
 2. The colours of <code>W<sub>1</sub></code> must be contiguous.
