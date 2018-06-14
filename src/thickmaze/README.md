@@ -184,7 +184,7 @@ Indeed, Prim's algorithm, for thick mazes, is simply the application of this alg
 
 ## Typeclasses
 
-For the definition of homomorphisms and related concepts, see [Homomorphisms](../../README.md#homomorphisms) on the main page.
+For the definition of homomorphisms and related concepts, see [Homomorphisms](../../README.md#homomorphism) on the main page.
 
 There is a homomorphism (specifically, a monomorphism) from regular `Maze`s to `ThickMaze`s. In other words, every `Maze` can be represented as a `ThickMaze` with the same structure, but not the converse, i.e. there are `ThickMaze`s that cannot be represented as `Maze`s.
 
