@@ -13,7 +13,7 @@ Additionally, all algorithms that can be used to generate `Maze`s can also be us
 
 https://en.wikipedia.org/wiki/Cellular_automaton
 
-These are algorithms that generate a random grid of floor and walls, and then for a time `t`, use certain rules based on the contents at time `t-1` to determine the layout. They are known to converge to relatively stable configurations quite quickly, but seldom produce connected (and thus, not perfect) mazes. They are still interesting to study, and algorithms such as [braiding](../../README.md#braiding) can post-modify such mazes to increase the likelihood that they be connected.
+These are algorithms that generate a random grid of floor and walls, and then for a time `t`, use certain rules based on the contents at time `t-1` to determine the layout. A key property of the cellular automata used for mazes is that they are known to converge to relatively stable configurations quite quickly, but seldom produce connected (and thus, not perfect) mazes. They are still interesting to study, and algorithms such as [braiding](../../README.md#braiding) can post-modify such mazes to increase the likelihood that they be connected.
 
 The state of a cell at time `t` is determined by three parameters, each of which will be described below:
 
