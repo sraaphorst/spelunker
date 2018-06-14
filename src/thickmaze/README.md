@@ -1,7 +1,5 @@
 # ThickMaze
 
-<code>A code span with <sup>superscript</sup> text and escaped characters: "&lt;&amp;&gt;".</code>
-
 A `ThickMaze` is a maze where the walls are not simply cell dividers, but actually take up a cell themselves, i.e. each entry in the `ThickMaze` is either `FLOOR` or `WALL`. This representation allows the `ThickMaze` library to use some unique algorithms that would not be possible for the [`Maze`](../maze/README.md) library:
 
 1. [Cellular Automata](#cellular-automata)
@@ -86,6 +84,8 @@ In our example, we choose:
 * <code>u<sub>x</sub> = 4</code>
 * <code>v<sub>x</sub> = 2</code>
 * <code>v<sub>y</sub> = 2</code>
+
+<code>A code span with <sup>superscript</sup> text and escaped characters: "&lt;&amp;&gt;".</code>
 
 Let `G` be a grid of width `w` and height `h`, and let `G[x][y]` indicate the cell in the `x`th column and `y`th row of `G`.
 
