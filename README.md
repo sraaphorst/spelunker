@@ -317,3 +317,5 @@ Here is a list of features that are currently lacking of incomplete that will be
 5. Jamis Buck. Mazes for Programmers. The Pragmatic Programmers, July 2015. http://mazesforprogrammers.com
 
 6. https://www.gamasutra.com/blogs/HermanTulleken/20161005/282629/Algorithms_for_making_more_interesting_mazes.php
+
+[Back to top](#spelunker)
