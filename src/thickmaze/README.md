@@ -19,9 +19,9 @@ The state of a cell at time `t` is determined by three parameters, each of which
 
 1. Its state at time `t-1`;
 2. The neighbourhood of the cell at time `t-1`; and
-3. The cellular automaton rule chosen.
+3. The cellular automaton ruleset chosen.
 
-The state of a cell is a binary parameter, where `true` means the cell is alive (i.e. a wall), and `false` means that the cell is not alive (i.e. a floor space).
+In the case of mazes. the state of a cell is a binary parameter, where `true` means the cell is alive (i.e. a wall), and `false` means that the cell is not alive (i.e. a floor space).
 
 The neighbourhood of a cell comprises the state of the cells around a given cell. The library provides implementations the two most common neighbourhood types:
 
