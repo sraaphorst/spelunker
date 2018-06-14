@@ -230,7 +230,7 @@ This section is mathematical but useful for maximizing the value of graph genera
 
 As mazes are essentially certain families of graphs (trees in the case of perfect mazes), we can discuss _homomorphisms_ between different classes of graphs. Some basic definitions:
 
-1. A _graph_ is a mathematical structure `G = (V,E)`, where `V` is a set of vertices (or points), and `E` is a set of edges between the vertices (or lines). A _maze_ can be thought of as a type of graph where the cells are vertices and the passages between cells are edges.
+1. A _graph_ is a mathematical structure `G = (V,E)`, where `V` is a set of vertices (or points), and `E` is a set of edges (or lines) between two vertices. A _maze_ can be thought of as a type of graph where the cells are vertices and the passages between cells are edges.
 
 1. A _homomorphism_ is a structure-preserving map: if we have two graphs, `G` and `H`, then a homomorphism `φ` is a map between the vertices of `G` and `H` so that if there is an edge between two vertices, say `(v, w)` in `G`, then there is also an edge between the vertices `(φ(v), φ(w))` in `H`.
 
