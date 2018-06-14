@@ -75,8 +75,8 @@ namespace spelunker::typeclasses {
         }
 
         static constexpr bool is_instance = true;
-        using src = maze::Maze;
-        using type = thickmaze::ThickMaze;
+        using src  = maze::Maze;
+        using dest = thickmaze::ThickMaze;
     };
 
     template<>
@@ -103,5 +103,9 @@ namespace spelunker::typeclasses {
 
             return graphmaze::GraphMaze(w, h, m.getStartingCell(), m.getEndingCells(), vc);
         }
+
+        static constexpr bool is_instance = true;
+        using src  = maze::Maze;
+        using dest = graphmaze::GraphMaze;
     };
 }

@@ -45,6 +45,10 @@ namespace spelunker::typeclasses {
 
             return maze::Maze(w, h, m.getStartingCell(), m.getEndingCells(), wi);
         }
+
+        static constexpr bool is_instance = true;
+        using src  = graphmaze::GraphMaze;
+        using dest = maze::Maze;
     };
 
     template<>
@@ -53,5 +57,8 @@ namespace spelunker::typeclasses {
             auto m = Homomorphism<graphmaze::GraphMaze, maze::Maze>::morph(gm);
             return Show<maze::Maze>::show(m);
         }
+
+        static constexpr bool is_instance = true;
+        using type = graphmaze::GraphMaze;
     };
 }
