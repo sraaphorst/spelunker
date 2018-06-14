@@ -89,7 +89,7 @@ Let `G` be a grid of width `w` and height `h`, and let `G[x][y]` indicate the ce
 
 The algorithm begins by producing a _periodic colouring_ of the cells of `G` using <code>K = u<sub>x</sub> * v<sub>y</sub></code> colours. This is done by defining a _colour lookup table_ `T` with:
 * <code>T<sub>c</sub> = v<sub>x</sub></code> columns; and
-* <code>T<sub>r</sub> = K / gcd(v<sub>x</sub>, v<sub>y</sub></code> rows
+* <code>T<sub>r</sub> = K / gcd(v<sub>x</sub>, v<sub>y</sub>)</code> rows
 
 where `gcd(a,b)` is the _greatest common divisor_ of `a` and `b`.
 
