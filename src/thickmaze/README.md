@@ -85,8 +85,6 @@ In our example, we choose:
 * <code>v<sub>x</sub> = 2</code>
 * <code>v<sub>y</sub> = 2</code>
 
-<code>A code span with <sup>superscript</sup> text and escaped characters: "&lt;&amp;&gt;".</code>
-
 Let `G` be a grid of width `w` and height `h`, and let `G[x][y]` indicate the cell in the `x`th column and `y`th row of `G`.
 
 The algorithm begins by producing a _periodic colouring_ of the cells of `G` using <code>K = u<sub>x</sub> * v<sub>y</sub></code> colours. This is done by defining a _colour lookup table_ `T` with:
