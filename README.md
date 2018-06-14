@@ -88,11 +88,11 @@ Right now, the `Maze` library can generate perfect mazes using the following 12 
 
 6. [Hunt-and-kill](src/maze/README.md#hunt-and-kill)
 
-7. [Randomized Kruskal's algorithm](src/maze/README.md#randomized-kruskals-algorithm]
+7. [Randomized Kruskal's algorithm](src/maze/README.md#randomized-kruskals-algorithm)
 
 8. [Randomized Prim's wall algorithm](src/maze/README.md#randomized-prims-wall-algorithm)
 
-9. [Randomized Prim's cell algorithm)(src/maze/README.md#randomized-prims-cell-algorithm)
+9. [Randomized Prim's cell algorithm](src/maze/README.md#randomized-prims-cell-algorithm)
 
 10. [Recursive division](src/maze/README.md#recursive-division)
 
