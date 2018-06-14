@@ -2,8 +2,8 @@
 
 A `ThickMaze` is a maze where the walls are not simply cell dividers, but actually take up a cell themselves, i.e. each entry in the `ThickMaze` is either `FLOOR` or `WALL`. This representation allows the `ThickMaze` library to use some unique algorithms that would not be possible for the [`Maze`](../maze/README.md) library:
 
-1. [Cellular Automata](##cellular-automata)
-2. [Grid Colourings](##grid-colourings)
+1. [Cellular Automata](#cellular-automata)
+2. [Grid Colourings](#grid-colourings)
 
 ## Cellular Automata
 
