@@ -190,7 +190,7 @@ There is a homomorphism (specifically, a monomorphism) from regular `Maze`s to `
 
 This is useful, as it means that every algorithm that generates `Maze`s can also generate `ThickMaze`s via the homomorphism.
 
-Here's an example of a 25 by 20 randomizd depth-first search `Maze`:
+Here's an example of a 25 by 20 randomized depth-first search `Maze`:
 
 ```
 ┌───────┬───────────────────┬─────────┬─────┬─────┐ 
