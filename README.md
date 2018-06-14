@@ -232,7 +232,7 @@ As mazes are essentially certain families of graphs (trees in the case of perfec
 
 1. A _graph_ is a mathematical structure `G = (V,E)`, where `V` is a set of vertices (or points), and `E` is a set of edges (or lines), each connecting two vertices. A _maze_ can be thought of as a type of graph where the cells are vertices and the passages between cells are edges.
 
-1. A _homomorphism_ is a structure-preserving map: if we have two graphs, `G` and `H`, then a homomorphism `φ` is a map between the vertices of `G` and `H` so that if there is an edge between two vertices, say `(v, w)` in `G`, then there is also an edge between the vertices `(φ(v), φ(w))` in `H`.
+1. A _homomorphism_ is a structure-preserving map: if we have two graphs, `G` and `H`, then a homomorphism `φ` is a map from the vertices of `G` to the vertices of `H` so that if there is an edge between two vertices in `G`, say `(v, w)`, then there is also an edge between the vertices `(φ(v), φ(w))` in `H`.
 
 ...This is important because we have a homomorphism from `Maze` to `ThickMaze`, which permits the use of any of the `Maze`-specifc generation algorithms to also be used to generate `ThickMaze`s. You can read more about this homomorphism [here](src/thickmaze/README.md#typeclasses).
 
