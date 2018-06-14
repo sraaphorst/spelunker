@@ -164,7 +164,7 @@ Here is an example of a 50 by 40 thick maze:
 
 # Braid Mazes
 
-Most of the algorithms in this library produce _perfect mazes_, i.e. mazes where given any two points in the maze, there is exactly one path between them (withut retracing your steps). These mazes are mathematically interesting, because they are called _trees_, and are a well-studied area of graph theory, which is why there are many algorithms to construct them.
+Most of the algorithms in this library produce _perfect mazes_, i.e. mazes where given any two points in the maze, there is exactly one path between them (without retracing your steps). These mazes are mathematically interesting, because they are called _trees_, and are a well-studied area of graph theory, which is why there are many algorithms to construct them.
 
 Perfect mazes, however, are generally easier to solve than non-perfect mazes, which are mazes with _loops_. A maze with no dead ends must, by definition, contain at least one _loop_ (e.g. many [unicursal mazes](#unicursal-mazes) can be thought of as one long, winding loop).
 
