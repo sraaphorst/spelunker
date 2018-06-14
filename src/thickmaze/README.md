@@ -76,43 +76,39 @@ The end result will be a perfect maze.
 In this variant of the randomized Prim's algorithm, assume that we are generating a maze of width `w` and height `h`. We will illustrate with an example of the process at each step. In the example, let `w = 24` and `h = 16`.
 
 Then select three integer parameters:
-* `0 < u<sub>x</sub> < w`;
-* `0 <= v<sub>x</sub> < w`; and
-* `0 < v<sub>y</sub> < h`.
+* <code>0 &lt; u<sub>x</sub> &lt; w</code>;
+* <code>0 &lt;= v<sub>x</sub> &lt; w</code>; and
+* <code>0 &lt; v<sub>y</sub> &lt; h</code>.
 
 In our example, we choose:
-* `u<sub>x</sub> = 4`
-* `v<sub>x</sub> = 2`
-* `v<sub>y</sub> = 2`
+* <code>u<sub>x</sub> = 4</code>
+* <code>v<sub>x</sub> = 2</code>
+* <code>v<sub>y</sub> = 2</code>
 
 Let `G` be a grid of width `w` and height `h`, and let `G[x][y]` indicate the cell in the `x`th column and `y`th row of `G`.
 
-The algorithm begins by producing a _periodic colouring_ of the cells of `G` using `K = u<sub>x</sub> * v<sub>y</sub>` colours. This is done by defining a _colour lookup table_ `T` with:
-* `T<sub>c</sub> = v<sub>x</sub>` columns; and
-* `T<sub>r</sub> = K / gcd(v<sub>x</sub>, v<sub>y</sub>` rows
+The algorithm begins by producing a _periodic colouring_ of the cells of `G` using <code>K = u<sub>x</sub> * v<sub>y</sub></code> colours. This is done by defining a _colour lookup table_ `T` with:
+* <code>T<sub>c</sub> = v<sub>x</sub></code> columns; and
+* <code>T<sub>r</sub> = K / gcd(v<sub>x</sub>, v<sub>y</sub></code> rows
 
 where `gcd(a,b)` is the _greatest common divisor_ of `a` and `b`.
 
-Over the first `K / v<sub>x</sub>` rows of `T`, assign a unique colour to each cell. Then, for the remaining rows of `T`, we let:
+Over the first <code>K / v<sub>x</sub></code> rows of `T`, assign a unique colour to each cell. Then, for the remaining rows of `T`, we let:
 
-```
-T[x][y] = T[(x - v<sub>x</sub>) % T<sub>c</sub>][(y - v<sub>y</sub>) % T<sub>r</sub>]
-```
+<code>T[x][y] = T[(x - v<sub>x</sub>) % T<sub>c</sub>][(y - v<sub>y</sub>) % T<sub>r</sub>]</code>
 
 where `%` is the modulo operator so that `c = a % b` has the property that `0 <= c < b` and there is some integer `p` such that `p * b + c = a`.
 
 This defines a colouring over all of the cells of our grid `G`, where we assign to cell `G[x][y]` the colour:
 
-```
-G[x][y] = T[x % T<sub>c</sub>][y % T<sub>r</sub>].
-```
+<code>G[x][y] = T[x % T<sub>c</sub>][y % T<sub>r</sub>]</code>.
 
-The idea here is that we have two vectors, `u = (u<sub>x</sub>, 0)` and `v = (v<sub>x</sub>, v<sub>y</sub>)` so that cells that differ by any linear combination of `u` and `v` have the same colour, hence the term *periodic*.
+The idea here is that we have two vectors, <code>u = (u<sub>x</sub>, 0)</code> and <code>v = (v<sub>x</sub>, v<sub>y</sub>)</code> so that cells that differ by any linear combination of `u` and `v` have the same colour, hence the term *periodic*.
 
 This is easier illustrated through example. Here is the colouring of our 24 by 16 grid using `K = 4 * 2 = 8` colours, with position `(0,0)` being in the upper-left corner. The lookup table has size:
 
-* `T<sub>r</sub> = 4`
-* `T<sub>c</sub> = 8 / gcd(2, 2) = 8 / 2 = 4`
+* <code>T<sub>r</sub> = 4</code>
+* <code>T<sub>c</sub> = 8 / gcd(2, 2) = 8 / 2 = 4</code>
 
 and is shown by the area bounded by the black box.
 
@@ -120,20 +116,20 @@ and is shown by the area bounded by the black box.
 
 Now, pick any colour `c` (in our example, white) to be the _rooms_ of the maze. In the randomized Prim's algorithm, the walls are single cells. The idea in this modification is to instead allow walls to assume different shapes consisting of one or more contiguous cells. We do this as follows: find a partition of the remaining `K-1` colours into two or three partition classes, say `{W<sub>1</sub>, W<sub>2</sub>}` or `{W<sub>1</sub>, W<sub>2</sub>, P}` subject to the properties below. The idea is that `W<sub>1</sub>` will represent one wall type, `W<sub>2</sub>` will represent another wall type, and `P` will represent the _pillars_ of our maze (i.e. fixed walls).
 
-1. `W<sub>1</sub>` and `W<sub>2</sub>` are both nonempty. (Note that `P` can be empty.)
-2. The colours of `W<sub>1</sub>` must be contiguous.
-3. The colours of `W<sub>2</sub>` must be contiguous.
+1. <code>W<sub>1</sub></code> and <code>W<sub>2</sub></code> are both nonempty. (Note that `P` can be empty.)
+2. The colours of <code>W<sub>1</sub></code> must be contiguous.
+3. The colours of <code>W<sub>2</sub></code> must be contiguous.
 3. A room (with exceptions for the borders) must be adjacent to exactly four walls.
 4. A wall (with exceptions for the borders) must be adjacent to exactly two rooms.
 5. A wall is adjacent to a room if and only if a room is adjacent to a wall.
 
 In our example above, we pick the following partition:
 
-1. `W<sub>1</sub>` is purple, cyan, and peach (i.e. the first three colours in the second row).
-2. `W<sub>2</sub>` is yellow, green, and blue (i.e. the first three colours in the fourth column).
+1. <code>W<sub>1</sub></code> is purple, cyan, and peach (i.e. the first three colours in the second row).
+2. <code>W<sub>2</sub></code> is yellow, green, and blue (i.e. the first three colours in the fourth column).
 3. `P` is red.
 
-Now that we have a partition of the colours, we can treat all the colours in a partition class as being the same since they represent either a wall or a pillar. In our example, we will replace the colours of `W<sub>1</sub>` all with peach, and the colours of `W<sub>2</sub>` all with green, while the pillars will (for now) remain red. Here is the resulting grid:
+Now that we have a partition of the colours, we can treat all the colours in a partition class as being the same since they represent either a wall or a pillar. In our example, we will replace the colours of <code>W<sub>1</sub></code> all with peach, and the colours of <code>W<sub>2</sub></code> all with green, while the pillars will (for now) remain red. Here is the resulting grid:
 
 ![Grid with partitioning applied](../../examples/gridmaze2.png)
 
@@ -182,7 +178,7 @@ Here is a degenerate example:
 
 ![Degenerate grid](../../examples/gridcolouringd.png)
 
-Indeed, Prim's algorithm, for thick mazes, is simply the application of this algorithm for `u<sub>x</sub> = 2`, `v<sub>x</sub> = 0`, `v<sub>y<sub> = 2`, which gives this colouring. The green and the blue cells are the walls, and the red cells are the pillars.
+Indeed, Prim's algorithm, for thick mazes, is simply the application of this algorithm for <code>u<sub>x</sub> = 2</code>, <code>v<sub>x</sub> = 0</code>, <code>v<sub>y</sub> = 2</code>, which gives this colouring. The green and the blue cells are the walls, and the red cells are the pillars.
 
 ![Prim colouring](../../examples/prim.png)
 
