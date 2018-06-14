@@ -13,9 +13,23 @@ namespace spelunker::typeclasses {
      */
      template<typename S, typename T>
      struct Homomorphism {
-         // std::T morph(S);
+         // static const T morph(const S&);
          static constexpr bool is_instance = false;
          using src = S;
-         using type = T;
+         using dest = T;
      };
+
+     /**
+      * The trivial homomorphism from an object to itself.
+      */
+      template<typename T>
+      struct Homomorphism<T, T> {
+          static const T morph(const T &o) {
+              return o;
+          }
+
+          static constexpr bool is_instance = true;
+          using src  = T;
+          using dest = T;
+      };
 }

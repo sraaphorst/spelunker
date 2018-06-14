@@ -23,5 +23,8 @@ namespace spelunker::typeclasses {
             r.render(tm);
             return out.str();
         }
+
+        static constexpr bool is_instance = true;
+        using type = thickmaze::ThickMaze;
     };
 }

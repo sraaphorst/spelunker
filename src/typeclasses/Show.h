@@ -15,7 +15,7 @@ namespace spelunker::typeclasses {
      */
     template<typename T>
     struct Show {
-        // std::string show(T);
+        // static std::string show(const &T);
         static constexpr bool is_instance = false;
         using type = T;
     };
