@@ -160,7 +160,7 @@ Here is an example of a 50 by 40 thick maze:
 
 1. [Cellular Automata](src/thickmaze/README.md#cellular-automata)
 
-2. [Grid Colourings](src/thickmaze/README.me#grid-colourings)
+2. [Grid Colourings](src/thickmaze/README.md#grid-colourings)
 
 # Braid Mazes
 
