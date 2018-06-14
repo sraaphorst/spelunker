@@ -49,8 +49,8 @@ target_link_libraries(wilson LINK_PUBLIC spelunker)
 add_executable(test_braid test_braid.cpp)
 target_link_libraries(test_braid LINK_PUBLIC spelunker)
 
-add_executable(test_isomorphism test_isomorphism.cpp)
-target_link_libraries(test_isomorphism LINK_PUBLIC spelunker)
+add_executable(test_homomorphisms test_homomorphisms.cpp)
+target_link_libraries(test_homomorphisms LINK_PUBLIC spelunker)
 
 add_executable(test_thickbraid test_thickbraid.cpp)
 target_link_libraries(test_thickbraid LINK_PUBLIC spelunker)
