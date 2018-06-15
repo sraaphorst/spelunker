@@ -14,41 +14,28 @@ set(SUBDIRS
         maze
         thickmaze
         typeclasses
-        types)
+        types
+        )
 
-foreach(d ${SUBDIRS})
-    add_subdirectory(${d})
+# Add all files to the lists.
+set(PUBLIC_HEADER_FILES "${CMAKE_CURRENT_BINARY_DIR}/SpelunkerConfig.h")
+set(PRIVATE_HEADER_FILES)
+set(SOURCE_FILES)
+set(FILETYPES PUBLIC_HEADER_FILES PRIVATE_HEADER_FILES SOURCE_FILES)
+
+foreach(pkg ${SUBDIRS})
+    message("Adding ${pkg}")
+    add_subdirectory(${pkg})
+
+    # Now add the files from each to the above lists.
+    string(TOUPPER ${pkg} PKG)
+    foreach (ft ${FILETYPES})
+        message("\tAppending ${ft} to ${${PKG}_${ft}}")
+        list(APPEND ${ft} ${${PKG}_${ft}})
+    endforeach()
 endforeach()
 
-set(PUBLIC_HEADER_FILES
-        ${GRIDMAZE_PUBLIC_HEADER_FILES}
-        ${MATH_PUBLIC_HEADER_FILES}
-        ${MAZE_PUBLIC_HEADER_FILES}
-        ${THICKMAZE_PUBLIC_HEADER_FILES}
-        ${TYPECLASSES_PUBLIC_HEADER_FILES}
-        ${TYPES_PUBLIC_HEADER_FILES}
-        ${CMAKE_CURRENT_BINARY_DIR}/SpelunkerConfig.h
-        )
-
-set(PRIVATE_HEADER_FILES
-        ${GRIDMAZE_PRIVATE_HEADER_FILES}
-        ${MATH_PRIVATE_HEADER_FILES}
-        ${MAZE_PRIVATE_HEADER_FILES}
-        ${THICKMAZE_PRIVATE_HEADER_FILES}
-        ${TYPECLASSES_PRIVATE_HEADER_FILES}
-        ${TYPES_PRIVATE_HEADER_FILES}
-        )
-
-set(SOURCE_FILES
-        ${GRIDMAZE_SOURCE_FILES}
-        ${MATH_SOURCE_FILES}
-        ${MAZE_SOURCE_FILES}
-        ${TYPES_SOURCE_FILES}
-        ${THICKMAZE_SOURCE_FILES}
-        ${TYPECLASSES_SOURCE_FILES}
-        ${TYPES_SOURCE_FILES}
-        )
-
+# Create the shared library.
 add_library(spelunker SHARED
         ${PUBLIC_HEADER_FILES}
         ${PRIVATE_HEADER_FILES}
