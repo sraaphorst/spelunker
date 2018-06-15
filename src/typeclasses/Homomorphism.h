@@ -4,6 +4,11 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+ // This looks to be what I want:
+ // http://coliru.stacked-crooked.com/a/715420454b817658
+ // or this:
+ // http://coliru.stacked-crooked.com/a/2ebd2109f7dfe365
+
 #pragma once
 
 namespace spelunker::typeclasses {
@@ -13,6 +18,14 @@ namespace spelunker::typeclasses {
      */
     template<typename S, typename T>
     struct Homomorphism {
+        //static const T morph(const S&);
+        static constexpr bool is_instance = false;
+        using src = S;
+        using dest = T;
+    };
+
+    template<typename S, typename T>
+    struct Monomorphism : Homomorphism<S,T> {
         //static const T morph(const S&);
         static constexpr bool is_instance = false;
         using src = S;
@@ -34,14 +47,27 @@ namespace spelunker::typeclasses {
     };
 
     /**
-     * A composition homomorphism.
+     * Composable homomorphisms.
      */
-    template<typename S, typename T, typename U,
-        typename HST = Homomorphism<S, T>,
-        typename HTU = Homomorphism<T, U> >
-    struct CompositionHomomorphism : public Homomorphism<S, U> {
+    template<typename, typename>
+    struct CompositionMorphism;
+
+    template<typename S, typename T, typename U>
+    struct CompositionMorphism<Homomorphism<S,T>, Homomorphism<T,U>> {
         static const U morph(const S &s) {
-            return HTU::morph(HST::morph(s));
+            return Homomorphism<T,U>::morph(Homomorphism<S,T>::morph(s));
+        }
+
+        static constexpr bool is_instance = true;
+        using src  = S;
+        using dest = U;
+    };
+
+
+    template<typename S, typename T, typename U>
+    struct CompositionMorphism<Monomorphism<S,T>, Monomorphism<T,U>> {
+        static const U morph(const S &s) {
+            return Monomorphism<T,U>::morph(Monomorphism<S,T>::morph(s));
         }
 
         static constexpr bool is_instance = true;
