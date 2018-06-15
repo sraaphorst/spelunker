@@ -29,7 +29,7 @@ namespace spelunker::gui {
 
         static auto const FLOOR_COLOUR     = Qt::gray;
         static auto const WALL_COLOUR      = Qt::black;
-        static auto constexpr WALL_WIDTH   = 2;
+        static auto constexpr WALL_WIDTH   = 1;
         static auto constexpr BORDER_WIDTH = 5;
     };
 }
