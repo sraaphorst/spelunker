@@ -11,9 +11,11 @@ set(_THICKMAZE_PUBLIC_HEADER_FILES
         ThickMazeGenerator.h
         ThickMazeRenderer.h
         ThickMazeTypeclasses.h
+        PARENT_SCOPE
         )
 
 set(_THICKMAZE_PRIVATE_HEADER_FILES
+        PARENT_SCOPE
         )
 
 set(_THICKMAZE_SOURCE_FILES
@@ -23,13 +25,6 @@ set(_THICKMAZE_SOURCE_FILES
         StringThickMazeRenderer.cpp
         ThickMaze.cpp
         ThickMazeGenerator.cpp
+        PARENT_SCOPE
         )
 
-src_dir_filelist("${_THICKMAZE_PUBLIC_HEADER_FILES}" outlst)
-set(THICKMAZE_PUBLIC_HEADER_FILES "${outlst}" PARENT_SCOPE)
-
-src_dir_filelist("${_THICKMAZE_PRIVATE_HEADER_FILES}" outlst)
-set(THICKMAZE_PRIVATE_HEADER_FILES "${outlst}" PARENT_SCOPE)
-
-src_dir_filelist("${_THICKMAZE_SOURCE_FILES}" outlst)
-set(THICKMAZE_SOURCE_FILES "${outlst}" PARENT_SCOPE)
