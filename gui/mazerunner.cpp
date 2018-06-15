@@ -2,8 +2,8 @@
  * This is just a placeholder for now.
  */
 
-#include <qapplication.h>
-#include <qpushbutton.h>
+#include <QApplication>
+#include <QPushButton>
 
 
 int main( int argc, char **argv )
