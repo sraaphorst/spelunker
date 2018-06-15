@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "../src/maze/Maze.h"
 #include <QWidget>
+
+#include <maze/Maze.h>
 
 namespace spelunker::gui {
     class MazeWidget final : public QWidget {
@@ -26,9 +27,9 @@ namespace spelunker::gui {
 
         maze::Maze maze;
 
-        static auto const FLOOR_COLOUR = Qt::gray;
-        static auto const WALL_COLOUR  = Qt::black;
-        static auto constexpr WALL_WIDTH = 2;
+        static auto const FLOOR_COLOUR     = Qt::gray;
+        static auto const WALL_COLOUR      = Qt::black;
+        static auto constexpr WALL_WIDTH   = 2;
         static auto constexpr BORDER_WIDTH = 5;
     };
 }

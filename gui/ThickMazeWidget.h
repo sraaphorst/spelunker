@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <QWidget>
+
 #include <tuple>
 
-#include "../src/thickmaze/ThickMaze.h"
-#include <QWidget>
+#include <thickmaze/ThickMaze.h>
 
 namespace spelunker::gui {
     class ThickMazeWidget final : public QWidget {

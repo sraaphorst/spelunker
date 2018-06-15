@@ -1,13 +1,11 @@
-add_executable(thickmaze_widget ThickMazeWidget.cpp MazeWidget.cpp)
-set_target_properties(thickmaze_widget PROPERTIES COMPILE_FLAGS "-DMAZE_TYPE=2")
-target_link_libraries(thickmaze_widget LINK_PUBLIC Qt5::Widgets Qt5::Core spelunker)
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
 
-add_executable(maze_widget MazeWidget.cpp)
-set_target_properties(maze_widget PROPERTIES COMPILE_FLAGS "-DMAZE_TYPE=1")
-target_link_libraries(maze_widget LINK_PUBLIC Qt5::Widgets Qt5::Core spelunker)
+set (CMAKE_PREFIX_PATH "/Applications/Qt-5.9.4/5.9.4/clang_64" CACHE PATH "")
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
+add_executable(test_thickmaze_widget ThickMazeWidget.cpp MazeWidget.cpp ThickMazeWidgetTest.cpp)
+target_link_libraries(test_thickmaze_widget LINK_PUBLIC Qt5::Widgets spelunker)
 
-add_executable(mazerunner mazerunner.cpp)
-target_link_libraries(mazerunner
-        Qt5::Widgets
-        spelunker)
+add_executable(test_maze_widget MazeWidget.cpp MazeWidgetTest.cpp)
+target_link_libraries(test_maze_widget LINK_PUBLIC Qt5::Widgets spelunker)
