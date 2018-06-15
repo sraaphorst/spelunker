@@ -1,24 +1,19 @@
 # CMakeLists
 # By Sebastian Raaphorst, 2018.
 
-set(_GRIDMAZE_PUBLIC_HEADER_FILES
+set(_GRAPHMAZE_PUBLIC_HEADER_FILES
         GraphMaze.h
         GraphMazeAttributes.h
         GraphMazeTypeclasses.h
+        PARENT_SCOPE
         )
 
-set(_GRIDMAZE_PRIVATE_HEADER_FILES
+set(_GRAPHMAZE_PRIVATE_HEADER_FILES
+        PARENT_SCOPE
         )
 
-set(_GRIDMAZE_SOURCE_FILES
+set(_GRAPHMAZE_SOURCE_FILES
         GraphMaze.cpp
+        PARENT_SCOPE
         )
 
-src_dir_filelist("${_GRIDMAZE_PUBLIC_HEADER_FILES}" outlst)
-set(GRIDMAZE_PUBLIC_HEADER_FILES "${outlst}" PARENT_SCOPE)
-
-src_dir_filelist("${_GRIDMAZE_PRIVATE_HEADER_FILES}" outlst)
-set(GRIDMAZE_PRIVATE_HEADER_FILES "${outlst}" PARENT_SCOPE)
-
-src_dir_filelist("${_GRIDMAZE_SOURCE_FILES}" outlst)
-set(GRIDMAZE_SOURCE_FILES "${outlst}" PARENT_SCOPE)

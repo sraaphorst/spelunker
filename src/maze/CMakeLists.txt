@@ -21,9 +21,11 @@ set(_MAZE_PUBLIC_HEADER_FILES
         SidewinderMazeGenerator.h
         StringMazeRenderer.h
         WilsonMazeGenerator.h
+        PARENT_SCOPE
         )
 
 set(_MAZE_PRIVATE_HEADER_FILES
+        PARENT_SCOPE
         )
 
 set(_MAZE_SOURCE_FILES
@@ -43,13 +45,5 @@ set(_MAZE_SOURCE_FILES
         SidewinderMazeGenerator.cpp
         StringMazeRenderer.cpp
         WilsonMazeGenerator.cpp
+        PARENT_SCOPE
         )
-
-src_dir_filelist("${_MAZE_PUBLIC_HEADER_FILES}" outlst)
-set(MAZE_PUBLIC_HEADER_FILES "${outlst}" PARENT_SCOPE)
-
-src_dir_filelist("${_MAZE_PRIVATE_HEADER_FILES}" outlst)
-set(MAZE_PRIVATE_HEADER_FILES "${outlst}" PARENT_SCOPE)
-
-src_dir_filelist("${_MAZE_SOURCE_FILES}" outlst)
-set(MAZE_SOURCE_FILES "${outlst}" PARENT_SCOPE)
