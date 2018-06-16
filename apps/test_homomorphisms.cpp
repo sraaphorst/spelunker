@@ -39,9 +39,9 @@ int main(int argc, char *argv[]) {
     std::cout << Show<maze::Maze>::show(m2);
     std::cout << std::endl;
 
-//    thickmaze::ThickMaze tm =
-//            CompositionMorphism<Homomorphism<graphmaze::GraphMaze, maze::Maze>,
-//                                Homomorphism<maze::Maze, thickmaze::ThickMaze>>::morph(gm);
+    thickmaze::ThickMaze tm2 =
+            CompositionMorphism<Homomorphism<graphmaze::GraphMaze, maze::Maze>,
+                                Homomorphism<maze::Maze, thickmaze::ThickMaze>>::morph(gm);
     auto tm = Homomorphism<graphmaze::GraphMaze, thickmaze::ThickMaze>::morph(gm);
     std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
     return 0;
