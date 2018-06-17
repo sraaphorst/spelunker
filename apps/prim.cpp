@@ -6,8 +6,9 @@
  * Generate a maze using the randomized Prim algorithm.
  */
 
+#include <maze/PrimMazeGenerator.h>
+
 #include "Executor.h"
-#include "maze/PrimMazeGenerator.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::PrimMazeGenerator>::generateAndDisplayMaze(argc, argv);

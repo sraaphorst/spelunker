@@ -6,11 +6,12 @@
 
 #include <iostream>
 
-#include "thickmaze/GridColouring.h"
-#include "thickmaze/GridColouringThickMazeGenerator.h"
-#include "thickmaze/ThickMaze.h"
-#include "thickmaze/ThickMazeTypeclasses.h"
-#include "typeclasses/Show.h"
+#include <typeclasses/Show.h>
+#include <thickmaze/GridColouring.h>
+#include <thickmaze/GridColouringThickMazeGenerator.h>
+#include <thickmaze/ThickMaze.h>
+#include <thickmaze/ThickMazeTypeclasses.h>
+
 #include "Utils.h"
 
 int main(int argc, char *argv[]) {

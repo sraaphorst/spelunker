@@ -9,7 +9,7 @@
 #include <sstream>
 #include <string>
 
-#include "typeclasses/Show.h"
+#include <typeclasses/Show.h>
 #include "ThickMazeAttributes.h"
 #include "ThickMaze.h"
 #include "StringThickMazeRenderer.h"

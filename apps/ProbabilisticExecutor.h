@@ -11,9 +11,10 @@
 
 #include <iostream>
 
-#include "maze/Maze.h"
-#include "maze/MazeTypeclasses.h"
-#include "typeclasses/Show.h"
+#include <typeclasses/Show.h>
+#include <maze/Maze.h>
+#include <maze/MazeTypeclasses.h>
+
 #include "Utils.h"
 
 template<typename T>

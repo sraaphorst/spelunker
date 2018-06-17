@@ -4,13 +4,13 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include "maze/DFSMazeGenerator.h"
-#include "maze/Maze.h"
-#include "maze/MazeTypeclasses.h"
-#include "thickmaze/ThickMaze.h"
-#include "thickmaze/ThickMazeTypeclasses.h"
-#include "typeclasses/Homomorphism.h"
-#include "typeclasses/Show.h"
+#include <typeclasses/Homomorphism.h>
+#include <typeclasses/Show.h>
+#include <maze/DFSMazeGenerator.h>
+#include <maze/Maze.h>
+#include <maze/MazeTypeclasses.h>
+#include <thickmaze/ThickMaze.h>
+#include <thickmaze/ThickMazeTypeclasses.h>
 
 using namespace spelunker;
 
