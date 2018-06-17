@@ -21,14 +21,14 @@ namespace spelunker::maze {
     BFSMazeGenerator::BFSMazeGenerator(int w, int h)
         : BFSMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze BFSMazeGenerator::generate() const {
+    const Maze BFSMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a random starting cell, mark it, and add its neighbours to a queue.
         const auto startX = math::RNG::randomRange(width);

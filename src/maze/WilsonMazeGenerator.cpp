@@ -23,14 +23,14 @@ namespace spelunker::maze {
     WilsonMazeGenerator::WilsonMazeGenerator(int w, int h)
         : WilsonMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze WilsonMazeGenerator::generate() const {
+    const Maze WilsonMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check which cells are part of the maze.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a starting cell at random and add it to the maze.
         const int startX = math::RNG::randomRange(width);

@@ -14,7 +14,9 @@
 
 #include <functional>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+
 #include "ThickMazeAttributes.h"
 #include "ThickMazeGenerator.h"
 
@@ -129,10 +131,11 @@ namespace spelunker::thickmaze {
             DetermineBehaviour determineBehaviour = fromAlgorithm(B2S123);
         };
 
-        CellularAutomatonThickMazeGenerator(int w, int h, settings &s);
+        CellularAutomatonThickMazeGenerator(const types::Dimensions2D &d, const settings &s);
+        CellularAutomatonThickMazeGenerator(int w, int h, const settings &s);
         ~CellularAutomatonThickMazeGenerator() final = default;
 
-        const ThickMaze generate() final;
+        const ThickMaze generate() const noexcept final;
     private:
         /// The settings for the cellular automaton.
         settings st;

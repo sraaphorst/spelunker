@@ -9,6 +9,7 @@
 #include <types/CommonMazeAttributes.h>
 #include <types/Dimensions2D.h>
 #include <types/Direction.h>
+#include <math/MathUtils.h>
 #include <math/RNG.h>
 
 #include "Maze.h"
@@ -18,7 +19,9 @@
 
 namespace spelunker::maze {
     SidewinderMazeGenerator::SidewinderMazeGenerator(const types::Dimensions2D &d, const double p)
-        : MazeGenerator{d}, probabilityEast{p} {}
+        : MazeGenerator{d}, probabilityEast{p} {
+        math::MathUtils::checkProbability(p);
+    }
 
     SidewinderMazeGenerator::SidewinderMazeGenerator(int w, int h, double p)
         : SidewinderMazeGenerator{types::Dimensions2D{w, h}, p} {}
@@ -29,11 +32,11 @@ namespace spelunker::maze {
     SidewinderMazeGenerator::SidewinderMazeGenerator(int w, int h)
         : SidewinderMazeGenerator{types::Dimensions2D{w, h}, defaultProbabilityEast} {}
 
-    const Maze SidewinderMazeGenerator::generate() const {
+    const Maze SidewinderMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // Keep a collection of the cells visited so far.
         std::vector< types::Cell > cellRun;

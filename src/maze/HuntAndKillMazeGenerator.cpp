@@ -23,14 +23,14 @@ namespace spelunker::maze {
     HuntAndKillMazeGenerator::HuntAndKillMazeGenerator(int w, int h)
         : HuntAndKillMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze HuntAndKillMazeGenerator::generate() const {
+    const Maze HuntAndKillMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Get a starting cell.
         auto currX = math::RNG::randomRange(width);
@@ -74,7 +74,7 @@ namespace spelunker::maze {
     void HuntAndKillMazeGenerator::randomPathCarving(const int startX,
                                                      const int startY,
                                                      types::CellIndicator &ci,
-                                                     WallIncidence &wi) const noexcept  {
+                                                     WallIncidence &wi) const noexcept {
         int x = startX;
         int y = startY;
 

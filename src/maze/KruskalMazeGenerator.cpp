@@ -26,11 +26,11 @@ namespace spelunker::maze {
     KruskalMazeGenerator::KruskalMazeGenerator(const int w, const int h)
         : KruskalMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze KruskalMazeGenerator::generate() const {
+    const Maze KruskalMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // Create a collection of all possible walls.
         std::vector<int> walls;

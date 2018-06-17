@@ -28,21 +28,11 @@ namespace spelunker::maze {
         virtual const Maze generate() const noexcept = 0;
 
     protected:
-        /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
-        /**
-         * Initialize the layout of the maze to the "empty" layout.
-         * This consists of the wall incidences all being set to true or false.
-         * The boundary walls are always maintained.
-         * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
-         * @return an "empty" layout
-         */
-        WallIncidence initializeEmptyLayout(bool walls) const noexcept;
-
         /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
-        const UnrankWallMap createUnrankWallMap() const noexcept ;
+        const UnrankWallMap createUnrankWallMap() const noexcept;
 
         /// A static function used by unrankWallID, separated out for testing.
-        static const UnrankWallMap createUnrankWallMapS(const types::Dimensions2D &dim);
+        static const UnrankWallMap createUnrankWallMapS(const types::Dimensions2D &dim) noexcept;
 
         /// A function that maps Position to the corresponding ID of the wall in the maze.
         const WallID rankPos(const types::Position &p) const;

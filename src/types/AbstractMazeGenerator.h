@@ -12,8 +12,11 @@ namespace spelunker::types {
     template<typename T>
     class AbstractMazeGenerator {
     protected:
-        AbstractMazeGenerator(const types::Dimensions2D &d);
-        AbstractMazeGenerator(int w, int h);
+        AbstractMazeGenerator(const types::Dimensions2D &d)
+            : dimensions{d} {}
+
+        AbstractMazeGenerator(int w, int h)
+            : AbstractMazeGenerator{Dimensions2D{w, h}} {}
 
         virtual ~AbstractMazeGenerator() = default;
 

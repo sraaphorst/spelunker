@@ -14,11 +14,11 @@ namespace spelunker::types {
             throw IllegalDimensions(w, h);
     }
 
-    bool Dimensions2D::operator==(const Dimensions2D &other) const {
+    bool Dimensions2D::operator==(const Dimensions2D &other) const noexcept {
         return width == other.getWidth() && height == other.getHeight();
     }
 
-    bool Dimensions2D::cellInBounds(const int x, const int y) const {
+    bool Dimensions2D::cellInBounds(const int x, const int y) const noexcept {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
     void Dimensions2D::checkCell(int x, int y) const {

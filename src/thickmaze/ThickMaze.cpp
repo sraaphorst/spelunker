@@ -4,22 +4,34 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include "math/MathUtils.h"
-#include "math/RNG.h"
-#include "types/CommonMazeAttributes.h"
-#include "types/Exceptions.h"
+#include <functional>
+
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Exceptions.h>
+#include <types/Symmetry.h>
+#include <math/MathUtils.h>
+#include <math/RNG.h>
+
+#include "ThickMazeAttributes.h"
 #include "ThickMaze.h"
 
 namespace spelunker::thickmaze {
+    ThickMaze::ThickMaze(const types::Dimensions2D &d, const thickmaze::CellContents &c)
+        : AbstractMaze{d}, contents{c} {}
+
     ThickMaze::ThickMaze(const int w, const int h, const CellContents &c)
-        : width(w), height(h), contents(c) {
-        if (width < 1 || height < 1)
-            throw types::IllegalDimensions(width, height);
+        : AbstractMaze{types::Dimensions2D{w, h}}, contents{c} {}
+
+    bool ThickMaze::operator==(const ThickMaze &other) const noexcept {
+        // We can just compare the wall incidence vectors, since == on vectors of the
+        // same size compares the contents.
+        return getDimensions() == other.getDimensions()
+               && contents == other.contents;
     }
 
     const CellType ThickMaze::cellIs(int x, int y) const {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            throw types::OutOfBoundsCoordinates(x, y);
+        checkCell(x, y);
         return contents[x][y];
     }
 
@@ -27,15 +39,83 @@ namespace spelunker::thickmaze {
         return numCellWallsInContents(c, contents);
     }
 
-    const ThickMaze ThickMaze::reverse() const {
-        auto invContents = createThickMazeCellContents(width, height);
-        for (auto y=0; y < height; ++y)
-            for (auto x=0; x < width; ++x)
-                invContents[x][y] = contents[x][y] == FLOOR ? WALL : FLOOR;
-        return ThickMaze(width, height, invContents);
+    const ThickMaze ThickMaze::applySymmetry(types::Symmetry s) const {
+        // Get the symmetry map corresponding to the symmetry.
+        std::function<const types::Cell(const types::Cell&)> mp;
+
+        const auto [width, height] = getDimensions().values();
+
+        switch (s) {
+            case types::Symmetry::ROTATION_BY_90:
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(getHeight() - y - 1, x);
+                };
+                break;
+            case types::Symmetry::ROTATION_BY_180:
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(getWidth() - x - 1, getHeight() - y - 1);
+                };
+                break;
+            case types::Symmetry::ROTATION_BY_270:
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(y, getWidth() - x - 1);
+                };
+                break;
+            case types::Symmetry::REFLECTION_IN_X:
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(x, getHeight() - y - 1);
+                };
+                break;
+            case types::Symmetry::REFLECTION_IN_Y:
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(getWidth() - x - 1, y);
+                };
+                break;
+            case types::Symmetry::REFLECTION_IN_NWSE:
+                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(y, x);
+                };
+                break;
+            case types::Symmetry::REFLECTION_IN_NESW:
+                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
+                mp = [this](const types::Cell &c) {
+                    const auto[x, y] = c;
+                    return types::cell(getHeight() - y - 1, getWidth() - x - 1);
+                };
+        }
+
+        // Determine the new width / height and create the wall incidence.
+        const auto nDim = types::applySymmetryToDimensions(s, getDimensions());
+        auto ncc = createThickMazeLayout(nDim);
+
+        for (auto y = 0; y < height; ++y) {
+            for (auto x = 0; x < width; ++x) {
+                const auto [nx, ny] = mp(types::cell(x, y));
+                ncc[nx][ny] = cellIs(x, y);
+            }
+        }
+
+        return ThickMaze{nDim, ncc};
     }
 
-    const ThickMaze ThickMaze::braid(double probability) const {
+    const ThickMaze ThickMaze::reverse() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
+        auto invContents = createThickMazeLayout(width, height);
+        for (auto y=0; y < height; ++y)
+            for (auto x=0; x < width; ++x)
+                invContents[x][y] = contents[x][y] == CellType::FLOOR ?CellType::WALL : CellType::FLOOR;
+        return ThickMaze(getDimensions(), invContents);
+    }
+
+    const ThickMaze ThickMaze::braid(double probability) const noexcept {
         math::MathUtils::checkProbability(probability);
 
         // Create a copy of the contents for this maze for the new maze.
@@ -47,7 +127,7 @@ namespace spelunker::thickmaze {
 
         // Lambda function to determine if a cell is a dead end.
         auto isDeadEnd = [&newContents, this](const int x, const int y) {
-            if (x < 0 || x >= width || y < 0 || y >= height || newContents[x][y] == WALL)
+            if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || newContents[x][y] == CellType::WALL)
                 return false;
             return numCellWalls(types::cell(x,y)) == 3;
         };
@@ -55,7 +135,7 @@ namespace spelunker::thickmaze {
         // Lambda function to determine how many dead ends are around a wall.
         // Returns -1 if the coordinates do not specify a valid wall.
         auto deadEndCounter = [&newContents, isDeadEnd, this](const int x, const int y) {
-            if (x < 0 || x >= width || y < 0 || y >= width || newContents[x][y] != WALL)
+            if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || newContents[x][y] != CellType::WALL)
                 return -1;
 
             int numDeadEnds = 0;
@@ -97,22 +177,10 @@ namespace spelunker::thickmaze {
 
             // Now pick a candidate and remove the wall.
             const auto [ex, ey] = math::RNG::randomElement(candidates);
-            newContents[ex][ey] = FLOOR;
+            newContents[ex][ey] = CellType::FLOOR;
         }
 
-        return ThickMaze(width, height, newContents);
-    }
-
-    const types::CellCollection ThickMaze::findDeadEnds() const noexcept {
-        types::CellCollection deadends;
-        for (auto y = 0; y < height; ++y) {
-            for (auto x = 0; x < width; ++x) {
-                const auto c = types::cell(x, y);
-                if (contents[x][y] == FLOOR && numCellWalls(c) == 3)
-                    deadends.emplace_back(c);
-            }
-        }
-        return deadends;
+        return ThickMaze(getDimensions(), newContents);
     }
 
     int ThickMaze::numCellWallsInContents(const types::Cell &c, const CellContents &cc) const {
@@ -120,18 +188,11 @@ namespace spelunker::thickmaze {
         const auto [x,y] = c;
         auto numCellWalls = 0;
 
-        if (x == 0 || cc[x-1][y] == WALL)        ++numCellWalls;
-        if (x == width-1 || cc[x+1][y] == WALL)  ++numCellWalls;
-        if (y == 0 || cc[x][y-1] == WALL)        ++numCellWalls;
-        if (y == height-1 || cc[x][y+1] == WALL) ++numCellWalls;
+        if (x == 0 || cc[x-1][y] == CellType::WALL)             ++numCellWalls;
+        if (x == getWidth()-1 || cc[x+1][y] == CellType::WALL)  ++numCellWalls;
+        if (y == 0 || cc[x][y-1] == CellType::WALL)             ++numCellWalls;
+        if (y == getHeight()-1 || cc[x][y+1] == CellType::WALL) ++numCellWalls;
 
         return numCellWalls;
-    }
-
-
-    void ThickMaze::checkCell(const types::Cell &c) const {
-        const auto [x,y] = c;
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            throw types::OutOfBoundsCoordinates(x, y);
     }
 }

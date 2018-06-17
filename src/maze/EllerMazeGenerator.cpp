@@ -12,6 +12,7 @@
 #include <types/Dimensions2D.h>
 #include <types/Direction.h>
 #include <types/DisjointSetHelper.h>
+#include <math/MathUtils.h>
 #include <math/RNG.h>
 
 #include "Maze.h"
@@ -23,7 +24,10 @@ namespace spelunker::maze {
     using namespace boost;
 
     EllerMazeGenerator::EllerMazeGenerator(const types::Dimensions2D &d, const double p, const double den)
-        : MazeGenerator{d}, probability{p}, density{den} {}
+        : MazeGenerator{d}, probability{p}, density{den} {
+        math::MathUtils::checkProbability(p);
+        math::MathUtils::checkProbability(den);
+    }
 
     EllerMazeGenerator::EllerMazeGenerator(const int w, const int h, const double p, const double den)
         : EllerMazeGenerator{types::Dimensions2D{w, h}, p, den} {}
@@ -34,11 +38,11 @@ namespace spelunker::maze {
     EllerMazeGenerator::EllerMazeGenerator(int w, int h)
         : EllerMazeGenerator{w, h, defaultProbability, defaultDensity} {}
 
-    const Maze EllerMazeGenerator::generate() const {
+    const Maze EllerMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // Create a vector of all elements.
         std::vector<types::Element> elements;

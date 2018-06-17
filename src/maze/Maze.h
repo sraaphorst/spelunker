@@ -110,17 +110,18 @@ namespace spelunker::maze {
         bool wall(int x, int y, types::Direction d) const;
 
         /// Determine if two mazes are equal.
-        bool operator==(const Maze &other) const;
+        bool operator==(const Maze &other) const noexcept;
 
         /// Determine if two mazes are not equal.
-        bool operator!=(const Maze &other) const {
+        bool operator!=(const Maze &other) const noexcept {
             return !(*this == other);
         }
 
         /// Determine the number of walls a cell has.
-        int numCellWalls(const types::Cell &c) const;
+        int numCellWalls(const types::Cell &c) const override;
 
-        virtual const Maze applySymmetry(types::Symmetry s) const override;
+        /// Apply a given symmetry transformation to this maze.
+        const Maze applySymmetry(types::Symmetry s) const override;
 
         /// Make a perfect maze into a 2w x 2h unicursal maze (aka labyrinth).
         /**
@@ -164,15 +165,7 @@ namespace spelunker::maze {
          * @param probability the probability of fixing a given dead end
          * @return a new maze with walls removed to decrease the number of dead ends
          */
-        const Maze braid(double probability = 1.0) const;
-
-        /// Find the dead ends for this maze.
-        /**
-         * Find a collection of all the dead ends for this maze.
-         * A cell is considered a "dead end" if it has exactly three walls.
-         * @return a collection of the dead end cells
-         */
-        const types::CellCollection findDeadEnds() const noexcept;
+        const Maze braid(double probability) const noexcept override;
 
         /// A static function used by rankPosition, separated out for testing.
         static WallID rankPositionS(const types::Dimensions2D &dim, int x, int y, types::Direction dir);

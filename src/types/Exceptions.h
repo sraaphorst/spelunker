@@ -10,11 +10,14 @@
 #include <string>
 #include <tuple>
 
-#include "Dimensions2D.h"
 #include <maze/MazeAttributes.h>
 #include <typeclasses/Show.h>
 
+#include "Dimensions2D.h"
+#include "Symmetry.h"
+
 namespace spelunker::types {
+
     /// The root of all non-STL exceptions throwable by this library.
     class Exception : public std::logic_error {
     protected:
@@ -43,7 +46,7 @@ namespace spelunker::types {
     private:
         static std::string msg(const Dimensions2D &d) {
             return "Dimensions2D "
-                   + typeclasses::Show<std::pair<int, int>>::show(d)
+                   + typeclasses::Show<Dimensions2D>::show(d)
                    + "are not legal.";
         }
     };

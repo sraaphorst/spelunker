@@ -9,6 +9,7 @@
 #include <types/CommonMazeAttributes.h>
 #include <types/Dimensions2D.h>
 #include <types/Direction.h>
+#include <math/MathUtils.h>
 #include <math/RNG.h>
 
 #include "Maze.h"
@@ -18,7 +19,9 @@
 
 namespace spelunker::maze {
     BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(const types::Dimensions2D &d, const double p)
-        : MazeGenerator{d}, eastProbability(p) {}
+        : MazeGenerator{d}, eastProbability(p) {
+        math::MathUtils::checkProbability(p);
+    }
 
     BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(int w, int h, double p)
         : BinaryTreeMazeGenerator{types::Dimensions2D{w, h}, p} {}
@@ -29,11 +32,11 @@ namespace spelunker::maze {
     BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(int w, int h)
         : BinaryTreeMazeGenerator{types::Dimensions2D{w, h}, defaultEastProbability} {}
 
-    const Maze BinaryTreeMazeGenerator::generate() const {
-        const auto [width, height] = getDimensions();
+    const Maze BinaryTreeMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x) {

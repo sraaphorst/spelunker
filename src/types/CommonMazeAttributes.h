@@ -17,6 +17,8 @@
 #include "Direction.h"
 
 namespace spelunker::types {
+    class Dimensions2D;
+
     /// An (x,y) cell in a maze.
     using Cell = std::pair<int, int>;
 
@@ -30,22 +32,7 @@ namespace spelunker::types {
     using CellIndicator = std::vector<CellRowIndicator>;
 
     /// Determine what direction two adjacent cells are apart.
-    inline Direction cellDirection(const Cell &c1, const Cell &c2) {
-        auto [x1, y1] = c1;
-        auto [x2, y2] = c2;
-
-        if (x1 - x2 == -1 && y1 == y2)
-            return Direction::EAST;
-        if (x1 - x2 ==  1 && y1 == y2)
-            return Direction::WEST;
-        if (y1 - y2 == -1 && x1 == x2)
-            return Direction::SOUTH;
-        if (y1 - y2 ==  1 && x1 == x2)
-            return Direction::NORTH;
-
-        // If we reach this point, the cells aren't adjacent.
-        throw std::domain_error("Vertices are not adjacent");
-    }
+    Direction cellDirection(const Cell &c1, const Cell &c2);
 
     /// A possible cell: it may be defined, or not.
     using PossibleCell = std::optional<Cell>;
@@ -55,6 +42,27 @@ namespace spelunker::types {
 
     /// The neighbours of a cell. Walls should face towards the original cell.
     using Neighbours = std::vector<types::Position>;
+
+    /// Initialize a cell indicator of the specified size.
+    /**
+     * Initialize a cell indicator, which is a matrix that indicates whether a cell has been processed
+     * or visited.
+     * @param width the width of the grid
+     * @oaram height the height of the grid
+     * @param def the starting state of each cell
+     * @return the initialized cell indicator matrix
+     */
+    CellIndicator initializeCellIndicator(int width, int height, bool def = false);
+
+    /// Initialize a cell indicator of the specified size.
+    /**
+     * Initialize a cell indicator, which is a matrix that indicates whether a cell has been processed
+     * or visited.
+     * @param d the dimension of the grid
+     * @param def the starting state of each cell
+     * @return the initialized cell indicator matrix
+     */
+    CellIndicator initializeCellIndicator(const Dimensions2D &d, bool def = false);
 
     /// Convenience function to make coordinates (x,y) into a Cell.
     /**

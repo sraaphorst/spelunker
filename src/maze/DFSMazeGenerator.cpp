@@ -23,14 +23,14 @@ namespace spelunker::maze {
     DFSMazeGenerator::DFSMazeGenerator(int w, int h)
         : MazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze DFSMazeGenerator::generate() const {
+    const Maze DFSMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Create the stack and pick a starting cell.
         std::stack<types::Cell> stack;

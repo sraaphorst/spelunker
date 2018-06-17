@@ -20,14 +20,14 @@ namespace spelunker::maze {
     AldousBroderMazeGenerator::AldousBroderMazeGenerator(int w, int h)
         : AldousBroderMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze AldousBroderMazeGenerator::generate() const {
+    const Maze AldousBroderMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // Keep track of which cells have and have not been visited.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a random starting position.
         auto currX = spelunker::math::RNG::randomRange(width);

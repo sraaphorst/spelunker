@@ -11,6 +11,8 @@
 
 #include <typeclasses/Show.h>
 
+#ifndef DIR
+#define DIR
 namespace spelunker::types {
     /**
      * The four possible directions in a grid maze.
@@ -39,7 +41,7 @@ namespace spelunker::types {
     std::string directionName(Direction d);
 
     /// Get as an offset for array manipulation.
-    unsigned int dirIdx(const Direction &d) {
+    inline unsigned int dirIdx(const Direction &d) {
         return static_cast<unsigned int>(d);
     }
 }
@@ -55,3 +57,4 @@ namespace spelunker::typeclasses {
         using type = types::Direction;
     };
 }
+#endif

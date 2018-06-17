@@ -11,6 +11,10 @@
 #include <sstream>
 #include <string>
 
+#include <types/AbstractMaze.h>
+#include <types/Dimensions2D.h>
+#include <types/Symmetry.h>
+
 #include "ThickMazeAttributes.h"
 
 namespace spelunker::thickmaze {
@@ -26,8 +30,16 @@ namespace spelunker::thickmaze {
      * odd width and height where walls are all contiguous cells of odd length >= 3. The mapping to this subset
      * is surjective, and thus Mazes and ThickMazes with this property are isomorphic.
      */
-    class ThickMaze final {
+    class ThickMaze final : public types::AbstractMaze<ThickMaze> {
     public:
+        /**
+         * Create a ThickMaze with the given width, height, and contents.
+         * This class is effectively immutable.
+         * @param d the dimensions of the maze, minus boundary walls
+         * @param c the contents of the maze, minus boundary walls
+         */
+        ThickMaze(const types::Dimensions2D &d, const CellContents &c);
+
         /**
          * Create a ThickMaze with the given width, height, and contents.
          * This class is effectively immutable.
@@ -36,22 +48,29 @@ namespace spelunker::thickmaze {
          * @param c the contents of the maze, minus boundary walls
          */
         ThickMaze(int w, int h, const CellContents &c);
-        virtual ~ThickMaze() = default;
+        ~ThickMaze() final = default;
 
-        inline const int getWidth() const noexcept { return width; }
-        inline const int getHeight() const noexcept { return height; }
+        /// Determine if two mazes are equal.
+        bool operator==(const ThickMaze &other) const noexcept;
 
+        /// Determine if two mazes are not equal.
+        bool operator!=(const ThickMaze &other) const noexcept {
+            return !(*this == other);
+        }
         const CellType cellIs(int x, int y) const;
 
         /// Determine the number of walls a cell has.
-        int numCellWalls(const types::Cell &c) const;
+        int numCellWalls(const types::Cell &c) const override;
+
+        /// Apply a given symmetry transformation to this maze.
+        const ThickMaze applySymmetry(types::Symmetry s) const override;
 
         /**
          * This algorithm swaps walls and floors, not including the border wall. It is useful for some
          * cellular automata algorithms, which are sometimes more wall-connected than floor-connected.
          * @return the reverse of the original maze, with walls and floors swapper.
          */
-        const ThickMaze reverse() const;
+        const ThickMaze reverse() const noexcept;
 
         /// Make a ThickMaze into a braid maze, clearing dead ends with the given probability.
         /**
@@ -71,15 +90,8 @@ namespace spelunker::thickmaze {
          * @param probability the probability of fixing a given dead end
          * @return a new maze with walls removed to decrease the number of dead ends
          */
-        const ThickMaze braid(double probability = 1.0) const;
+        const ThickMaze braid(double probability) const noexcept override;
 
-        /// Find the dead ends for this maze.
-        /**
-         * Find a collection of all the dead ends for this maze.
-         * A cell is considered a "dead end" if it has exactly three walls.
-         * @return a collection of the dead end cells
-         */
-        const types::CellCollection findDeadEnds() const noexcept;
 
     private:
         /// Determine the number of walls a cell has for an instance of Contents.
@@ -93,14 +105,6 @@ namespace spelunker::thickmaze {
          */
         int numCellWallsInContents(const types::Cell &c, const CellContents &cc) const;
 
-        /**
-         * Check a cell to make sure it appears in a valid place.
-         * @param c the cell to check
-         */
-        void checkCell(const types::Cell &c) const;
-
-        const int width;
-        const int height;
         const CellContents contents;
     };
 }

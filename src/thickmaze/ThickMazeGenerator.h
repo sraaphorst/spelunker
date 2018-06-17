@@ -8,17 +8,20 @@
 
 #pragma once
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/AbstractMazeGenerator.h>
 
 namespace spelunker::thickmaze {
     class ThickMaze;
 
-    class ThickMazeGenerator {
+    class ThickMazeGenerator : public types::AbstractMazeGenerator<ThickMaze> {
     public:
+        ThickMazeGenerator(const types::Dimensions2D &d);
         ThickMazeGenerator(int w, int h);
         virtual ~ThickMazeGenerator() = default;
 
-        virtual const ThickMaze generate() = 0;
+        virtual const ThickMaze generate() const noexcept = 0;
 
     protected:
         /**
@@ -26,9 +29,6 @@ namespace spelunker::thickmaze {
          * @param c the cell
          * @return a list of the cell's neighbours
          */
-        const types::CellCollection neighbours(const types::Cell& c);
-
-        const int width;
-        const int height;
+        const types::CellCollection neighbours(const types::Cell& c) const;
     };
 };

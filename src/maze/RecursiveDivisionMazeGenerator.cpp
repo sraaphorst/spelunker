@@ -24,11 +24,11 @@ namespace spelunker::maze {
     RecursiveDivisionMazeGenerator::RecursiveDivisionMazeGenerator(int w, int h)
         : RecursiveDivisionMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze RecursiveDivisionMazeGenerator::generate() const {
+    const Maze RecursiveDivisionMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // Unlike other algorithms, we start with no walls, and then add them iteratively.
-        auto wi = initializeEmptyLayout(false);
+        auto wi = createMazeLayout(getDimensions(), false);
 
         // Now create the container of rectangles to solve, and go through iteratively.
         std::queue<rectangle> areas;

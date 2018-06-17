@@ -13,6 +13,8 @@
 #include <typeclasses/Show.h>
 
 namespace spelunker::types {
+    class Dimensions2D;
+
     /// Maze symmetries. Note that the diagonal reflections can only be performed for square mazes.
     /**
      * Maze symmetries. Since we work with (0,0) in the upper left corner, which is not standard in the euclidean
@@ -41,6 +43,9 @@ namespace spelunker::types {
      * @return the new direction under the effect of the symmetry
      */
     Direction applySymmetryToDirection(Symmetry s, Direction d);
+
+    /// Determine the effects of a symmetry on the dimensions.
+    const Dimensions2D applySymmetryToDimensions(Symmetry s, const Dimensions2D &d);
 }
 
 namespace spelunker::typeclasses {

@@ -51,7 +51,7 @@ namespace spelunker::gui {
             auto xpos = 0.0;
             for (auto x = -1; x <= mw; ++x) {
                 // If this is a wall, draw it.
-                if (x == -1 || x == mw || y == -1 || y == mh || maze.cellIs(x, y) == thickmaze::WALL)
+                if (x == -1 || x == mw || y == -1 || y == mh || maze.cellIs(x, y) == thickmaze::CellType::WALL)
                     painter.fillRect(QRectF{xpos, ypos, cellW, cellH}, WALL_COLOUR);
 
                 xpos += cellW;

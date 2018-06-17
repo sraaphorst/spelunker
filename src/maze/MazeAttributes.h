@@ -33,12 +33,30 @@ namespace spelunker::maze {
     using UnrankWallMap = std::map<WallID, std::pair<types::Position, types::Position>>;
 
     /// Calculates the number of possible internal (non-boundary) walls in a maze of width w and height h.
-    inline const int calculateNumWalls(const int w, const int h) {
-        return (w - 1) * h + w * (h - 1);
-    }
+    const int calculateNumWalls(int width, int height);
 
     /// Calculates the number of possible internal (non-boundary) walls in a maze of the specified dimensions.
-    inline const int calculateNumWalls(const types::Dimensions2D &d) {
-        return calculateNumWalls(d.getWidth(), d.getHeight());
-    }
+    const int calculateNumWalls(const types::Dimensions2D &d) noexcept;
+
+    /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
+    /**
+     * Initialize the layout of the maze to the "empty" layout.
+     * This consists of the wall incidences all being set to true or false.
+     * The boundary walls are always maintained.
+     * @param w the width of the layout
+     * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
+     * @return an "empty" layout
+     */
+    WallIncidence createMazeLayout(int width, int height, bool walls = true);
+
+    /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
+    /**
+     * Initialize the layout of the maze to the "empty" layout.
+     * This consists of the wall incidences all being set to true or false.
+     * The boundary walls are always maintained.
+     * @param d the dimension of the layout
+     * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
+     * @return an "empty" layout
+     */
+    WallIncidence createMazeLayout(const types::Dimensions2D & d, bool walls = true) noexcept;
 }

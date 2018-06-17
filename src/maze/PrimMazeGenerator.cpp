@@ -21,14 +21,14 @@ namespace spelunker::maze {
     PrimMazeGenerator::PrimMazeGenerator(int w, int h)
         : PrimMazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze PrimMazeGenerator::generate() const {
+    const Maze PrimMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a cell at random.
         const int startX = math::RNG::randomRange(width);
@@ -73,7 +73,7 @@ namespace spelunker::maze {
 
     void PrimMazeGenerator::addCellWalls(const types::Cell &c,
                                          WallCollection &wallList,
-                                         const WallIncidence &wi) const {
+                                         const WallIncidence &wi) const noexcept {
         // Check each of the four walls to make sure they are valid and not a boundary wall.
         const auto [x, y] = c;
 

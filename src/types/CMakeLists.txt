@@ -19,8 +19,7 @@ set(_TYPES_PRIVATE_HEADER_FILES
         )
 
 set(_TYPES_SOURCE_FILES
-        AbstractMaze.cpp
-        AbstractMazeGenerator.cpp
+        CommonMazeAttributes.cpp
         Dimensions2D.cpp
         Direction.cpp
         Symmetry.cpp

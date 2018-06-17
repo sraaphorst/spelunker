@@ -6,6 +6,7 @@
 
 #include <string>
 
+#include "Dimensions2D.h"
 #include "Direction.h"
 #include "Symmetry.h"
 
@@ -97,5 +98,19 @@ namespace spelunker::types {
                         return Direction::SOUTH;
                 }
         }
+    }
+
+    const Dimensions2D applySymmetryToDimensions(Symmetry s, const Dimensions2D &d) {
+        int nWidth, nHeight;
+        if (s == Symmetry::ROTATION_BY_180
+            || s == Symmetry::REFLECTION_IN_X
+            || s == Symmetry::REFLECTION_IN_Y) {
+            nWidth = d.getWidth();
+            nHeight = d.getHeight();
+        } else {
+            nWidth = d.getHeight();
+            nHeight = d.getWidth();
+        }
+        return Dimensions2D{nWidth, nHeight};
     }
 }

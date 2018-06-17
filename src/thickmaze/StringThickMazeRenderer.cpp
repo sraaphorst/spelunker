@@ -15,8 +15,7 @@ namespace spelunker::thickmaze {
     StringThickMazeRenderer::StringThickMazeRenderer(std::ostream &o) : out(o) {}
 
     void StringThickMazeRenderer::render(const spelunker::thickmaze::ThickMaze &tm) {
-        const int width  = tm.getWidth();
-        const int height = tm.getHeight();
+        const auto [width, height] = tm.getDimensions().values();
 
         // Draw the border, and then the contents.
         // Hence, we iterate from -1 (the west and north border walls) to
@@ -25,7 +24,7 @@ namespace spelunker::thickmaze {
             for (auto x = -1; x <= width; ++x) {
                 if (x == -1 || x == width
                     || y == -1 || y == height
-                    || tm.cellIs(x, y) == WALL)
+                    || tm.cellIs(x, y) == CellType::WALL)
                     out << "██";
                 else out << "  ";
 

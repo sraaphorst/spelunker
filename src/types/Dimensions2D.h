@@ -11,6 +11,8 @@
 
 #include <typeclasses/Show.h>
 
+#include "CommonMazeAttributes.h"
+
 namespace spelunker::types {
     /**
      * An immutable set of two dimensions.

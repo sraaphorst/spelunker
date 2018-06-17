@@ -9,8 +9,10 @@
 #include <QPainter>
 #include <QColor>
 
+#include <types/Direction.h>
 #include <maze/Maze.h>
 #include <maze/DFSMazeGenerator.h>
+
 #include "MazeWidget.h"
 
 namespace spelunker::gui {
@@ -64,13 +66,13 @@ namespace spelunker::gui {
                 const auto LOWER_LEFT  = QPointF{xpos, ypos + cellH};
                 const auto LOWER_RIGHT = QPointF{xpos + cellW, ypos + cellH};
 
-                if (maze.wall(x, y, types::NORTH))
+                if (maze.wall(x, y, types::Direction::NORTH))
                     painter.drawLine(UPPER_LEFT, UPPER_RIGHT);
-                if (maze.wall(x, y, types::EAST))
+                if (maze.wall(x, y, types::Direction::EAST))
                     painter.drawLine(UPPER_RIGHT, LOWER_RIGHT);
-                if (maze.wall(x, y, types::SOUTH))
+                if (maze.wall(x, y, types::Direction::SOUTH))
                     painter.drawLine(LOWER_LEFT, LOWER_RIGHT);
-                if (maze.wall(x, y, types::WEST))
+                if (maze.wall(x, y, types::Direction::WEST))
                     painter.drawLine(UPPER_LEFT, LOWER_LEFT);
 
                 xpos += cellW;

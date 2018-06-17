@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     spelunker::maze::Maze m = gen.generate();
     std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
 
-    spelunker::maze::Maze mb = m.braid();
+    spelunker::maze::Maze mb = m.braidAll();
     std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(mb);
     return 0;
 }

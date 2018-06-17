@@ -29,14 +29,14 @@ namespace spelunker::maze {
     GrowingTreeMazeGenerator::GrowingTreeMazeGenerator(const int w, const int h, Selector sel)
         : GrowingTreeMazeGenerator{types::Dimensions2D{w, h}, sel} {}
 
-    const Maze GrowingTreeMazeGenerator::generate() const {
+    const Maze GrowingTreeMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Create the cell collection and pick a starting cell.
         types::CellCollection C;
@@ -45,11 +45,11 @@ namespace spelunker::maze {
         while (!C.empty()) {
             // Select the element c using the selector.
             const auto idx = selector(C);
-            if (idx < 0 || idx >= C.size())
-                throw std::out_of_range("C has size " + std::to_string(C.size()) + ", selector tried to pick " + std::to_string(idx));
-
+//            if (idx < 0 || idx >= C.size())
+//                throw std::out_of_range("C has size " + std::to_string(C.size()) + ", selector tried to pick " + std::to_string(idx));
             const auto c = C[idx];
-            ci[c.first][c.second] = true;
+            const auto [x, y] = c;
+            ci[x][y] = true;
 
             // Find a list of unvisited neighbours. If we can't find one, continue.
             const auto nbrs = unvisitedNeighbours(c, ci);

@@ -49,17 +49,17 @@ namespace spelunker::maze {
                const WallIncidence &walls)
             : Maze(w, h, {}, types::CellCollection(), walls) {}
 
-    bool Maze::wall(const types::Position &p) const noexcept {
+    bool Maze::wall(const types::Position &p) const {
         const int rk = rankPosition(p);
         return rk == -1 || wallIncidence[rk];
     }
 
-    bool Maze::wall(int x, int y, types::Direction d) const noexcept {
+    bool Maze::wall(int x, int y, types::Direction d) const {
         const int rk = rankPosition(x, y, d);
         return rk == -1 || wallIncidence[rk];
     }
 
-    bool Maze::operator==(const Maze &other) const {
+    bool Maze::operator==(const Maze &other) const noexcept {
         // We can just compare the wall incidence vectors, since == on vectors of the
         // same size compares the contents.
         return getDimensions() == other.getDimensions()
@@ -77,40 +77,40 @@ namespace spelunker::maze {
         switch (s) {
             case types::Symmetry::ROTATION_BY_90:
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), getHeight() - y - 1, x,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::ROTATION_BY_180:
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), getWidth() - x - 1, getHeight() - y - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::ROTATION_BY_270:
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), y, getWidth() - x - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_X:
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), x, getHeight() - y - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_Y:
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), getWidth() - x - 1, y,
                                                types::applySymmetryToDirection(s, d));
                 };
@@ -118,16 +118,16 @@ namespace spelunker::maze {
             case types::Symmetry::REFLECTION_IN_NWSE:
                 if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), y, x, types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_NESW:
                 if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
                 mp = [this, s](const types::Position &p) {
-                    auto[c, d] = p;
-                    auto[x, y] = c;
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
                     return Maze::rankPositionS(getDimensions(), getHeight() - y - 1, getWidth() - x - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
@@ -135,16 +135,7 @@ namespace spelunker::maze {
         }
 
         // Determine the new width / height and create the wall incidence.
-        int nWidth, nHeight;
-        if (s == types::Symmetry::ROTATION_BY_180
-                || s == types::Symmetry::REFLECTION_IN_X
-                || s == types::Symmetry::REFLECTION_IN_Y) {
-            nWidth = getWidth();
-            nHeight = getHeight();
-        } else {
-            nWidth = getHeight();
-            nHeight = getWidth();
-        }
+        const auto nDim = types::applySymmetryToDimensions(s, getDimensions());
 
         const auto dirs = types::directions();
         auto nwi = WallIncidence(numWalls, true);
@@ -161,7 +152,7 @@ namespace spelunker::maze {
                     nwi[nRk] = wallIncidence[rk];
                 }
 
-        return Maze(nWidth, nHeight, nwi);
+        return Maze(nDim, nwi);
     }
 
     const Maze Maze::makeUnicursal() const {
@@ -268,7 +259,7 @@ namespace spelunker::maze {
         return Maze(ud, uStart, types::CellCollection(), wi);
     }
 
-    const Maze Maze::braid(const double probability) const {
+    const Maze Maze::braid(const double probability) const noexcept {
         math::MathUtils::checkProbability(probability);
 
         // Create a copy of the wall incidence for this maze for the new maze.
@@ -317,19 +308,6 @@ namespace spelunker::maze {
         }
 
         return Maze(getDimensions(), getStartingCell(), getGoalCells(), wi);
-    }
-
-    const types::CellCollection Maze::findDeadEnds() const noexcept {
-        types::CellCollection deadends;
-        const auto [width, height] = getDimensions().values();
-        for (auto y = 0; y < height; ++y) {
-            for (auto x = 0; x < width; ++x) {
-                const auto c = types::cell(x, y);
-                if (numCellWalls(c) == 3)
-                    deadends.emplace_back(c);
-            }
-        }
-        return deadends;
     }
 
     int Maze::numCellWallsInWI(const spelunker::types::Cell &c, const spelunker::maze::WallIncidence &wi) const {

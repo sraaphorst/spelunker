@@ -10,10 +10,12 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-#include "typeclasses/Homomorphism.h"
-#include "typeclasses/Show.h"
-#include "maze/Maze.h"
-#include "maze/MazeAttributes.h"
+#include <types/Dimensions2D.h>
+#include <typeclasses/Homomorphism.h>
+#include <typeclasses/Show.h>
+#include <maze/Maze.h>
+#include <maze/MazeAttributes.h>
+
 #include "GraphMaze.h"
 #include "GraphMazeAttributes.h"
 
@@ -39,7 +41,7 @@ namespace spelunker::typeclasses {
                 auto d = types::cellDirection(types::cell(x1,y1), types::cell(x2,y2));
 
                 // Now carve the corresponding wall out of wc.
-                auto wallID = maze::Maze::rankPositionS(w, h, x1, y1, d);
+                auto wallID = maze::Maze::rankPositionS(types::Dimensions2D{w, h}, x1, y1, d);
                 wi[wallID] = false;
             }
 

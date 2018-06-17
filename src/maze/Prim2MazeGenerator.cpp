@@ -22,14 +22,14 @@ namespace spelunker::maze {
     Prim2MazeGenerator::Prim2MazeGenerator(int w, int h)
         : Prim2MazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const Maze Prim2MazeGenerator::generate() const {
+    const Maze Prim2MazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();
 
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a start cell at random.
         const int startX = math::RNG::randomRange(width);
@@ -74,7 +74,7 @@ namespace spelunker::maze {
 
     void Prim2MazeGenerator::addUnivisitedNeighbourCells(const types::Cell &c,
                                                          types::CellCollection &cells,
-                                                         const types::CellIndicator &ci)  const {
+                                                         const types::CellIndicator &ci) const noexcept {
         const auto[x, y] = c;
         if (x - 1 >= 0 && !ci[x - 1][y])
             cells.emplace_back(types::cell(x - 1, y));

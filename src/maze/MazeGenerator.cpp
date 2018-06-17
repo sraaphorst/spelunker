@@ -19,16 +19,11 @@ namespace spelunker::maze {
     MazeGenerator::MazeGenerator(const int w, const int h)
         : MazeGenerator{types::Dimensions2D{w, h}} {}
 
-    WallIncidence MazeGenerator::initializeEmptyLayout(bool walls) const {
-        // This involves just setting the wall incidences to true or false.
-        return WallIncidence(numWalls, walls);
-    }
-
-    const UnrankWallMap MazeGenerator::createUnrankWallMap() const {
+    const UnrankWallMap MazeGenerator::createUnrankWallMap() const noexcept {
         return createUnrankWallMapS(getDimensions());
     }
 
-    const UnrankWallMap MazeGenerator::createUnrankWallMapS(const types::Dimensions2D &dim) {
+    const UnrankWallMap MazeGenerator::createUnrankWallMapS(const types::Dimensions2D &dim) noexcept {
         UnrankWallMap umap;
 
         // The easiest way to do this is the inefficient way: iterate over all possible positions and collect
@@ -39,15 +34,15 @@ namespace spelunker::maze {
         for (auto x = 0; x < width; ++x)
             for (auto y = 0; y < height; ++y) {
                 for (const auto dir : types::directions()) {
-                    const int rk = Maze::rankPositionS(dim, x, y, dir);
+                    const auto rk = Maze::rankPositionS(dim, x, y, dir);
                     if (rk != -1)
                         unrankings[rk].emplace_back(pos(x, y, dir));
                 }
             }
 
         // Now convert to pairs.
-        for (auto kv : unrankings) {
-            const auto [rk, ps] = kv;
+        for (const auto &kv : unrankings) {
+            const auto &[rk, ps] = kv;
             assert(ps.size() == 2);
             umap.insert(std::make_pair(rk, std::make_pair(ps[0], ps[1])));
         }
@@ -98,16 +93,16 @@ namespace spelunker::maze {
 #ifdef DEBUG
     void MazeGenerator::test_createUnrankWallMapS(const types::Dimensions2D &dim) {
         const auto m = createUnrankWallMapS(dim);
-        for (const auto kv : m) {
+        for (const auto &kv : m) {
             // kv is std::map<WallID, std::pair<types::Position, types::Position> >
-            const auto [rk, ps] = kv;
-            const auto [p1, p2] = ps;
+            const auto &[rk, ps] = kv;
+            const auto &[p1, p2] = ps;
 
-            const auto [c1, d1] = p1;
+            const auto &[c1, d1] = p1;
             const auto [x1, y1] = c1;
             assert(Maze::rankPositionS(dim, x1, y1, d1) == rk);
 
-            const auto [c2, d2] = p2;
+            const auto &[c2, d2] = p2;
             const auto [x2, y2] = c2;
             assert(Maze::rankPositionS(dim, x2, y2, d2) == rk);
         }

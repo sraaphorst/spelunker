@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     thickmaze::ThickMaze tm = typeclasses::Homomorphism<maze::Maze, thickmaze::ThickMaze>::morph(m);
     std::cout << typeclasses::Show<thickmaze::ThickMaze>::show(tm);
 
-    spelunker::thickmaze::ThickMaze btm = tm.braid();
+    spelunker::thickmaze::ThickMaze btm = tm.braidAll();
     std::cout << typeclasses::Show<thickmaze::ThickMaze>::show(btm);
     return 0;
 }
