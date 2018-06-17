@@ -11,8 +11,8 @@
 #include <map>
 #include <vector>
 
-#include "typeclasses/Show.h"
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
 
 namespace spelunker::maze {
     /// The ID for a wall. Walls are ranked to ints.
@@ -30,35 +30,33 @@ namespace spelunker::maze {
     using WallCollection = std::vector<WallID>;
 
     /// Used to reverse wall ranking, i.e. a map that takes a wall rank and gives the two cells it separates.
-    using UnrankWallMap = std::map<WallID, std::pair<types::Position, types::Position> >;
+    using UnrankWallMap = std::map<WallID, std::pair<types::Position, types::Position>>;
 
     /// Calculates the number of possible internal (non-boundary) walls in a maze of width w and height h.
-    inline const int calculateNumWalls(const int w, const int h) {
-        return (w - 1) * h + w * (h - 1);
-    }
-}
+    const int calculateNumWalls(int width, int height);
 
-namespace spelunker::typeclasses {
-    using namespace spelunker::types;
+    /// Calculates the number of possible internal (non-boundary) walls in a maze of the specified dimensions.
+    const int calculateNumWalls(const types::Dimensions2D &d) noexcept;
 
-    template<>
-    struct Show<Direction> {
-        static std::string show(const Direction &t) {
-            switch (t) {
-                case NORTH:
-                    return "NORTH";
-                case EAST:
-                    return "EAST";
-                case SOUTH:
-                    return "SOUTH";
-                case WEST:
-                    return "WEST";
-                default:
-                    return "UNDEFINED";
-            }
-        }
+    /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
+    /**
+     * Initialize the layout of the maze to the "empty" layout.
+     * This consists of the wall incidences all being set to true or false.
+     * The boundary walls are always maintained.
+     * @param w the width of the layout
+     * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
+     * @return an "empty" layout
+     */
+    WallIncidence createMazeLayout(int width, int height, bool walls = true);
 
-        static constexpr bool is_instance = true;
-        using type = Direction;
-    };
+    /// Create an "empty layout", either full of walls, or without any walls (other than the boundary walls).
+    /**
+     * Initialize the layout of the maze to the "empty" layout.
+     * This consists of the wall incidences all being set to true or false.
+     * The boundary walls are always maintained.
+     * @param d the dimension of the layout
+     * @param walls indicates whether the maze should be all walls or no walls (except the boundary wall).
+     * @return an "empty" layout
+     */
+    WallIncidence createMazeLayout(const types::Dimensions2D & d, bool walls = true) noexcept;
 }

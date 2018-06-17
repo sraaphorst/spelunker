@@ -20,9 +20,11 @@
 using namespace std;
 #endif
 
-#include "typeclasses/Show.h"
-#include "types/CommonMazeAttributes.h"
-#include "math/Partition.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Direction.h>
+#include <typeclasses/Show.h>
+#include <math/Partition.h>
+
 #include "GridColouring.h"
 
 namespace spelunker::thickmaze {
@@ -296,10 +298,10 @@ namespace spelunker::thickmaze {
             std::pair<int, int> delta;
         };
         // Each point around (sx, sy).
-        std::vector<delta_data> deltas{{spelunker::types::NORTH, {0,  -1}},
-                                       {spelunker::types::EAST,  {1,  0}},
-                                       {spelunker::types::SOUTH, {0,  1}},
-                                       {spelunker::types::WEST,  {-1, 0}}};
+        std::vector<delta_data> deltas{{types::Direction::NORTH, {0,  -1}},
+                                       {types::Direction::EAST,  {1,  0}},
+                                       {types::Direction::SOUTH, {0,  1}},
+                                       {types::Direction::WEST,  {-1, 0}}};
 
         for (auto delta: deltas) {
             auto[dir, d0] = delta;

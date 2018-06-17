@@ -14,8 +14,8 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-#include "types/Exceptions.h"
-#include "types/CommonMazeAttributes.h"
+#include <types/Exceptions.h>
+#include <types/CommonMazeAttributes.h>
 
 namespace spelunker::graphmaze {
     /// The representation of a cell, which is a vertex in the graph.

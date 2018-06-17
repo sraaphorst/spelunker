@@ -7,20 +7,28 @@
 #include <algorithm>
 #include <queue>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "RecursiveDivisionMazeGenerator.h"
 
 namespace spelunker::maze {
-    RecursiveDivisionMazeGenerator::RecursiveDivisionMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    RecursiveDivisionMazeGenerator::RecursiveDivisionMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator(d) {}
 
-    const Maze RecursiveDivisionMazeGenerator::generate() {
+    RecursiveDivisionMazeGenerator::RecursiveDivisionMazeGenerator(int w, int h)
+        : RecursiveDivisionMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze RecursiveDivisionMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
         // Unlike other algorithms, we start with no walls, and then add them iteratively.
-        auto wi = initializeEmptyLayout(false);
+        auto wi = createMazeLayout(getDimensions(), false);
 
         // Now create the container of rectangles to solve, and go through iteratively.
         std::queue<rectangle> areas;
@@ -56,9 +64,9 @@ namespace spelunker::maze {
                     continue;
 
                 if (vertical)
-                    wi[rankPos(types::pos(area.x + p, area.y + i, types::EAST))] = true;
+                    wi[rankPos(types::pos(area.x + p, area.y + i, types::Direction::EAST))] = true;
                 else
-                    wi[rankPos(types::pos(area.x + i, area.y + p, types::SOUTH))] = true;
+                    wi[rankPos(types::pos(area.x + i, area.y + p, types::Direction::SOUTH))] = true;
             }
             
             // Now split into two areas. Since we are always adding walls on the E and S,
@@ -72,6 +80,6 @@ namespace spelunker::maze {
             }
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

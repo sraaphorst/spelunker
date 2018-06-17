@@ -7,10 +7,10 @@
 #include <iostream>
 using namespace std;
 
-#include "maze/DFSMazeGenerator.h"
-#include "maze/Maze.h"
-#include "maze/MazeTypeclasses.h"
-#include "typeclasses/Show.h"
+#include <typeclasses/Show.h>
+#include <maze/DFSMazeGenerator.h>
+#include <maze/Maze.h>
+#include <maze/MazeTypeclasses.h>
 
 int main(int argc, char *argv[]) {
     spelunker::maze::DFSMazeGenerator dfs(25, 20);

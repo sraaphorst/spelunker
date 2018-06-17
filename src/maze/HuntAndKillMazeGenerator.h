@@ -6,7 +6,9 @@
 
 #pragma once
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -26,10 +28,11 @@ namespace spelunker::maze {
      */
     class HuntAndKillMazeGenerator final : public MazeGenerator {
     public:
+        HuntAndKillMazeGenerator(const types::Dimensions2D &d);
         HuntAndKillMazeGenerator(int w, int h);
         ~HuntAndKillMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
 
     private:
         void randomPathCarving(int startX, int startY, types::CellIndicator &ci, WallIncidence &wi) const noexcept;

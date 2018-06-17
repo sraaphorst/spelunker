@@ -8,26 +8,41 @@
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
-#include "types/CommonMazeAttributes.h"
-#include "types/DisjointSetHelper.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <types/DisjointSetHelper.h>
+#include <math/MathUtils.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "EllerMazeGenerator.h"
 
 namespace spelunker::maze {
     using namespace boost;
 
-    EllerMazeGenerator::EllerMazeGenerator(const int w, const int h, const double p, const double d)
-            : MazeGenerator(w, h), probability(p), density(d) {}
+    EllerMazeGenerator::EllerMazeGenerator(const types::Dimensions2D &d, const double p, const double den)
+        : MazeGenerator{d}, probability{p}, density{den} {
+        math::MathUtils::checkProbability(p);
+        math::MathUtils::checkProbability(den);
+    }
+
+    EllerMazeGenerator::EllerMazeGenerator(const int w, const int h, const double p, const double den)
+        : EllerMazeGenerator{types::Dimensions2D{w, h}, p, den} {}
+
+    EllerMazeGenerator::EllerMazeGenerator(const types::Dimensions2D &d)
+        : EllerMazeGenerator{d, defaultProbability, defaultDensity} {}
 
     EllerMazeGenerator::EllerMazeGenerator(int w, int h)
-            : MazeGenerator(w, h), probability(0.5), density(0.5) {}
+        : EllerMazeGenerator{w, h, defaultProbability, defaultDensity} {}
 
-    const Maze EllerMazeGenerator::generate() {
+    const Maze EllerMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // Create a vector of all elements.
         std::vector<types::Element> elements;
@@ -63,7 +78,7 @@ namespace spelunker::maze {
                 const auto &set2 = dsets.find_set(elements[rankCell(x + 1, y)]);
 
                 if (set1 != set2 && (y == height - 1 || math::RNG::randomProbability() < probability)) {
-                    wi[rankPos(types::pos(x, y, types::EAST))] = false;
+                    wi[rankPos(types::pos(x, y, types::Direction::EAST))] = false;
                     dsets.link(set1, set2);
                 }
             }
@@ -106,7 +121,7 @@ namespace spelunker::maze {
                         cells.pop_back();
 
                         const auto cell = unrankCell(sRk);
-                        wi[rankPos(types::pos(cell.first, cell.second, types::SOUTH))] = false;
+                        wi[rankPos(types::pos(cell.first, cell.second, types::Direction::SOUTH))] = false;
 
                         // Add the cell to this set in the partition.
                         const auto &setDown = dsets.find_set(elements[rankCell(cell.first, cell.second + 1)]);
@@ -125,6 +140,6 @@ namespace spelunker::maze {
             }
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

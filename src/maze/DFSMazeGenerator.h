@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <types/Dimensions2D.h>
+
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -31,10 +33,11 @@ namespace spelunker::maze {
      */
     class DFSMazeGenerator final : public MazeGenerator {
     public:
+        DFSMazeGenerator(const types::Dimensions2D &d);
         DFSMazeGenerator(int w, int h);
         ~DFSMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
     };
 };
 

@@ -38,6 +38,7 @@ set(_MAZE_SOURCE_FILES
         HuntAndKillMazeGenerator.cpp
         KruskalMazeGenerator.cpp
         Maze.cpp
+        MazeAttributes.cpp
         MazeGenerator.cpp
         PrimMazeGenerator.cpp
         Prim2MazeGenerator.cpp

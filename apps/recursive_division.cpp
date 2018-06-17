@@ -8,11 +8,11 @@
 
 #include <iostream>
 
+#include <typeclasses/Show.h>
+#include <maze/Maze.h>
+#include <maze/RecursiveDivisionMazeGenerator.h>
+
 #include "Executor.h"
-#include "maze/Maze.h"
-#include "typeclasses/Show.h"
-#include "maze/RecursiveDivisionMazeGenerator.h"
-#include "Utils.h"
 
 int main(int argc, char *argv[]) {
     return Executor<spelunker::maze::RecursiveDivisionMazeGenerator>::generateAndDisplayMaze(argc, argv);

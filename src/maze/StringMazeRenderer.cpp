@@ -10,9 +10,11 @@
 #include <ostream>
 #include <string>
 
-#include "types/CommonMazeAttributes.h"
-#include "maze/Maze.h"
-#include "maze/MazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Direction.h>
+#include <maze/Maze.h>
+#include <maze/MazeAttributes.h>
+
 #include "StringMazeRenderer.h"
 
 namespace spelunker::maze {
@@ -54,22 +56,28 @@ namespace spelunker::maze {
         BoxColumn         bCol(height+1, bDir);
         BoxRepresentation box(width+1, bCol);
 
+        const auto N = types::dirIdx(types::Direction::NORTH);
+        const auto E = types::dirIdx(types::Direction::EAST);
+        const auto S = types::dirIdx(types::Direction::SOUTH);
+        const auto W = types::dirIdx(types::Direction::WEST);
+
+
         for (auto x=0; x <= width; ++x) {
             for (auto y=0; y <= height; ++y) {
-                box[x][y][types::NORTH] = wall(m, x-1, y-1, types::EAST)  || wall(m,   x, y-1, types::WEST);
-                box[x][y][types::WEST]  = wall(m, x-1, y-1, types::SOUTH) || wall(m, x-1,   y, types::NORTH);
-                box[x][y][types::SOUTH] = wall(m, x-1,   y, types::EAST)  || wall(m,   x,   y, types::WEST);
-                box[x][y][types::EAST]  = wall(m,   x, y-1, types::SOUTH) || wall(m,   x,   y, types::NORTH);
+                box[x][y][N] = wall(m, x-1, y-1, types::Direction::EAST)  || wall(m,   x, y-1, types::Direction::WEST);
+                box[x][y][W] = wall(m, x-1, y-1, types::Direction::SOUTH) || wall(m, x-1,   y, types::Direction::NORTH);
+                box[x][y][S] = wall(m, x-1,   y, types::Direction::EAST)  || wall(m,   x,   y, types::Direction::WEST);
+                box[x][y][E] = wall(m,   x, y-1, types::Direction::SOUTH) || wall(m,   x,   y, types::Direction::NORTH);
             }
         }
 
         // Now we are ready to render.
         for (auto y=0; y <= height; ++y) {
             for (auto x=0; x <= width; ++x) {
-                const auto n = box[x][y][types::NORTH] ? 1 : 0;
-                const auto w = box[x][y][types::WEST]  ? 1 : 0;
-                const auto s = box[x][y][types::SOUTH] ? 1 : 0;
-                const auto e = box[x][y][types::EAST]  ? 1 : 0;
+                const auto n = box[x][y][N] ? 1 : 0;
+                const auto w = box[x][y][W] ? 1 : 0;
+                const auto s = box[x][y][S] ? 1 : 0;
+                const auto e = box[x][y][E] ? 1 : 0;
 
                 const auto idx = n * 8 + w * 4 + s * 2 + e;
                 out << boxchars[idx] << boxchars[e == 0 ? 0 : 5];

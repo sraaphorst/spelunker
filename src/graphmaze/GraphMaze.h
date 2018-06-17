@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
 #include "GraphMazeAttributes.h"
 #include <boost/graph/adjacency_list.hpp>
 

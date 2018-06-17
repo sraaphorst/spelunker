@@ -8,14 +8,15 @@
 
 #include <iostream>
 
-#include "thickmaze/CellularAutomatonThickMazeGenerator.h"
-#include "typeclasses/Show.h"
-#include "thickmaze/ThickMaze.h"
-#include "thickmaze/ThickMazeTypeclasses.h"
+#include <typeclasses/Show.h>
+#include <thickmaze/CellularAutomatonThickMazeGenerator.h>
+#include <thickmaze/ThickMaze.h>
+#include <thickmaze/ThickMazeTypeclasses.h>
+
 using namespace spelunker::thickmaze;
 
 int main(int argc, char *argv[]) {
-    CellularAutomatonThickMazeGenerator::settings s;
+    CellularAutomatonThickMazeGenerator::settings s{};
     CellularAutomatonThickMazeGenerator gen(100, 50, s);
     ThickMaze tm = gen.generate();//.reverse();
     std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);

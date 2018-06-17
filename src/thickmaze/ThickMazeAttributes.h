@@ -11,11 +11,12 @@
 #include <tuple>
 #include <vector>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
 
 namespace spelunker::thickmaze {
     /// The different types of contents that a cell may contain.
-    enum CellType {
+    enum class CellType {
         FLOOR = 0,
         WALL
     };
@@ -24,12 +25,9 @@ namespace spelunker::thickmaze {
     using CellRow = std::vector<CellType>;
     using CellContents = std::vector<CellRow>;
 
-    /// Create an empty set of contents (all FLOOR).
-    inline CellContents createThickMazeCellContents(int width, int height, CellType c = FLOOR) {
-        CellContents contents;
-        contents.resize(width);
-        for (auto i=0; i < width; ++i)
-            contents[i] = CellRow(height, c);
-        return contents;
-    }
+    /// Create an empty layout.
+    CellContents createThickMazeLayout(int width, int height, CellType c = CellType::FLOOR);
+
+    /// Create an empty layout.
+    CellContents createThickMazeLayout(const types::Dimensions2D &d, CellType c = CellType::FLOOR) noexcept;
 }

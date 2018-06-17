@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <types/Dimensions2D.h>
+
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -33,11 +35,15 @@ namespace spelunker::maze {
      */
     class BinaryTreeMazeGenerator final : public MazeGenerator {
     public:
+        BinaryTreeMazeGenerator(const types::Dimensions2D &d, double p);
         BinaryTreeMazeGenerator(int w, int h, double p);
+        BinaryTreeMazeGenerator(const types::Dimensions2D &d);
         BinaryTreeMazeGenerator(int w, int h);
         ~BinaryTreeMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
+
+        static constexpr double defaultEastProbability = 0.5;
 
     private:
         const double eastProbability;

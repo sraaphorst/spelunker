@@ -24,6 +24,7 @@ set(_THICKMAZE_SOURCE_FILES
         GridColouringThickMazeGenerator.cpp
         StringThickMazeRenderer.cpp
         ThickMaze.cpp
+        ThickMazeAttributes.cpp
         ThickMazeGenerator.cpp
         PARENT_SCOPE
         )

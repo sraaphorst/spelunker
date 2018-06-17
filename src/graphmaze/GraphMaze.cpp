@@ -9,11 +9,12 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-#include "types/CommonMazeAttributes.h"
-#include "types/Exceptions.h"
-#include "typeclasses/Homomorphism.h"
-#include "typeclasses/Show.h"
-#include "maze/Maze.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Exceptions.h>
+#include <typeclasses/Homomorphism.h>
+#include <typeclasses/Show.h>
+#include <maze/Maze.h>
+
 #include "GraphMazeAttributes.h"
 #include "GraphMaze.h"
 

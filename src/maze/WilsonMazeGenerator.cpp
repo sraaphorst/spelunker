@@ -6,23 +6,31 @@
 
 #include <map>
 
-#include "types/CommonMazeAttributes.h"
-#include "maze/Maze.h"
-#include "maze/MazeAttributes.h"
-#include "maze/MazeGenerator.h"
-#include "math/RNG.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <maze/Maze.h>
+#include <maze/MazeAttributes.h>
+#include <maze/MazeGenerator.h>
+#include <math/RNG.h>
+
 #include "WilsonMazeGenerator.h"
 
 namespace spelunker::maze {
-    WilsonMazeGenerator::WilsonMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    WilsonMazeGenerator::WilsonMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze WilsonMazeGenerator::generate() {
+    WilsonMazeGenerator::WilsonMazeGenerator(int w, int h)
+        : WilsonMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze WilsonMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check which cells are part of the maze.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a starting cell at random and add it to the maze.
         const int startX = math::RNG::randomRange(width);
@@ -88,16 +96,16 @@ namespace spelunker::maze {
                 wi[rankPos(types::pos(x, y, dir))] = false;
 
                 switch (dir) {
-                    case types::NORTH:
+                    case types::Direction::NORTH:
                         y -= 1;
                         break;
-                    case types::EAST:
+                    case types::Direction::EAST:
                         x += 1;
                         break;
-                    case types::SOUTH:
+                    case types::Direction::SOUTH:
                         y += 1;
                         break;
-                    case types::WEST:
+                    case types::Direction::WEST:
                         x -= 1;
                         break;
                 }

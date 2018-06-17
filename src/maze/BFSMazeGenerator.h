@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <types/Dimensions2D.h>
+
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -32,9 +34,11 @@ namespace spelunker::maze {
      */
     class BFSMazeGenerator final : public MazeGenerator{
     public:
+        BFSMazeGenerator(const types::Dimensions2D &d);
         BFSMazeGenerator(int w, int h);
+
         ~BFSMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
     };
 }

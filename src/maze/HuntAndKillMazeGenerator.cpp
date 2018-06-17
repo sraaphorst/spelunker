@@ -4,26 +4,33 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "HuntAndKillMazeGenerator.h"
 
 #include <iostream>
 using namespace std;
 
 namespace spelunker::maze {
-    HuntAndKillMazeGenerator::HuntAndKillMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    HuntAndKillMazeGenerator::HuntAndKillMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze HuntAndKillMazeGenerator::generate() {
+    HuntAndKillMazeGenerator::HuntAndKillMazeGenerator(int w, int h)
+        : HuntAndKillMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze HuntAndKillMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // We need a cell lookup to check if we have visited a cell already.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Get a starting cell.
         auto currX = math::RNG::randomRange(width);
@@ -61,13 +68,13 @@ namespace spelunker::maze {
             currY = nextY;
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 
     void HuntAndKillMazeGenerator::randomPathCarving(const int startX,
                                                      const int startY,
                                                      types::CellIndicator &ci,
-                                                     WallIncidence &wi) const noexcept  {
+                                                     WallIncidence &wi) const noexcept {
         int x = startX;
         int y = startY;
 
@@ -80,6 +87,7 @@ namespace spelunker::maze {
             if (nbrs.empty()) break;
             const auto nbr = math::RNG::randomElement(nbrs);
             wi[rankPos(nbr)] = false;
+
             x = nbr.first.first;
             y = nbr.first.second;
         }

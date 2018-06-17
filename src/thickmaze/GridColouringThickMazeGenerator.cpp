@@ -10,9 +10,11 @@
 #include <tuple>
 #include <vector>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <math/RNG.h>
+
 #include "GridColouring.h"
-#include "math/RNG.h"
 #include "ThickMaze.h"
 #include "ThickMazeAttributes.h"
 
@@ -24,12 +26,16 @@ using namespace std;
 #endif
 
 namespace spelunker::thickmaze {
+    GridColouringThickMazeGenerator::GridColouringThickMazeGenerator(const types::Dimensions2D &d,
+                                    const GridColouring &gc, const GridColouring::CandidateConfiguration &cfg)
+        : ThickMazeGenerator{d}, gridColouring{gc}, configuration{cfg} {}
+
     GridColouringThickMazeGenerator::GridColouringThickMazeGenerator(int w, int h, const GridColouring &gc,
                                                                      const GridColouring::CandidateConfiguration &cfg)
-    : ThickMazeGenerator(w, h), gridColouring(gc), configuration(cfg) {}
+        : GridColouringThickMazeGenerator{types::Dimensions2D{w, h}, gc, cfg} {}
 
 
-    const ThickMaze GridColouringThickMazeGenerator::generate() {
+    const ThickMaze GridColouringThickMazeGenerator::generate() const noexcept {
 #ifdef DEBUG
         cout << "Using following colouring:" << endl;
         for (auto i=0; i < gridColouring.numRows(); ++i) {
@@ -51,8 +57,10 @@ namespace spelunker::thickmaze {
         }
         cout << endl;
 #endif
+        const auto [width, height] = getDimensions().values();
+
         // Create a layout consisting completely of walls.
-        auto contents = thickmaze::createThickMazeCellContents(width, height, WALL);
+        auto contents = thickmaze::createThickMazeLayout(getDimensions(), CellType::WALL);
 
         // Find all the rooms as defined by the colouring and the configuration.
         std::vector<std::pair<int, int>> rooms;
@@ -85,7 +93,7 @@ namespace spelunker::thickmaze {
         cout << "Starting at cell " << sx << "," << sy << endl;
 #endif
 
-        contents[sx][sy] = FLOOR;
+        contents[sx][sy] = CellType::FLOOR;
         auto swalls = adjacentWalls(types::cell(sx, sy), offsetMap);
 #ifdef DEBUG
         cout << "\tAdjacent walls:" << endl;
@@ -125,25 +133,25 @@ namespace spelunker::thickmaze {
             auto arooms = adjacentRooms(wall);
 #ifdef DEBUG
             cout << "\tAdjacent rooms: ";
-            for (auto xyz: arooms) {
-                cout << "(" << xyz.first << "," << xyz.second << ")=" << (contents[xyz.first][xyz.second] == WALL ? "uncovered" : "covered") << "   ";
+            for (auto curroom: arooms) {
+                cout << "(" << curroom.first << "," << curroom.second << ")=" << (contents[curroom.first][curroom.second] == CellType::WALL ? "uncovered" : "covered") << "   ";
             }
             cout << endl;
 #endif
             bool uncovered = false;
             for (auto r: arooms) {
                 auto [rx, ry] = r;
-                if (contents[rx][ry] == WALL) {
+                if (contents[rx][ry] == CellType::WALL) {
 #ifdef DEBUG
                     cout << "\tSetting room " << rx << "," << ry << " to FLOOR" << endl;
 #endif
-                    contents[rx][ry] = FLOOR;
+                    contents[rx][ry] = CellType::FLOOR;
                     for (auto rw: wall) {
                         auto [rwx, rwy] = rw;
 #ifdef DEBUG
                         cout << "\tSetting wall " << rwx << ","  << rwy << " to FLOOR" << endl;
 #endif
-                        contents[rwx][rwy] = FLOOR;
+                        contents[rwx][rwy] = CellType::FLOOR;
                     }
 
                     auto rWalls = adjacentWalls(r, offsetMap);
@@ -165,7 +173,7 @@ namespace spelunker::thickmaze {
     }
 
     std::optional<GridColouringThickMazeGenerator::AggregateWall>
-            GridColouringThickMazeGenerator::offsetToAggregate(const types::Cell &c, const GridColouring::Offsets &offsets) {
+            GridColouringThickMazeGenerator::offsetToAggregate(const types::Cell &c, const GridColouring::Offsets &offsets) const {
         AggregateWall wall;
 
         auto [x, y] = c;
@@ -173,14 +181,14 @@ namespace spelunker::thickmaze {
             auto [dx, dy] = offset;
             int cx = x + dx;
             int cy = y + dy;
-            if (cx < 0 || cx >= width || cy < 0 || cy >= height)
+            if (!getDimensions().cellInBounds(cx, cy))
                 return {};
             wall.emplace_back(std::make_pair(cx, cy));
         }
         return wall;
     }
 
-    types::CellCollection GridColouringThickMazeGenerator::adjacentRooms(const AggregateWall &wall) {
+    types::CellCollection GridColouringThickMazeGenerator::adjacentRooms(const AggregateWall &wall) const noexcept {
         types::CellCollection rooms;
         for (auto w: wall) {
             // Check the colours of all of the cells around w.
@@ -197,14 +205,15 @@ namespace spelunker::thickmaze {
     }
 
     GridColouringThickMazeGenerator::AggregateWallCollection
-        GridColouringThickMazeGenerator::adjacentWalls(const types::Cell &c, const GridColouring::OffsetMap &offsetMap) {
+        GridColouringThickMazeGenerator::adjacentWalls(const types::Cell &c, const GridColouring::OffsetMap &offsetMap) const {
+        getDimensions().checkCell(c);
 
         AggregateWallCollection walls;
         for (const auto &offsetData: offsetMap) {
             const auto &[dir, offsets] = offsetData;
             auto wall = offsetToAggregate(c, offsets);
-            if (wall.has_value())
-                walls.emplace_back(wall.value());
+            if (wall)
+                walls.emplace_back(*wall);
         }
 
         return walls;

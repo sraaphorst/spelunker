@@ -8,15 +8,15 @@
 
 #include <iostream>
 
-#include "typeclasses/Homomorphism.h"
-#include "typeclasses/Show.h"
-#include "maze/DFSMazeGenerator.h"
-#include "maze/Maze.h"
-#include "maze/MazeTypeclasses.h"
-#include "graphmaze/GraphMaze.h"
-#include "graphmaze/GraphMazeTypeclasses.h"
-#include "thickmaze/ThickMaze.h"
-#include "thickmaze/ThickMazeTypeclasses.h"
+#include <typeclasses/Homomorphism.h>
+#include <typeclasses/Show.h>
+#include <maze/DFSMazeGenerator.h>
+#include <maze/Maze.h>
+#include <maze/MazeTypeclasses.h>
+#include <graphmaze/GraphMaze.h>
+#include <graphmaze/GraphMazeTypeclasses.h>
+#include <thickmaze/ThickMaze.h>
+#include <thickmaze/ThickMazeTypeclasses.h>
 using namespace spelunker;
 using namespace typeclasses;
 

@@ -6,34 +6,48 @@
 
 #include <vector>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <math/MathUtils.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "BinaryTreeMazeGenerator.h"
 
 namespace spelunker::maze {
+    BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(const types::Dimensions2D &d, const double p)
+        : MazeGenerator{d}, eastProbability(p) {
+        math::MathUtils::checkProbability(p);
+    }
+
     BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(int w, int h, double p)
-            : MazeGenerator(w, h), eastProbability(p) {}
+        : BinaryTreeMazeGenerator{types::Dimensions2D{w, h}, p} {}
+
+    BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(const types::Dimensions2D &d)
+        : BinaryTreeMazeGenerator{d, defaultEastProbability} {}
 
     BinaryTreeMazeGenerator::BinaryTreeMazeGenerator(int w, int h)
-            : BinaryTreeMazeGenerator(w, h, 0.5) {}
+        : BinaryTreeMazeGenerator{types::Dimensions2D{w, h}, defaultEastProbability} {}
 
-    const Maze BinaryTreeMazeGenerator::generate() {
+    const Maze BinaryTreeMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x) {
                 // Determine the directions (south / east) we can head from this cell.
                 types::Direction d;
                 if (x + 1 < width && y + 1 < height)
-                    d = math::RNG::randomProbability() < eastProbability ? types::EAST : types::SOUTH;
+                    d = math::RNG::randomProbability() < eastProbability ? types::Direction::EAST : types::Direction::SOUTH;
                 else if (x + 1 < width)
-                    d = types::EAST;
+                    d = types::Direction::EAST;
                 else if (y + 1 < height)
-                    d = types::SOUTH;
+                    d = types::Direction::SOUTH;
                 else
                     continue;
 
@@ -41,6 +55,6 @@ namespace spelunker::maze {
                 wi[idx] = false;
             }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

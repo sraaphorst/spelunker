@@ -4,23 +4,30 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "AldousBroderMazeGenerator.h"
 
 namespace spelunker::maze {
-    AldousBroderMazeGenerator::AldousBroderMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    AldousBroderMazeGenerator::AldousBroderMazeGenerator(const spelunker::types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze AldousBroderMazeGenerator::generate() {
+    AldousBroderMazeGenerator::AldousBroderMazeGenerator(int w, int h)
+        : AldousBroderMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze AldousBroderMazeGenerator::generate() const noexcept {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and remove them iteratively.
-        auto wi = initializeEmptyLayout(true);
+        auto wi = createMazeLayout(getDimensions(), true);
 
         // Keep track of which cells have and have not been visited.
-        types::CellIndicator ci(width, types::CellRowIndicator(height, false));
+        auto ci = types::initializeCellIndicator(getDimensions(), false);
 
         // Pick a random starting position.
         auto currX = spelunker::math::RNG::randomRange(width);
@@ -46,6 +53,6 @@ namespace spelunker::maze {
             }
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

@@ -12,6 +12,8 @@
 
 #include <vector>
 
+#include <types/Dimensions2D.h>
+
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -20,10 +22,11 @@ namespace spelunker::maze {
     /// A @see{MazeGenerator} using the randomized Kruskal method.
     class KruskalMazeGenerator final : public MazeGenerator {
     public:
+        KruskalMazeGenerator(const types::Dimensions2D &d);
         KruskalMazeGenerator(int w, int h);
         ~KruskalMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
     };
 }
 

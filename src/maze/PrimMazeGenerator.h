@@ -10,7 +10,9 @@
 
 #pragma once
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -20,13 +22,14 @@ namespace spelunker::maze {
     /// A @see{MazeGenerator} using the randomized Prim method.
     class PrimMazeGenerator final : public MazeGenerator {
     public:
+        PrimMazeGenerator(const types::Dimensions2D &d);
         PrimMazeGenerator(int w, int h);
         ~PrimMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
 
     private:
         /// Add the non-exterior walls of a cell to the wall list, with one possible omission.
-        void addCellWalls(const types::Cell &c, WallCollection &wallList, const WallIncidence &wi);
+        void addCellWalls(const types::Cell &c, WallCollection &wallList, const WallIncidence &wi) const noexcept;
     };
 };

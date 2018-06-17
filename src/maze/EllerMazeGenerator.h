@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <types/Dimensions2D.h>
+
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -51,13 +53,32 @@ namespace spelunker::maze {
          * A maze generator using Eller's algorithm that generates horizontal gaps with probability p
          * and generates vertical gaps with density up to d.
          *
+         * @param d dimensions of the maze
+         * @param p probability with which to adjoin two adjacent cells in different sets
+         * @param den density of vertical adjoining (i.e. if we have c cells in a set, a random
+         *          number of vertical connections in [1,min(1, c * d)] will be made.
+         */
+        EllerMazeGenerator(const types::Dimensions2D &d, double p, double den);
+
+        /// Maze generator using Eller's algorithm that generates walls with probability p and density d.
+        /**
+         * A maze generator using Eller's algorithm that generates horizontal gaps with probability p
+         * and generates vertical gaps with density up to d.
+         *
          * @param w width of the maze
          * @param h height of the maze
          * @param p probability with which to adjoin two adjacent cells in different sets
-         * @param d density of vertical adjoining (i.e. if we have c cells in a set, a random
+         * @param den density of vertical adjoining (i.e. if we have c cells in a set, a random
          *          number of vertical connections in [1,min(1, c * d)] will be made.
          */
-        EllerMazeGenerator(int w, int h, double p, double d);
+        EllerMazeGenerator(int w, int h, double p, double den);
+
+        /**
+         * Create a maze generator using Eller's algorithm that generates walls with probability 0.5
+         * and generates vertical gaps with density up to 0.5.
+         * @param d dimensions of the maze
+         */
+        EllerMazeGenerator(const types::Dimensions2D &d);
 
         /**
          * Create a maze generator using Eller's algorithm that generates walls with probability 0.5
@@ -69,7 +90,10 @@ namespace spelunker::maze {
 
         ~EllerMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
+
+        static constexpr double defaultProbability = 0.5;
+        static constexpr double defaultDensity = 0.5;
 
     private:
         const double probability;

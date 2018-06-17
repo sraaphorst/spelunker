@@ -16,8 +16,8 @@
 #include <vector>
 
 #include <types/CommonMazeAttributes.h>
-#include "math/Partition.h"
-#include "typeclasses/Show.h"
+#include <math/Partition.h>
+#include <typeclasses/Show.h>
 
 namespace spelunker::thickmaze {
     class GridColouring final {

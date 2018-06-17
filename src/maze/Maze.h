@@ -11,16 +11,21 @@
 #include <functional>
 #include <optional>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/AbstractMaze.h>
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <types/Symmetry.h>
+#include <types/UnicursalizableMaze.h>
 #include "MazeAttributes.h"
 
 namespace spelunker::maze {
-    // Class forward.
+    // Forwards.
     class MazeGenerator;
 
-    /// An immutable 2D planar maze.
+    /// A 2D planar maze where walls are lines separating cells.
     /**
-     * A immutable 2D planar maze where walls have no thickness.
+     * A 2D planar maze where walls have no thickness, i.e. they are simply lines separating cells.
      * It encompasses a layout, as well as starting and ending positions.
      *
      * Here is a brief description as to how the layout is stored:
@@ -44,22 +49,45 @@ namespace spelunker::maze {
      * cells, we have a function that takes a cell coordinates and a direction and returns the rank of the
      * wall, or -1 if the wall is a bounding wall.
      */
-    class Maze final {
+    class Maze final: public types::AbstractMaze<Maze>, types::UnicursalizableMaze<Maze> {
     public:
+        /// Create a maze bounded by dimensions, with a start and ending positions.
+        /**
+         * Creates a maze within a bounded rectangle of width and height, along with the start position and
+         * the ending positions.
+         * @param d the dimensions of the maze
+         * @param start an optional starting position
+         * @param goals a collection of the goal positions
+         * @param walls the wall incidence as described above
+         */
+        Maze(const types::Dimensions2D &d,
+             const types::PossibleCell &start,
+             const types::CellCollection &goals,
+             const WallIncidence &walls);
+
+        /// Creates a maze bounded by dimensions, but with no start / end positions.
+        /**
+         * Creates a maze of the specified dimensions.
+         * @param d the dimensions of the maze
+         * @param the wall incidence structure
+         */
+        Maze(const types::Dimensions2D &d,
+             const WallIncidence &walls);
+
         /// Create a maze bounded by width and height, with a start and ending positions.
         /**
          * Creates a maze within a bounded rectangle of width and height, along with the start position and
          * the ending positions.
          * @param w width of the maze
          * @param h height of the maze
-         * @param s an optional starting position
-         * @param ends a collection of the ending positions
+         * @param start an optional starting position
+         * @param goals a collection of the goal positions
          * @param walls the wall incidence as described above
          */
         Maze(int w,
              int h,
-             const types::PossibleCell &s,
-             const types::CellCollection &ends,
+             const types::PossibleCell &start,
+             const types::CellCollection &goals,
              const WallIncidence &walls);
 
         /// Creates a maze bounded by width and height, but with no start / end positions.
@@ -73,39 +101,27 @@ namespace spelunker::maze {
              int h,
              const WallIncidence &walls);
 
-        ~Maze() = default;
-
-        inline const int getWidth() const noexcept { return width; }
-        inline const int getHeight() const noexcept { return height; }
-
-        inline types::PossibleCell getStartingCell() const noexcept { return startCell; }
-        inline types::CellCollection getEndingCells() const noexcept { return endingCells; }
-
-        /// Create a new maze with the specified starting cell.
-        const Maze withStartingCell(const types::PossibleCell &s) const;
-
-        /// Create a new maze with the specified ending cells.
-        const Maze withEndingCells(const types::CellCollection &ends) const;
+        ~Maze() final = default;
 
         /// For a given position, determine if there is a wall.
-        bool wall(const types::Position &p) const noexcept;
+        bool wall(const types::Position &p) const;
 
         /// For a given set of coordinates (x,y) and a direction, determine if there is a wall.
-        bool wall(int x, int y, types::Direction d) const noexcept;
+        bool wall(int x, int y, types::Direction d) const;
 
         /// Determine if two mazes are equal.
-        bool operator==(const Maze &other) const;
+        bool operator==(const Maze &other) const noexcept;
 
         /// Determine if two mazes are not equal.
-        bool operator!=(const Maze &other) const {
+        bool operator!=(const Maze &other) const noexcept {
             return !(*this == other);
         }
 
         /// Determine the number of walls a cell has.
-        int numCellWalls(const types::Cell &c) const;
+        int numCellWalls(const types::Cell &c) const override;
 
-        /// Apply a symmetry to this maze to get a new one.
-        const Maze applySymmetry(types::Symmetry s) const;
+        /// Apply a given symmetry transformation to this maze.
+        const Maze applySymmetry(types::Symmetry s) const override;
 
         /// Make a perfect maze into a 2w x 2h unicursal maze (aka labyrinth).
         /**
@@ -129,7 +145,7 @@ namespace spelunker::maze {
          *
          * @return a unicursal modification of this maze
          */
-        const Maze makeUnicursal() const;
+        const Maze makeUnicursal() const override;
 
         /// Make a maze into a braid maze, clearing dead ends with the given probability.
         /**
@@ -149,18 +165,10 @@ namespace spelunker::maze {
          * @param probability the probability of fixing a given dead end
          * @return a new maze with walls removed to decrease the number of dead ends
          */
-        const Maze braid(double probability = 1.0) const;
-
-        /// Find the dead ends for this maze.
-        /**
-         * Find a collection of all the dead ends for this maze.
-         * A cell is considered a "dead end" if it has exactly three walls.
-         * @return a collection of the dead end cells
-         */
-        const types::CellCollection findDeadEnds() const noexcept;
+        const Maze braid(double probability) const noexcept override;
 
         /// A static function used by rankPosition, separated out for testing.
-        static WallID rankPositionS(int w, int h, int x, int y, types::Direction d);
+        static WallID rankPositionS(const types::Dimensions2D &dim, int x, int y, types::Direction dir);
 
     private:
         /// Determine the number of walls a cell has for an instance of WallIncidence.
@@ -198,31 +206,13 @@ namespace spelunker::maze {
         /// A function that maps a cell (x,y) and direction to wall ranks.
         WallID rankPosition(int x, int y, types::Direction d) const;
 
-        /// Check the start and end positions to make sure they appear in valid places.
-        void checkCells() const;
-
-        /**
-         * Check a cell to make sure it appears in a valid place.
-         * @param c the cell to check
-         */
-        void checkCell(const types::Cell &c) const;
-
-        /// Static auxiliary method to check to see if a cell is valid.
-        static void checkCell(int w, int h, int x, int y);
-
-        const int width;
-        const int height;
         const int numWalls;
-        const types::PossibleCell startCell;
-        const types::CellCollection endingCells;
         const WallIncidence wallIncidence;
 
 #ifdef DEBUG
     public:
         /// Static test case for the rankPositionS function.
-        static void test_rankPositionS(int w, int h);
+        static void test_rankPositionS(const types::Dimensions2D &dim);
 #endif
-
-        friend MazeGenerator;
     };
 }
