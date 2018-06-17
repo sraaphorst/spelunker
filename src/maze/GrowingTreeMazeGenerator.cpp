@@ -7,21 +7,31 @@
 #include <stdexcept>
 #include <string>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "GrowingTreeMazeGenerator.h"
 
 namespace spelunker::maze {
-    GrowingTreeMazeGenerator::GrowingTreeMazeGenerator(const int w, const int h, const CellSelectionStrategy &strategy)
-            : GrowingTreeMazeGenerator(w, h, getSelector(strategy)) {}
+    GrowingTreeMazeGenerator::GrowingTreeMazeGenerator(const types::Dimensions2D &d, const CellSelectionStrategy &sel)
+        : GrowingTreeMazeGenerator{d, getSelector(sel)} {}
+
+    GrowingTreeMazeGenerator::GrowingTreeMazeGenerator(const int w, const int h, const CellSelectionStrategy &sel)
+        : GrowingTreeMazeGenerator{types::Dimensions2D{w, h}, getSelector(sel)} {}
+
+    GrowingTreeMazeGenerator::GrowingTreeMazeGenerator(const types::Dimensions2D &d, Selector sel)
+        : MazeGenerator{d}, selector{sel} {}
 
     GrowingTreeMazeGenerator::GrowingTreeMazeGenerator(const int w, const int h, Selector sel)
-            : MazeGenerator(w, h), selector(sel) {}
+        : GrowingTreeMazeGenerator{types::Dimensions2D{w, h}, sel} {}
 
-    const Maze GrowingTreeMazeGenerator::generate() {
+    const Maze GrowingTreeMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -56,7 +66,7 @@ namespace spelunker::maze {
             C.emplace_back(nbr.first);
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 
     GrowingTreeMazeGenerator::Selector GrowingTreeMazeGenerator::getSelector(const CellSelectionStrategy css) {

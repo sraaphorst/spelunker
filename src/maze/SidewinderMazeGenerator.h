@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <types/Dimensions2D.h>
+
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -17,12 +19,16 @@ namespace spelunker::maze {
 
     class SidewinderMazeGenerator final : public MazeGenerator {
     public:
+        SidewinderMazeGenerator(const types::Dimensions2D &d, double p);
         SidewinderMazeGenerator(int w, int h, double p);
+        SidewinderMazeGenerator(const types::Dimensions2D &d);
         SidewinderMazeGenerator(int w, int h);
 
         ~SidewinderMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
+
+        static constexpr double defaultProbabilityEast = 0.5;
 
     private:
         const double probabilityEast;

@@ -4,18 +4,26 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "PrimMazeGenerator.h"
 
 namespace spelunker::maze {
-    PrimMazeGenerator::PrimMazeGenerator(int w, int h)
-        : MazeGenerator(w, h) {}
+    PrimMazeGenerator::PrimMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze PrimMazeGenerator::generate() {
+    PrimMazeGenerator::PrimMazeGenerator(int w, int h)
+        : PrimMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze PrimMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -60,12 +68,12 @@ namespace spelunker::maze {
             addCellWalls(unvisitedCell, walls, wi);
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 
     void PrimMazeGenerator::addCellWalls(const types::Cell &c,
                                          WallCollection &wallList,
-                                         const WallIncidence &wi) {
+                                         const WallIncidence &wi) const {
         // Check each of the four walls to make sure they are valid and not a boundary wall.
         const auto [x, y] = c;
 
@@ -77,12 +85,12 @@ namespace spelunker::maze {
 
         // To avoid unnecessary unranking, check we aren't trying to add a boundary wall here.
         if (x - 1 >= 0)
-            adder(x, y, types::WEST);
-        if (x + 1 < width)
-            adder(x, y, types::EAST);
+            adder(x, y, types::Direction::WEST);
+        if (x + 1 < getWidth())
+            adder(x, y, types::Direction::EAST);
         if (y - 1 >= 0)
-            adder(x, y, types::NORTH);
-        if (y + 1 < height)
-            adder(x, y, types::SOUTH);
+            adder(x, y, types::Direction::NORTH);
+        if (y + 1 < getHeight())
+            adder(x, y, types::Direction::SOUTH);
     }
 }

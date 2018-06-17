@@ -10,7 +10,9 @@
 
 #pragma once
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -19,15 +21,16 @@ namespace spelunker::maze {
 
     class Prim2MazeGenerator final : public MazeGenerator {
     public:
+        Prim2MazeGenerator(const types::Dimensions2D &d);
         Prim2MazeGenerator(int w, int h);
         virtual ~Prim2MazeGenerator() = default;
 
-        const Maze generate() override;
+        const Maze generate() const noexcept override;
 
     private:
         /// Add the unvisited neighbours of a cell to the list to process.
         void addUnivisitedNeighbourCells(const types::Cell &c,
                                          types::CellCollection &cells,
-                                         const types::CellIndicator &ci);
+                                         const types::CellIndicator &ci) const noexcept;
     };
 };

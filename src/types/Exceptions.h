@@ -10,36 +10,40 @@
 #include <string>
 #include <tuple>
 
-#include "maze/MazeAttributes.h"
-#include "typeclasses/Show.h"
+#include "Dimensions2D.h"
+#include <maze/MazeAttributes.h>
+#include <typeclasses/Show.h>
 
 namespace spelunker::types {
     /// The root of all non-STL exceptions throwable by this library.
     class Exception : public std::logic_error {
     protected:
-        explicit Exception(const std::string what) : std::logic_error(what) {}
+        explicit Exception(const std::string &what) : std::logic_error(what) {}
     };
 
-    /// Thrown if a cell out of bounds of the maze is accessed.
-    class OutOfBoundsCell : public Exception {
+    /// Thrown if coordinates out of bounds of the maze are attempted to be accessed.
+    class OutOfBoundsCoordinates : public Exception {
     public:
-        OutOfBoundsCell(const types::Cell &c) : Exception(msg(c)) {}
+        OutOfBoundsCoordinates(const int x, const int y) : Exception(msg(x, y)) {}
 
     private:
-        static std::string msg(const types::Cell &c) {
-            return "Cell " + spelunker::typeclasses::Show<types::Cell>::show(c) + " is out of bounds.";
+        static std::string msg(const int x, const int y) {
+            return "Cell "
+                   + typeclasses::Show<types::Cell>::show(std::make_pair(x, y))
+                   + " is out of bounds.";
         }
     };
 
     /// Thrown if the user tries to create a maze with illegal dimensions.
     class IllegalDimensions : public Exception {
     public:
-        IllegalDimensions(const int width, const int height) : Exception(msg(width, height)) {}
+        IllegalDimensions(const Dimensions2D &d) : Exception(msg(d)) {}
+        IllegalDimensions(const int width, const int height) : Exception(msg(Dimensions2D{width, height})) {}
 
     private:
-        static std::string msg(const int width, const int height) {
-            return "Dimensions "
-                   + spelunker::typeclasses::Show<std::pair<int, int>>::show(std::make_pair(width, height))
+        static std::string msg(const Dimensions2D &d) {
+            return "Dimensions2D "
+                   + typeclasses::Show<std::pair<int, int>>::show(d)
                    + "are not legal.";
         }
     };
@@ -51,13 +55,15 @@ namespace spelunker::types {
      */
     class IllegalGroupOperation : public Exception {
     public:
+        IllegalGroupOperation(const Dimensions2D &d, const types::Symmetry s) : Exception(msg(d, s)) {}
         IllegalGroupOperation(const int width, const int height, const types::Symmetry s)
-                : Exception(msg(width, height, s)) {}
+                : IllegalGroupOperation(Dimensions2D{width, height}, s) {}
 
     private:
-        static std::string msg(const int width, const int height, const types::Symmetry s) {
-            return "width " + std::to_string(width) + " != " + std::to_string(height)
-                   + ", so cannot perform symmetry " + types::symmetryName(s);
+        static std::string msg(const Dimensions2D &d, const types::Symmetry s) {
+            return "width " + typeclasses::Show<int>::show(d.getWidth())
+                   + " != height " + typeclasses::Show<int>::show(d.getHeight())
+                   + ", so cannot perform symmetry: " + typeclasses::Show<types::Symmetry>::show(s);
         }
     };
 }

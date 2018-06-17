@@ -10,7 +10,9 @@
 
 #pragma once
 
-#include "maze/MazeGenerator.h"
+#include <types/Dimensions2D.h>
+
+#include "MazeGenerator.h"
 
 namespace spelunker::maze {
     class Maze;
@@ -31,9 +33,11 @@ namespace spelunker::maze {
      */
     class WilsonMazeGenerator final : public MazeGenerator {
     public:
+        WilsonMazeGenerator(const types::Dimensions2D &d);
         WilsonMazeGenerator(int w, int h);
+
         ~WilsonMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
     };
 };

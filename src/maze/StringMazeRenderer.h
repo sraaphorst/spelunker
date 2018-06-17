@@ -13,9 +13,10 @@
 #include <string>
 #include <vector>
 
-#include "types/CommonMazeAttributes.h"
-#include "maze/MazeAttributes.h"
-#include "maze/MazeRenderer.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Direction.h>
+#include <maze/MazeAttributes.h>
+#include <maze/MazeRenderer.h>
 
 namespace spelunker::maze {
     class Maze;

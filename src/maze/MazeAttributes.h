@@ -11,8 +11,8 @@
 #include <map>
 #include <vector>
 
-#include "typeclasses/Show.h"
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
 
 namespace spelunker::maze {
     /// The ID for a wall. Walls are ranked to ints.
@@ -30,35 +30,15 @@ namespace spelunker::maze {
     using WallCollection = std::vector<WallID>;
 
     /// Used to reverse wall ranking, i.e. a map that takes a wall rank and gives the two cells it separates.
-    using UnrankWallMap = std::map<WallID, std::pair<types::Position, types::Position> >;
+    using UnrankWallMap = std::map<WallID, std::pair<types::Position, types::Position>>;
 
     /// Calculates the number of possible internal (non-boundary) walls in a maze of width w and height h.
     inline const int calculateNumWalls(const int w, const int h) {
         return (w - 1) * h + w * (h - 1);
     }
-}
 
-namespace spelunker::typeclasses {
-    using namespace spelunker::types;
-
-    template<>
-    struct Show<Direction> {
-        static std::string show(const Direction &t) {
-            switch (t) {
-                case NORTH:
-                    return "NORTH";
-                case EAST:
-                    return "EAST";
-                case SOUTH:
-                    return "SOUTH";
-                case WEST:
-                    return "WEST";
-                default:
-                    return "UNDEFINED";
-            }
-        }
-
-        static constexpr bool is_instance = true;
-        using type = Direction;
-    };
+    /// Calculates the number of possible internal (non-boundary) walls in a maze of the specified dimensions.
+    inline const int calculateNumWalls(const types::Dimensions2D &d) {
+        return calculateNumWalls(d.getWidth(), d.getHeight());
+    }
 }

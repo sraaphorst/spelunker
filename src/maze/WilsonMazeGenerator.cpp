@@ -6,18 +6,26 @@
 
 #include <map>
 
-#include "types/CommonMazeAttributes.h"
-#include "maze/Maze.h"
-#include "maze/MazeAttributes.h"
-#include "maze/MazeGenerator.h"
-#include "math/RNG.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <maze/Maze.h>
+#include <maze/MazeAttributes.h>
+#include <maze/MazeGenerator.h>
+#include <math/RNG.h>
+
 #include "WilsonMazeGenerator.h"
 
 namespace spelunker::maze {
-    WilsonMazeGenerator::WilsonMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    WilsonMazeGenerator::WilsonMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze WilsonMazeGenerator::generate() {
+    WilsonMazeGenerator::WilsonMazeGenerator(int w, int h)
+        : WilsonMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze WilsonMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -88,16 +96,16 @@ namespace spelunker::maze {
                 wi[rankPos(types::pos(x, y, dir))] = false;
 
                 switch (dir) {
-                    case types::NORTH:
+                    case types::Direction::NORTH:
                         y -= 1;
                         break;
-                    case types::EAST:
+                    case types::Direction::EAST:
                         x += 1;
                         break;
-                    case types::SOUTH:
+                    case types::Direction::SOUTH:
                         y += 1;
                         break;
-                    case types::WEST:
+                    case types::Direction::WEST:
                         x -= 1;
                         break;
                 }

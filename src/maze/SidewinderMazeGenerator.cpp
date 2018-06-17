@@ -6,21 +6,32 @@
 
 #include <vector>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/Direction.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "SidewinderMazeGenerator.h"
 
 namespace spelunker::maze {
+    SidewinderMazeGenerator::SidewinderMazeGenerator(const types::Dimensions2D &d, const double p)
+        : MazeGenerator{d}, probabilityEast{p} {}
+
     SidewinderMazeGenerator::SidewinderMazeGenerator(int w, int h, double p)
-        : MazeGenerator(w, h), probabilityEast(p) {}
+        : SidewinderMazeGenerator{types::Dimensions2D{w, h}, p} {}
+
+    SidewinderMazeGenerator::SidewinderMazeGenerator(const types::Dimensions2D &d)
+            : SidewinderMazeGenerator{d, defaultProbabilityEast} {}
 
     SidewinderMazeGenerator::SidewinderMazeGenerator(int w, int h)
-        : SidewinderMazeGenerator(w, h, 0.5) {}
+        : SidewinderMazeGenerator{types::Dimensions2D{w, h}, defaultProbabilityEast} {}
 
-    const Maze SidewinderMazeGenerator::generate() {
+    const Maze SidewinderMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -37,13 +48,13 @@ namespace spelunker::maze {
                 cellRun.emplace_back(types::cell(x, y));
                 if (cellRun.size() > 1)
                     // We actually carve walls to the west for simplicity.
-                    wi[rankPos(types::pos(x, y, types::WEST))] = false;
+                    wi[rankPos(types::pos(x, y, types::Direction::WEST))] = false;
 
                 // If we are at the end of the row or probability dictates we stop, add
                 // a vertical cell, and empty out the run.
                 if (x == maxX || math::RNG::randomProbability() > probabilityEast) {
                     const auto cell = math::RNG::randomElement(cellRun);
-                    wi[rankPos(types::pos(cell, types::SOUTH))] = false;
+                    wi[rankPos(types::pos(cell, types::Direction::SOUTH))] = false;
                     cellRun.clear();
                 }
             }
@@ -51,8 +62,8 @@ namespace spelunker::maze {
 
         // The bottom row is all empty.
         for (auto x = 1; x < width; ++x)
-            wi[rankPos(types::pos(x, maxY, types::WEST))] = false;
+            wi[rankPos(types::pos(x, maxY, types::Direction::WEST))] = false;
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

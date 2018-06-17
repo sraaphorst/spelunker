@@ -12,7 +12,9 @@
 
 #include <functional>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
 
@@ -65,12 +67,27 @@ namespace spelunker::maze {
         /// Create a growing tree maze generator with a predetermined cell selection strategy.
         /**
          * Create a growing tree maze generator with a predetermined cell selection strategy.
+         * @param d dimension of the mazes to produce
+         * @param strategy the strategy to use when picking a cell from C
+         */
+        GrowingTreeMazeGenerator(const types::Dimensions2D &d, const CellSelectionStrategy &strategy);
+
+        /// Create a growing tree maze generator with a predetermined cell selection strategy.
+        /**
+         * Create a growing tree maze generator with a predetermined cell selection strategy.
          * @param w width of mazes to produce
          * @param h height of mazes to produce
          * @param strategy the strategy to use when picking a cell from C
          */
         GrowingTreeMazeGenerator(int w, int h, const CellSelectionStrategy &strategy);
 
+        /// Create a growing tree maze generator with a user-specified selector.
+        /**
+         * Create a growing tree maze generator with a user-specified selector.
+         * @param d dimension of the mazes to produce
+         * @param sel the cell selector, which should return the index of the cell to use
+         */
+        GrowingTreeMazeGenerator(const types::Dimensions2D &d, Selector sel);
 
         /// Create a growing tree maze generator with a user-specified selector.
         /**
@@ -83,7 +100,7 @@ namespace spelunker::maze {
 
         ~GrowingTreeMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
 
     private:
         /// The selection function. Should return an index of the CellCollection. Only called if it contains elements.

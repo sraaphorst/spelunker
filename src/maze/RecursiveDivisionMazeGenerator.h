@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <types/Dimensions2D.h>
+
 #include "MazeGenerator.h"
 
 namespace spelunker::maze {
@@ -17,15 +19,16 @@ namespace spelunker::maze {
 
     class RecursiveDivisionMazeGenerator final : public MazeGenerator {
     public:
+        RecursiveDivisionMazeGenerator(const types::Dimensions2D &d);
         RecursiveDivisionMazeGenerator(int w, int h);
         ~RecursiveDivisionMazeGenerator() final = default;
 
-        const Maze generate() final;
+        const Maze generate() const noexcept final;
     private:
         /// A rectangle struct we use to represent sections of the maze to complete, to avoid recursion.
         struct rectangle {
             const int x, y, w, h;
-            rectangle(int px, int py, int pw, int ph) : x(px), y(py), w(pw), h(ph) {}
+            rectangle(int px, int py, int pw, int ph) : x{px}, y{py}, w{pw}, h{ph} {}
         };
     };
 }

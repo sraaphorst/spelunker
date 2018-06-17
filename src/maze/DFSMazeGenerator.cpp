@@ -7,18 +7,25 @@
 #include <stack>
 #include <vector>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "DFSMazeGenerator.h"
 
 namespace spelunker::maze {
-    DFSMazeGenerator::DFSMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    DFSMazeGenerator::DFSMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze DFSMazeGenerator::generate() {
+    DFSMazeGenerator::DFSMazeGenerator(int w, int h)
+        : MazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze DFSMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -32,7 +39,8 @@ namespace spelunker::maze {
         while (!stack.empty()) {
             // Marking c visited will occur multiple times, but we don't care.
             const auto c = stack.top();
-            ci[c.first][c.second] = true;
+            const auto [cx, cy] = c;
+            ci[cx][cy] = true;
 
             // Find a list of unvisited neighbours. If we can't find one, then backtrack.
             const auto nbrs = unvisitedNeighbours(c, ci);
@@ -48,6 +56,6 @@ namespace spelunker::maze {
             stack.push(nbr.first);
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

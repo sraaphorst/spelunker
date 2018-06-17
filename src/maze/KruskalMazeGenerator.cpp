@@ -7,27 +7,35 @@
 #include <vector>
 #include <boost/pending/disjoint_sets.hpp>
 
-#include "types/CommonMazeAttributes.h"
-#include "types/DisjointSetHelper.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <types/DisjointSetHelper.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "KruskalMazeGenerator.h"
 
 namespace spelunker::maze {
     using namespace boost;
 
-    KruskalMazeGenerator::KruskalMazeGenerator(const int w, const int h)
-            : MazeGenerator(w, h) {}
+    KruskalMazeGenerator::KruskalMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze KruskalMazeGenerator::generate() {
+    KruskalMazeGenerator::KruskalMazeGenerator(const int w, const int h)
+        : KruskalMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze KruskalMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
         // Create a collection of all possible walls.
         std::vector<int> walls;
-        for (auto w = 0; w < numWalls; ++w)
+        const int wallUpper = getNumWalls();
+        for (auto w = 0; w < wallUpper; ++w)
             walls.emplace_back(w);
 
         // Get the map of wall ranks to adjacent cells.
@@ -60,10 +68,12 @@ namespace spelunker::maze {
         for (auto w : walls) {
             const auto &pp = unrank[w];
 
-            const auto& [cx1, cy1] = pp.first.first;
+            const auto [c1, c2] = pp;
+
+            const auto [cx1, cy1] = c1.first;
             const auto cr1 = rankCell(cx1, cy1);
 
-            const auto& [cx2, cy2] = pp.second.first;
+            const auto [cx2, cy2] = c2.first;
             const auto cr2 = rankCell(cx2, cy2);
 
             // If the cells belong to separate partitions, remove the wall and join them.
@@ -75,6 +85,6 @@ namespace spelunker::maze {
             }
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }

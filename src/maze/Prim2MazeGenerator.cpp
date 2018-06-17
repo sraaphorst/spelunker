@@ -6,18 +6,25 @@
 
 #include <algorithm>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <types/Dimensions2D.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "Prim2MazeGenerator.h"
 
 namespace spelunker::maze {
-    Prim2MazeGenerator::Prim2MazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {}
+    Prim2MazeGenerator::Prim2MazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze Prim2MazeGenerator::generate() {
+    Prim2MazeGenerator::Prim2MazeGenerator(int w, int h)
+        : Prim2MazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze Prim2MazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and then remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -62,20 +69,20 @@ namespace spelunker::maze {
             addUnivisitedNeighbourCells(cell, cells, ci);
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 
     void Prim2MazeGenerator::addUnivisitedNeighbourCells(const types::Cell &c,
                                                          types::CellCollection &cells,
-                                                         const types::CellIndicator &ci) {
+                                                         const types::CellIndicator &ci)  const {
         const auto[x, y] = c;
         if (x - 1 >= 0 && !ci[x - 1][y])
             cells.emplace_back(types::cell(x - 1, y));
-        if (x + 1 < width && !ci[x + 1][y])
+        if (x + 1 < getWidth() && !ci[x + 1][y])
             cells.emplace_back(types::cell(x + 1, y));
         if (y - 1 >= 0 && !ci[x][y - 1])
             cells.emplace_back(types::cell(x, y - 1));
-        if (y + 1 < height && !ci[x][y + 1])
+        if (y + 1 < getHeight() && !ci[x][y + 1])
             cells.emplace_back(types::cell(x, y + 1));
     }
 }

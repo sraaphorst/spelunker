@@ -19,7 +19,7 @@ namespace spelunker::thickmaze {
 
     const CellType ThickMaze::cellIs(int x, int y) const {
         if (x < 0 || x >= width || y < 0 || y >= height)
-            throw types::OutOfBoundsCell(types::cell(x, y));
+            throw types::OutOfBoundsCoordinates(x, y);
         return contents[x][y];
     }
 
@@ -132,6 +132,6 @@ namespace spelunker::thickmaze {
     void ThickMaze::checkCell(const types::Cell &c) const {
         const auto [x,y] = c;
         if (x < 0 || x >= width || y < 0 || y >= height)
-            throw types::OutOfBoundsCell(types::Cell(x, y));
+            throw types::OutOfBoundsCoordinates(x, y);
     }
 }

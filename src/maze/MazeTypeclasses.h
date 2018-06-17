@@ -101,7 +101,7 @@ namespace spelunker::typeclasses {
                     ++v;
                 }
 
-            return graphmaze::GraphMaze(w, h, m.getStartingCell(), m.getEndingCells(), vc);
+            return graphmaze::GraphMaze(w, h, m.getStartingCell(), m.getGoalCells(), vc);
         }
 
         static constexpr bool is_instance = true;

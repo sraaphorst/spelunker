@@ -6,18 +6,24 @@
 
 #include <queue>
 
-#include "types/CommonMazeAttributes.h"
+#include <types/CommonMazeAttributes.h>
+#include <math/RNG.h>
+
 #include "Maze.h"
 #include "MazeAttributes.h"
 #include "MazeGenerator.h"
-#include "math/RNG.h"
 #include "BFSMazeGenerator.h"
 
 namespace spelunker::maze {
-    BFSMazeGenerator::BFSMazeGenerator(int w, int h)
-            : MazeGenerator(w, h) {};
+    BFSMazeGenerator::BFSMazeGenerator(const types::Dimensions2D &d)
+        : MazeGenerator{d} {}
 
-    const Maze BFSMazeGenerator::generate() {
+    BFSMazeGenerator::BFSMazeGenerator(int w, int h)
+        : BFSMazeGenerator{types::Dimensions2D{w, h}} {}
+
+    const Maze BFSMazeGenerator::generate() const {
+        const auto [width, height] = getDimensions().values();
+
         // We start with all walls, and remove them iteratively.
         auto wi = initializeEmptyLayout(true);
 
@@ -39,13 +45,15 @@ namespace spelunker::maze {
             // then skip it.
             const auto cell = queue.front();
             queue.pop();
-            if (ci[cell.first][cell.second]) continue;
+
+            const auto [cellx, celly] = cell;
+            if (ci[cellx][celly]) continue;
 
             // Otherwise, find its visited neighbours in the maze and pick one at random.
             const auto vnbrs = visitedNeighbours(cell, ci);
             const auto vnbr  = math::RNG::randomElement(vnbrs);
             wi[rankPos(vnbr)] = false;
-            ci[cell.first][cell.second] = true;
+            ci[cellx][celly] = true;
 
             // Add the unvisited neighbours to the queue.
             const auto unbrs = unvisitedNeighbours(cell, ci);
@@ -53,6 +61,6 @@ namespace spelunker::maze {
                 queue.push(unbr.first);
         }
 
-        return Maze(width, height, wi);
+        return Maze(getDimensions(), wi);
     }
 }
