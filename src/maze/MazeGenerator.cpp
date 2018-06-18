@@ -19,10 +19,6 @@ namespace spelunker::maze {
     MazeGenerator::MazeGenerator(const int w, const int h)
         : MazeGenerator{types::Dimensions2D{w, h}} {}
 
-    const UnrankWallMap MazeGenerator::createUnrankWallMap() const noexcept {
-        return createUnrankWallMapS(getDimensions());
-    }
-
     const UnrankWallMap MazeGenerator::createUnrankWallMapS(const types::Dimensions2D &dim) noexcept {
         UnrankWallMap umap;
 
@@ -48,6 +44,10 @@ namespace spelunker::maze {
         }
 
         return umap;
+    }
+
+    const UnrankWallMap MazeGenerator::createUnrankWallMap() const noexcept {
+        return createUnrankWallMapS(getDimensions());
     }
 
     const WallID MazeGenerator::rankPos(const types::Position &p) const {
@@ -89,23 +89,4 @@ namespace spelunker::maze {
             nbrs.emplace_back(types::pos(x, y + 1, types::Direction::NORTH));
         return nbrs;
     }
-
-#ifdef DEBUG
-    void MazeGenerator::test_createUnrankWallMapS(const types::Dimensions2D &dim) {
-        const auto m = createUnrankWallMapS(dim);
-        for (const auto &kv : m) {
-            // kv is std::map<WallID, std::pair<types::Position, types::Position> >
-            const auto &[rk, ps] = kv;
-            const auto &[p1, p2] = ps;
-
-            const auto &[c1, d1] = p1;
-            const auto [x1, y1] = c1;
-            assert(Maze::rankPositionS(dim, x1, y1, d1) == rk);
-
-            const auto &[c2, d2] = p2;
-            const auto [x2, y2] = c2;
-            assert(Maze::rankPositionS(dim, x2, y2, d2) == rk);
-        }
-    }
-#endif
 }

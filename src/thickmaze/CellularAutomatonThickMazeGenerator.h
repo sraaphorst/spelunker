@@ -42,7 +42,7 @@ namespace spelunker::thickmaze {
      * Note that these algorithms sometimes do better if the resultant mazes are reversed via a call
      * to @see{ThickMaze#reverse}.
      */
-    class CellularAutomatonThickMazeGenerator final : ThickMazeGenerator {
+    class CellularAutomatonThickMazeGenerator final : public ThickMazeGenerator {
     public:
         /// A function type that determines the number of living neighbours.
         using NeighbourCounter = std::function<int(const types::Cell, const CellContents&)>;

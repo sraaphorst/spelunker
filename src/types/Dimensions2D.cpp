@@ -18,6 +18,18 @@ namespace spelunker::types {
         return width == other.getWidth() && height == other.getHeight();
     }
 
+    Dimensions2D Dimensions2D::operator+(const Dimensions2D &other) const noexcept {
+        return Dimensions2D{width + other.getWidth(), height + other.getHeight()};
+    }
+
+    Dimensions2D Dimensions2D::operator*(const int scalar) const noexcept {
+        return Dimensions2D{scalar * width, scalar * height};
+    }
+
+    Dimensions2D Dimensions2D::operator/(int scalar) const {
+        return Dimensions2D{width / scalar, height / scalar};
+    }
+
     bool Dimensions2D::cellInBounds(const int x, const int y) const noexcept {
         return x >= 0 && x < width && y >= 0 && y < height;
     }

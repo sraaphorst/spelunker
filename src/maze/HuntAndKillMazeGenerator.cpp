@@ -13,9 +13,6 @@
 #include "MazeGenerator.h"
 #include "HuntAndKillMazeGenerator.h"
 
-#include <iostream>
-using namespace std;
-
 namespace spelunker::maze {
     HuntAndKillMazeGenerator::HuntAndKillMazeGenerator(const types::Dimensions2D &d)
         : MazeGenerator{d} {}
