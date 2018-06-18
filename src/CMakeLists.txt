@@ -79,3 +79,5 @@ foreach (s ${SUBDIRS})
     endforeach()
 endforeach()
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SpelunkerConfig.h" DESTINATION include/spelunker)
+
+add_subdirectory(test)
