@@ -19,6 +19,7 @@ set(apps
         wilson
         test_braid
         test_homomorphisms
+        test_symmetry
         test_thickbraid
         test_thickify
         test_unicursal

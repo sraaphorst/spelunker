@@ -14,7 +14,4 @@ set(TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 add_executable(tests ${TEST_SOURCES})
 target_link_libraries(tests Catch)
 
-add_executable(section section.cpp main.cpp)
-target_link_libraries(section spelunker Catch)
-
 add_subdirectory(maze)

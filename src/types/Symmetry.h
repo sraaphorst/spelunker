@@ -12,6 +12,8 @@
 
 #include <typeclasses/Show.h>
 
+#include "Direction.h"
+
 namespace spelunker::types {
     class Dimensions2D;
 
