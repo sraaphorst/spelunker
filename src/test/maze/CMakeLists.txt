@@ -1,0 +1,2 @@
+add_executable(test_maze_symmetries TestMazeSymmetries.cpp ${TEST_SOURCES})
+target_link_libraries(test_maze_symmetries Catch spelunker)

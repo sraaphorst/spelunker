@@ -71,10 +71,10 @@ namespace spelunker::maze {
 
     GrowingTreeMazeGenerator::Selector GrowingTreeMazeGenerator::getSelector(const CellSelectionStrategy css) {
         switch (css) {
-            case OLDEST: return [](const types::CellCollection &c) { return 0; };
-            case NEWEST: return [](const types::CellCollection &c) { return c.size() - 1; };
-            case MIDDLE: return [](const types::CellCollection &c) { return c.size() / 2; };
-            case RANDOM: return [](const types::CellCollection &c) { return math::RNG::randomRange(c.size()); };
+            case CellSelectionStrategy::OLDEST: return [](const types::CellCollection &c) { return 0; };
+            case CellSelectionStrategy::NEWEST: return [](const types::CellCollection &c) { return c.size() - 1; };
+            case CellSelectionStrategy::MIDDLE: return [](const types::CellCollection &c) { return c.size() / 2; };
+            case CellSelectionStrategy::RANDOM: return [](const types::CellCollection &c) { return math::RNG::randomRange(c.size()); };
         }
     }
 }

@@ -46,6 +46,11 @@ namespace spelunker::thickmaze {
         const auto [width, height] = getDimensions().values();
 
         switch (s) {
+            case types::Symmetry::IDENTITY:
+                mp = [](const types::Cell &c) {
+                    return c;
+                };
+                break;
             case types::Symmetry::ROTATION_BY_90:
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;

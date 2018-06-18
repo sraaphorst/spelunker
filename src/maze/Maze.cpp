@@ -24,6 +24,9 @@
 #include "Maze.h"
 #include "MazeGenerator.h"
 
+#include <iostream>
+using namespace std;
+
 namespace spelunker::maze {
     Maze::Maze(const types::Dimensions2D &d,
                const types::PossibleCell &start,
@@ -71,64 +74,74 @@ namespace spelunker::maze {
     }
 
     const Maze Maze::applySymmetry(const types::Symmetry s) const {
+        // Get the new dimensions for the symmetry.
+        const auto ndim = types::applySymmetryToDimensions(s, getDimensions());
+
         // Get the symmetry map corresponding to the symmetry.
         std::function<WallID(const types::Position &)> mp;
 
         switch (s) {
-            case types::Symmetry::ROTATION_BY_90:
-                mp = [this, s](const types::Position &p) {
+            case types::Symmetry ::IDENTITY:
+                mp = [&ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), getHeight() - y - 1, x,
+                    return Maze::rankPositionS(ndim, x, y, d);
+                };
+                break;
+            case types::Symmetry::ROTATION_BY_90:
+                mp = [this, s, &ndim](const types::Position &p) {
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
+                    return Maze::rankPositionS(ndim, getHeight() - y - 1, x,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::ROTATION_BY_180:
-                mp = [this, s](const types::Position &p) {
+                mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), getWidth() - x - 1, getHeight() - y - 1,
+                    return Maze::rankPositionS(ndim, getWidth() - x - 1, getHeight() - y - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::ROTATION_BY_270:
-                mp = [this, s](const types::Position &p) {
+                mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), y, getWidth() - x - 1,
+                    return Maze::rankPositionS(ndim, y, getWidth() - x - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_X:
-                mp = [this, s](const types::Position &p) {
+                mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), x, getHeight() - y - 1,
+                    return Maze::rankPositionS(ndim, x, getHeight() - y - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_Y:
-                mp = [this, s](const types::Position &p) {
+                mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), getWidth() - x - 1, y,
+                    return Maze::rankPositionS(ndim, getWidth() - x - 1, y,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_NWSE:
                 if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
-                mp = [this, s](const types::Position &p) {
+                mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), y, x, types::applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(ndim, y, x, types::applySymmetryToDirection(s, d));
                 };
                 break;
             case types::Symmetry::REFLECTION_IN_NESW:
                 if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
-                mp = [this, s](const types::Position &p) {
+                mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(getDimensions(), getHeight() - y - 1, getWidth() - x - 1,
+                    return Maze::rankPositionS(ndim, getHeight() - y - 1, getWidth() - x - 1,
                                                types::applySymmetryToDirection(s, d));
                 };
                 break;

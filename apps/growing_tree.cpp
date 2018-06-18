@@ -50,16 +50,16 @@ int main(int argc, char *argv[]) {
     spelunker::maze::GrowingTreeMazeGenerator::CellSelectionStrategy strategyType;
     switch (strategy) {
         case 0:
-            strategyType = spelunker::maze::GrowingTreeMazeGenerator::OLDEST;
+            strategyType = spelunker::maze::GrowingTreeMazeGenerator::CellSelectionStrategy::OLDEST;
             break;
         case 1:
-            strategyType = spelunker::maze::GrowingTreeMazeGenerator::NEWEST;
+            strategyType = spelunker::maze::GrowingTreeMazeGenerator::CellSelectionStrategy::NEWEST;
             break;
         case 2:
-            strategyType = spelunker::maze::GrowingTreeMazeGenerator::MIDDLE;
+            strategyType = spelunker::maze::GrowingTreeMazeGenerator::CellSelectionStrategy::MIDDLE;
             break;
         default:
-            strategyType = spelunker::maze::GrowingTreeMazeGenerator::RANDOM;
+            strategyType = spelunker::maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM;
             break;
     };
 

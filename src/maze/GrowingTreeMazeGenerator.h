@@ -57,7 +57,7 @@ namespace spelunker::maze {
     public:
         using Selector = std::function<int(const types::CellCollection&)>;
         /// The predetermined cell selection strategies.
-        enum CellSelectionStrategy {
+        enum class CellSelectionStrategy {
             OLDEST = 0,
             NEWEST,
             MIDDLE,
