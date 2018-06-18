@@ -24,9 +24,6 @@
 #include "Maze.h"
 #include "MazeGenerator.h"
 
-#include <iostream>
-using namespace std;
-
 namespace spelunker::maze {
     Maze::Maze(const types::Dimensions2D &d,
                const types::PossibleCell &start,
@@ -407,27 +404,4 @@ namespace spelunker::maze {
         // Make the compiler happy.
         throw std::invalid_argument("Trying to rank illegal direction.");
     }
-
-#ifdef DEBUG
-    void Maze::test_rankPositionS(const spelunker::types::Dimensions2D &dim) {
-        std::set<int> ranks;
-        const auto numwalls = calculateNumWalls(dim);
-        const auto [width, height] = dim.values();
-
-        for (auto x = 0; x < width; ++x)
-            for (auto y = 0; y < height; ++y) {
-                for (auto dir: types::directions()) {
-                    const auto r = rankPositionS(dim, x, y, dir);
-                    if (r != -1) ranks.insert(r);
-                }
-                if (y > 0 && y < height - 1)
-                    assert(rankPositionS(dim, x, y, types::Direction::NORTH) == rankPositionS(dim, x, y - 1, types::Direction::SOUTH));
-                if (x > 0 && x < width - 1)
-                    assert(rankPositionS(dim, x - 1, y, types::Direction::EAST) == rankPositionS(dim, x, y, types::Direction::WEST));
-            }
-
-        for (auto i = 0; i < numwalls; ++i)
-            assert(ranks.find(i) != ranks.end());
-    }
-#endif
 }

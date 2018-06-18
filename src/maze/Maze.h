@@ -208,11 +208,5 @@ namespace spelunker::maze {
 
         const int numWalls;
         const WallIncidence wallIncidence;
-
-#ifdef DEBUG
-    public:
-        /// Static test case for the rankPositionS function.
-        static void test_rankPositionS(const types::Dimensions2D &dim);
-#endif
     };
 }

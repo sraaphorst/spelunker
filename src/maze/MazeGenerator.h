@@ -27,12 +27,12 @@ namespace spelunker::maze {
 
         virtual const Maze generate() const noexcept = 0;
 
+        /// A static function used by unrankWallID, separated out for testing.
+        static const UnrankWallMap createUnrankWallMapS(const types::Dimensions2D &dim) noexcept;
+
     protected:
         /// Create a map to reverse rankPosition: determine the two Positions on either side of a wall.
         const UnrankWallMap createUnrankWallMap() const noexcept;
-
-        /// A static function used by unrankWallID, separated out for testing.
-        static const UnrankWallMap createUnrankWallMapS(const types::Dimensions2D &dim) noexcept;
 
         /// A function that maps Position to the corresponding ID of the wall in the maze.
         const WallID rankPos(const types::Position &p) const;
@@ -74,12 +74,6 @@ namespace spelunker::maze {
          */
         const types::Neighbours neighbours(const types::Cell &c,
                                            std::function<bool(const int, const int)> filter) const;
-
-#ifdef DEBUG
-    public:
-        /// Static test case for the createUnrankWallMapS function.
-        static void test_createUnrankWallMapS(const types::Dimensions2D &dim);
-#endif
     };
 }
 
