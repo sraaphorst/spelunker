@@ -15,3 +15,4 @@ add_executable(tests ${TEST_SOURCES})
 target_link_libraries(tests Catch)
 
 add_subdirectory(maze)
+add_subdirectory(thickmaze)
