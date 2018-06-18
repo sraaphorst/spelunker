@@ -1,5 +1,5 @@
 /**
- * RankPositionTest.cpp
+ * TestRankPosition.cpp
  *
  * By Sebastian Raaphorst, 2018.
  *
