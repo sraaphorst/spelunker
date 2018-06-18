@@ -1,3 +1,9 @@
+/**
+ * TestMazeSymmetries.cpp
+ *
+ * By Sebastian Raaphorst, 2018.
+ */
+
 #include <catch.hpp>
 
 #include <string>
@@ -10,6 +16,7 @@
 #include "MazeGenerators.h"
 
 using namespace spelunker;
+
 
 TEST_CASE("Rectangular mazes can be manipulated via certain symmetries", "[maze][symmetry][rectangle]") {
     int constexpr width = 50;
@@ -151,6 +158,29 @@ TEST_CASE("Rectangular mazes can be manipulated via certain symmetries", "[maze]
             REQUIRE_THROWS(m.applySymmetry(types::Symmetry::REFLECTION_IN_NWSE));
         }
     }
+
+    SECTION("Reflecting in the X and then Y axis is the same as a rotation by 180 degrees") {
+        for (const auto gen: gens) {
+            const maze::Maze m = gen->generate();
+            const maze::Maze mX_Y = m
+                    .applySymmetry(types::Symmetry::REFLECTION_IN_X)
+                    .applySymmetry(types::Symmetry::REFLECTION_IN_Y);
+            const maze::Maze m180 = m.applySymmetry(types::Symmetry::ROTATION_BY_180);
+            REQUIRE(mX_Y == m180);
+        }
+    }
+
+    SECTION("Reflecting in the Y and then X axis is the same as a rotation by 180 degrees") {
+        for (const auto gen: gens) {
+            const maze::Maze m = gen->generate();
+            const maze::Maze mX_Y = m
+                    .applySymmetry(types::Symmetry::REFLECTION_IN_Y)
+                    .applySymmetry(types::Symmetry::REFLECTION_IN_X);
+            const maze::Maze m180 = m.applySymmetry(types::Symmetry::ROTATION_BY_180);
+            REQUIRE(mX_Y == m180);
+        }
+    }
+
 
     // Delete the generators.
     deleteGenerators(gens);

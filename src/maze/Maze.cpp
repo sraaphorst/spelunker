@@ -81,6 +81,13 @@ namespace spelunker::maze {
         std::function<WallID(const types::Position &)> mp;
 
         switch (s) {
+            case types::Symmetry ::IDENTITY:
+                mp = [&ndim](const types::Position &p) {
+                    const auto[c, d] = p;
+                    const auto[x, y] = c;
+                    return Maze::rankPositionS(ndim, x, y, d);
+                };
+                break;
             case types::Symmetry::ROTATION_BY_90:
                 mp = [this, s, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
