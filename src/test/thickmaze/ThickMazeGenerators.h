@@ -34,7 +34,7 @@ using namespace spelunker;
 // Return a list of all TihickMazeGenerators.
 using ThickMazeGenerators = std::vector<thickmaze::ThickMazeGenerator*>;
 
-ThickMazeGenerators createThickMazeGenerators(const types::Dimensions2D &d) {
+const ThickMazeGenerators createThickMazeGenerators(const types::Dimensions2D &d) {
     const types::Dimensions2D dhalf = d/2;
     const thickmaze::GridColouring gridColouring{4, 1, 2};
     const thickmaze::GridColouring::CandidateConfigurationCollection cfgColl = gridColouring.wallCandidates(10);

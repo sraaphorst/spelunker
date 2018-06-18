@@ -18,13 +18,13 @@
 using namespace spelunker;
 
 TEST_CASE("Rectangular Mazes can be manipulated via certain symmetries", "[maze][symmetry][rectangle]") {
-    int constexpr width = 50;
-    int constexpr height = 40;
-    auto const dim = types::Dimensions2D{width, height};
+    constexpr auto width = 50;
+    constexpr auto height = 40;
+    const auto dim = types::Dimensions2D{width, height};
 
     // Get all the generators and all the symmetries.
     auto gens = createMazeGenerators(dim);
-    auto syms = types::symmetries();
+    const auto syms = types::symmetries();
 
     SECTION("All generators produce mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
         for (const auto gen: gens) {
@@ -76,12 +76,12 @@ TEST_CASE("Rectangular Mazes can be manipulated via certain symmetries", "[maze]
 }
 
 TEST_CASE("Square Mazes can be manipulated via all symmetries", "[maze][symmetry][square]") {
-    int constexpr side = 50;
-    auto const dim = types::Dimensions2D{side, side};
+    constexpr auto side = 50;
+    const auto dim = types::Dimensions2D{side, side};
 
     // Get all the generators and all the symmetries.
     auto gens = createMazeGenerators(dim);
-    auto syms = types::symmetries();
+    const auto syms = types::symmetries();
 
     SECTION("All generators produce Mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
         for (const auto gen: gens) {

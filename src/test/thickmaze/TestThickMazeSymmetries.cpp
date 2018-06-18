@@ -19,8 +19,8 @@ using namespace spelunker;
 
 
 TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[thickmaze][symmetry][rectangle]") {
-    int constexpr width = 50;
-    int constexpr height = 40;
+    constexpr auto width = 50;
+    constexpr auto height = 40;
     const auto dim = types::Dimensions2D{width, height};
 
     // ThickMaze constructions from regular mazes produce size 2w-1 by 2h-1.
@@ -28,15 +28,17 @@ TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[
 
     // Get all the generators and all the symmetries.
     auto gens = createThickMazeGenerators(dim);
-    auto syms = types::symmetries();
+    const auto syms = types::symmetries();
 
     SECTION("All generators produce ThickMazes of the correct size: " +
             typeclasses::Show<types::Dimensions2D>::show(dim) + " or " +
             typeclasses::Show<types::Dimensions2D>::show(dim_1)) {
         for (const auto gen: gens) {
             const auto m = gen->generate();
-            REQUIRE(m.getWidth() == Approx(width).epsilon(1));
-            REQUIRE(m.getHeight() == Approx(width).epsilon(1));
+
+            // Use approx to allow width / height or width - 1 / height - 1 (for the hommorphism constructions).
+            REQUIRE(m.getWidth() == Approx(width - 0.5).epsilon(0.5));
+            REQUIRE(m.getHeight() == Approx(height - 0.5).epsilon(0.5));
         }
     }
 
@@ -82,23 +84,25 @@ TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[
 }
 
 TEST_CASE("Square ThickMazes can be manipulated via all symmetries", "[thickmaze][symmetry][square]") {
-    int constexpr side = 50;
-    auto const dim = types::Dimensions2D{side, side};
+    constexpr auto side = 50;
+    const auto dim = types::Dimensions2D{side, side};
 
     // ThickMaze constructions from regular mazes produce size 2w-1 by 2h-1.
-    auto const dim_1 = types::Dimensions2D{side-1, side-1};
+    const auto dim_1 = types::Dimensions2D{side-1, side-1};
 
     // Get all the generators and all the symmetries.
     auto gens = createThickMazeGenerators(dim);
-    auto syms = types::symmetries();
+    const auto syms = types::symmetries();
 
     SECTION("All generators produce ThickMazes of the correct size: " +
             typeclasses::Show<types::Dimensions2D>::show(dim) + " or " +
             typeclasses::Show<types::Dimensions2D>::show(dim_1)) {
         for (const auto gen: gens) {
             const auto m = gen->generate();
-            REQUIRE(m.getWidth() == Approx(side).epsilon(1));
-            REQUIRE(m.getHeight() == Approx(side).epsilon(1));
+
+            // Use approx to allow width / height or width - 1 / height - 1 (for the hommorphism constructions).
+            REQUIRE(m.getWidth()  == Approx(side - 0.5).epsilon(0.5));
+            REQUIRE(m.getHeight() == Approx(side - 0.5).epsilon(0.5));
         }
     }
 
