@@ -92,13 +92,13 @@ namespace spelunker::types {
                     case Symmetry::ROTATION_BY_270:
                         return Symmetry::ROTATION_BY_90;
                     case Symmetry::REFLECTION_IN_Y:
-                        return Symmetry::REFLECTION_IN_NESW;
-                    case Symmetry::REFLECTION_IN_X:
-                        return Symmetry::REFLECTION_IN_NWSE;
-                    case Symmetry::REFLECTION_IN_NESW:
-                        return Symmetry::REFLECTION_IN_Y;
-                    case Symmetry::REFLECTION_IN_NWSE:
                         return Symmetry::REFLECTION_IN_X;
+                    case Symmetry::REFLECTION_IN_X:
+                        return Symmetry::REFLECTION_IN_Y;
+                    case Symmetry::REFLECTION_IN_NESW:
+                        return Symmetry::REFLECTION_IN_NWSE;
+                    case Symmetry::REFLECTION_IN_NWSE:
+                        return Symmetry::REFLECTION_IN_NESW;
                 }
 
             case Symmetry::ROTATION_BY_270:
@@ -111,9 +111,9 @@ namespace spelunker::types {
                         return Symmetry::ROTATION_BY_90;
                     case Symmetry::ROTATION_BY_270:
                         return Symmetry::ROTATION_BY_180;
-                    case Symmetry::REFLECTION_IN_Y:
-                        return Symmetry::REFLECTION_IN_NWSE;
                     case Symmetry::REFLECTION_IN_X:
+                        return Symmetry::REFLECTION_IN_NWSE;
+                    case Symmetry::REFLECTION_IN_Y:
                         return Symmetry::REFLECTION_IN_NESW;
                     case Symmetry::REFLECTION_IN_NESW:
                         return Symmetry::REFLECTION_IN_X;
@@ -277,7 +277,8 @@ namespace spelunker::types {
 
     const Dimensions2D applySymmetryToDimensions(Symmetry s, const Dimensions2D &d) noexcept {
         int nWidth, nHeight;
-        if (s == Symmetry::ROTATION_BY_180
+        if (s == Symmetry::IDENTITY
+            ||s == Symmetry::ROTATION_BY_180
             || s == Symmetry::REFLECTION_IN_X
             || s == Symmetry::REFLECTION_IN_Y) {
             nWidth = d.getWidth();

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     maze::DFSMazeGenerator dfs(50, 40);
     maze::Maze m = dfs.generate();
     std::cout << typeclasses::Show<maze::Maze>::show(m);
-    maze::Maze m90 = m.applySymmetry(types::Symmetry::ROTATION_BY_90);
+    maze::Maze m90 = m.applySymmetry(types::Symmetry::IDENTITY);
     std::cout << typeclasses::Show<maze::Maze>::show(m90);
     return 0;
 }
