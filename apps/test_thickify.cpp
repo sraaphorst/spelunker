@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
     std::cout << spelunker::typeclasses::Show<spelunker::maze::Maze>::show(m);
 
     spelunker::thickmaze::ThickMaze tm = spelunker::typeclasses::Homomorphism<spelunker::maze::Maze, spelunker::thickmaze::ThickMaze>::morph(m);
+    std::cout << "ThickMaze has size: " << spelunker::typeclasses::Show<spelunker::types::Dimensions2D>::show(tm.getDimensions()) << std::endl;
     std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
     return 0;
 }

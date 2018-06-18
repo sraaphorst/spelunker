@@ -23,7 +23,7 @@
 namespace spelunker::thickmaze {
     class ThickMaze;
 
-    class GridColouringThickMazeGenerator final : ThickMazeGenerator {
+    class GridColouringThickMazeGenerator final : public ThickMazeGenerator {
     public:
         GridColouringThickMazeGenerator(const types::Dimensions2D &d,
                                         const GridColouring &gc, const GridColouring::CandidateConfiguration &cfg);

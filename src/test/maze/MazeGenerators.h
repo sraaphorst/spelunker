@@ -28,8 +28,8 @@ using namespace spelunker;
 // Return a list of all MazeGenerators.
 using MazeGenerators = std::vector<maze::MazeGenerator*>;
 
-MazeGenerators createGenerators(const types::Dimensions2D &d) {
-    return std::vector<maze::MazeGenerator*> {
+MazeGenerators createMazeGenerators(const types::Dimensions2D &d) {
+    return MazeGenerators {
         new maze::AldousBroderMazeGenerator{d},
         new maze::BFSMazeGenerator{d},
         new maze::BinaryTreeMazeGenerator{d},
@@ -45,7 +45,7 @@ MazeGenerators createGenerators(const types::Dimensions2D &d) {
     };
 }
 
-void deleteGenerators(MazeGenerators &mgs) {
+void deleteMazeGenerators(MazeGenerators &mgs) {
     while (!mgs.empty()) {
         auto mg = mgs.back();
         mgs.pop_back();

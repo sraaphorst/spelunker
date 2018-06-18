@@ -17,27 +17,24 @@
 
 using namespace spelunker;
 
-#include <iostream>
-using namespace std;
-
-TEST_CASE("Rectangular mazes can be manipulated via certain symmetries", "[maze][symmetry][rectangle]") {
+TEST_CASE("Rectangular Mazes can be manipulated via certain symmetries", "[maze][symmetry][rectangle]") {
     int constexpr width = 50;
     int constexpr height = 40;
     auto const dim = types::Dimensions2D{width, height};
 
     // Get all the generators and all the symmetries.
-    auto gens = createGenerators(dim);
+    auto gens = createMazeGenerators(dim);
     auto syms = types::symmetries();
 
     SECTION("All generators produce mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
         for (const auto gen: gens) {
-            const maze::Maze m = gen->generate();
+            const auto m = gen->generate();
             REQUIRE(m.getWidth() == width);
             REQUIRE(m.getHeight() == height);
         }
     }
 
-    SECTION("A maze under the action of two symmetries equals the maze under the action of their composition") {
+    SECTION("A Maze under the action of two symmetries equals the Maze under the action of their composition") {
         for (const auto s1: syms) {
             if (s1 == types::Symmetry::REFLECTION_IN_NESW || s1 == types::Symmetry::REFLECTION_IN_NWSE)
                 continue;
@@ -58,7 +55,7 @@ TEST_CASE("Rectangular mazes can be manipulated via certain symmetries", "[maze]
         }
     }
 
-    SECTION("Attempts to operate on a rectangular maze with diagonal symmetries should cause an exception") {
+    SECTION("Attempts to operate on a rectangular Maze with diagonal symmetries should cause an exception") {
         for (const auto s1: syms) {
             for (const auto s2: syms) {
                 const auto sc = types::composeSymmetries(s1, s2);
@@ -75,26 +72,26 @@ TEST_CASE("Rectangular mazes can be manipulated via certain symmetries", "[maze]
     }
 
     // Delete the generators.
-    deleteGenerators(gens);
+    deleteMazeGenerators(gens);
 }
 
-TEST_CASE("Square mazes can be manipulated via all symmetries", "[maze][symmetry][square]") {
+TEST_CASE("Square Mazes can be manipulated via all symmetries", "[maze][symmetry][square]") {
     int constexpr side = 50;
     auto const dim = types::Dimensions2D{side, side};
 
     // Get all the generators and all the symmetries.
-    auto gens = createGenerators(dim);
+    auto gens = createMazeGenerators(dim);
     auto syms = types::symmetries();
 
-    SECTION("All generators produce mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
+    SECTION("All generators produce Mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
         for (const auto gen: gens) {
-            const maze::Maze m = gen->generate();
+            const auto m = gen->generate();
             REQUIRE(m.getWidth() == side);
             REQUIRE(m.getHeight() == side);
         }
     }
 
-    SECTION("A maze under the action of two symmetries equals the maze under the action of their composition") {
+    SECTION("A Maze under the action of two symmetries equals the Maze under the action of their composition") {
         for (const auto s1: syms) {
             for (const auto s2: syms) {
                 const auto sc = types::composeSymmetries(s1, s2);
@@ -110,5 +107,5 @@ TEST_CASE("Square mazes can be manipulated via all symmetries", "[maze][symmetry
     }
 
     // Delete the generators.
-    deleteGenerators(gens);
+    deleteMazeGenerators(gens);
 }

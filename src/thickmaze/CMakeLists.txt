@@ -9,6 +9,7 @@ set(_THICKMAZE_PUBLIC_HEADER_FILES
         ThickMaze.h
         ThickMazeAttributes.h
         ThickMazeGenerator.h
+        ThickMazeGeneratorByHomomorphism.h
         ThickMazeRenderer.h
         ThickMazeTypeclasses.h
         PARENT_SCOPE
@@ -26,6 +27,7 @@ set(_THICKMAZE_SOURCE_FILES
         ThickMaze.cpp
         ThickMazeAttributes.cpp
         ThickMazeGenerator.cpp
+        ThickMazeGeneratorByHomomorphism.cpp
         PARENT_SCOPE
         )
 

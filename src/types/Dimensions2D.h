@@ -30,6 +30,15 @@ namespace spelunker::types {
         /// Determine if two dimensions objects are the same.
         bool operator==(const Dimensions2D &other) const noexcept;
 
+        /// Add two dimensions together.
+        Dimensions2D operator+(const Dimensions2D &other) const noexcept;
+
+        /// Multiply by a scalar.
+        Dimensions2D operator*(int scalar) const noexcept;
+
+        // Divide by a scalar (integer division).
+        Dimensions2D operator/(int scalar) const;
+
         /// Get the width part of the dimensions.
         inline int getWidth() const noexcept {
             return width;
@@ -84,6 +93,10 @@ namespace spelunker::types {
         const int width;
         const int height;
     };
+
+    inline Dimensions2D operator*(int scalar, const Dimensions2D dim) noexcept {
+        return dim.operator*(scalar);
+    }
 }
 
 namespace spelunker::typeclasses {
