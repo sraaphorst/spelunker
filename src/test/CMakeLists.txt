@@ -14,5 +14,6 @@ set(TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 add_executable(tests ${TEST_SOURCES})
 target_link_libraries(tests Catch)
 
+add_subdirectory(types)
 add_subdirectory(maze)
 add_subdirectory(thickmaze)
