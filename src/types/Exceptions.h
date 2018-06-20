@@ -13,7 +13,7 @@
 #include <maze/MazeAttributes.h>
 #include <typeclasses/Show.h>
 
-#include "Dimensions2D.h"
+//#include "Dimensions2D.h"
 #include "Symmetry.h"
 
 namespace spelunker::types {
@@ -40,13 +40,12 @@ namespace spelunker::types {
     /// Thrown if the user tries to create a maze with illegal dimensions.
     class IllegalDimensions : public Exception {
     public:
-        IllegalDimensions(const Dimensions2D &d) : Exception(msg(d)) {}
-        IllegalDimensions(const int width, const int height) : Exception(msg(Dimensions2D{width, height})) {}
+        IllegalDimensions(const int width, const int height) : Exception(msg(std::make_pair(width, height))) {}
 
     private:
-        static std::string msg(const Dimensions2D &d) {
+        static std::string msg(const std::pair<int, int> &d) {
             return "Dimensions2D "
-                   + typeclasses::Show<Dimensions2D>::show(d)
+                   + typeclasses::Show<std::pair<int,int>>::show(d)
                    + " are not legal.";
         }
     };

@@ -26,7 +26,7 @@ namespace spelunker::types {
         AbstractMaze(const Dimensions2D &d, const PossibleCell &startPos, const CellCollection &endPos)
             : dimensions{d}, startCell{startPos}, goalCells{endPos} {
             if (d.getWidth() < 1 || d.getHeight() < 1)
-                throw types::IllegalDimensions(d);
+                throw types::IllegalDimensions(d.getWidth(), d.getHeight());
             if (startCell)
                 checkCell(*startCell);
             for (const auto g: goalCells)
