@@ -21,9 +21,11 @@ using namespace spelunker;
 using namespace typeclasses;
 
 // This declares the type to be available everywhere.
-template <> class Homomorphism<graphmaze::GraphMaze, thickmaze::ThickMaze> :
+namespace spelunker::typeclasses{
+        template <> class Homomorphism<graphmaze::GraphMaze, thickmaze::ThickMaze> :
         public CompositionMorphism<Homomorphism<graphmaze::GraphMaze, maze::Maze>,
-                Homomorphism<maze::Maze, thickmaze::ThickMaze>> {};
+        Homomorphism<maze::Maze, thickmaze::ThickMaze>> {};
+};
 
 int main(int argc, char *argv[]) {
     maze::DFSMazeGenerator gen(50,40);
