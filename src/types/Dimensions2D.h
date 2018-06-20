@@ -1,11 +1,16 @@
 /**
- * Dimensions.h
+ * Dimensions2D.h
  *
  * By Sebastian Raaphorst, 2018.
  */
 
 #pragma once
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/version.hpp>
+
+#include <iostream>
 #include <string>
 #include <tuple>
 
@@ -89,15 +94,33 @@ namespace spelunker::types {
          */
         void checkCell(const Cell &c) const;
 
+        static Dimensions2D load(std::istream &s);
+        void save(std::ostream &s) const;
+
     private:
         const int width;
         const int height;
+
+        /**
+         * Empty constructor for serialization.
+         */
+        Dimensions2D() : width{0}, height{0} {};
+
+        friend class boost::serialization::access;
+
+        template<typename Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+            ar & const_cast<int&>(width);
+            ar & const_cast<int&>(height);
+        }
     };
 
     inline Dimensions2D operator*(int scalar, const Dimensions2D dim) noexcept {
         return dim.operator*(scalar);
     }
 }
+
+BOOST_CLASS_VERSION(spelunker::types::Dimensions2D, 1)
 
 namespace spelunker::typeclasses {
     template<>

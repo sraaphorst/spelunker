@@ -4,6 +4,11 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+#include <iostream>
+
 #include "Exceptions.h"
 #include "Dimensions2D.h"
 
@@ -11,7 +16,7 @@ namespace spelunker::types {
     Dimensions2D::Dimensions2D(int w, int h)
         : width{w}, height{h} {
         if (w < 0 || h < 0)
-            throw IllegalDimensions(w, h);
+            throw new IllegalDimensions(w, h);
     }
 
     bool Dimensions2D::operator==(const Dimensions2D &other) const noexcept {
@@ -41,5 +46,17 @@ namespace spelunker::types {
     void Dimensions2D::checkCell(const Cell &c) const {
         const auto [x,y] = c;
         checkCell(x, y);
+    }
+
+    Dimensions2D Dimensions2D::load(std::istream &s) {
+        Dimensions2D dim;
+        boost::archive::text_iarchive ia{s};
+        ia >> dim;
+        return dim;
+    }
+
+    void Dimensions2D::save(std::ostream &s) const {
+        boost::archive::text_oarchive oa{s};
+        oa << *this;
     }
 }

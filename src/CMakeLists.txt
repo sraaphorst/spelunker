@@ -67,6 +67,7 @@ add_library(spelunker SHARED
         ${PRIVATE_HEADER_FILES}
         ${SOURCE_FILES}
         )
+target_link_libraries(spelunker ${Boost_SERIALIZATION_LIBRARY})
 
 # Install the lib, all public headers, and the processed SpelunkerConfig.h file.
 # We cannot use install(DIRECTORY...) to do this since that would copy the CMakeLists.txt files as well.

@@ -47,7 +47,7 @@ namespace spelunker::types {
         static std::string msg(const Dimensions2D &d) {
             return "Dimensions2D "
                    + typeclasses::Show<Dimensions2D>::show(d)
-                   + "are not legal.";
+                   + " are not legal.";
         }
     };
 
