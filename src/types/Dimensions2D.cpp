@@ -23,6 +23,10 @@ namespace spelunker::types {
         return width == other.getWidth() && height == other.getHeight();
     }
 
+    bool Dimensions2D::operator!=(const Dimensions2D &other) const noexcept {
+        return !(*this == other);
+    }
+
     Dimensions2D Dimensions2D::operator+(const Dimensions2D &other) const noexcept {
         return Dimensions2D{width + other.getWidth(), height + other.getHeight()};
     }

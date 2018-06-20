@@ -167,7 +167,7 @@ namespace spelunker::maze {
 
     const Maze Maze::makeUnicursal() const {
         // We need a wall incidence map of size 2w x 2h.
-        const types::Dimensions2D ud = getDimensions().scale(2);
+        const types::Dimensions2D ud = 2 * getDimensions();
         const int uNumWalls = calculateNumWalls(ud);
 
         // We start off empty and use this maze to place walls in the unicursal new one.

@@ -35,6 +35,9 @@ namespace spelunker::types {
         /// Determine if two dimensions objects are the same.
         bool operator==(const Dimensions2D &other) const noexcept;
 
+        /// Determine if two dimensions objects are different.
+        bool operator!=(const Dimensions2D &other) const noexcept;
+
         /// Add two dimensions together.
         Dimensions2D operator+(const Dimensions2D &other) const noexcept;
 
@@ -62,11 +65,6 @@ namespace spelunker::types {
         /// Determines if these dimensions are square, i.e. the width and the height are the same.
         inline bool isSquare() const noexcept {
             return width == height;
-        }
-
-        /// Scale up the dimensions by a factor.
-        inline Dimensions2D scale(int factor) const noexcept {
-            return Dimensions2D{factor * width, factor * height};
         }
 
         /**
