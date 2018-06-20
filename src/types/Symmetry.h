@@ -8,6 +8,10 @@
 
 #pragma once
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/version.hpp>
+
 #include <string>
 
 #include <typeclasses/Show.h>
@@ -47,6 +51,12 @@ namespace spelunker::types {
     /// A list of all Symmetries for iteration.
     const std::vector<Symmetry> symmetries() noexcept;
 
+    /// Function to serialize a Symmetry.
+    template <typename Archive>
+    void serialize(Archive &ar, Symmetry &d, const unsigned int version) {
+        ar & d;
+    }
+
     /// Compose two symmetries.
     /**
      * The symmetries of the square form a non-abelian group. Here is the Cayley table:
@@ -83,6 +93,8 @@ namespace spelunker::types {
     /// Determine the effects of a symmetry on the dimensions.
     const Dimensions2D applySymmetryToDimensions(Symmetry s, const Dimensions2D &d) noexcept;
 }
+
+BOOST_CLASS_VERSION(spelunker::types::Symmetry, 1)
 
 namespace spelunker::typeclasses {
     template<>
