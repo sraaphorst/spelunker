@@ -16,7 +16,7 @@ namespace spelunker::types {
     Dimensions2D::Dimensions2D(int w, int h)
         : width{w}, height{h} {
         if (w < 0 || h < 0)
-            throw new IllegalDimensions(w, h);
+            throw IllegalDimensions(w, h);
     }
 
     bool Dimensions2D::operator==(const Dimensions2D &other) const noexcept {

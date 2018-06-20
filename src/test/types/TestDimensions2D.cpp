@@ -73,7 +73,7 @@ TEST_CASE("Dimensions2D should have overloaded operators", "[types][dimensions][
     }
 }
 
-TEST_CASE("Dimensions should be able to tell if a cell is in bounds", "[types][dimensions]") {
+TEST_CASE("Dimensions should be able to tell if a cell is in bounds", "[types][dimensions][exception]") {
     const types::Dimensions2D dim{width, height};
 
     SECTION("Points in bounds should be recognized as such") {
@@ -113,14 +113,12 @@ TEST_CASE("Dimensions should know if they are square", "[types][dimensions][squa
         for (auto y=0; y < height; ++y)
             REQUIRE(types::Dimensions2D{x, y}.isSquare() == (x == y));
 }
-/**
- * These cause an EXC_BAD_ACCESS on MacOS X, so just say no.
- */
-//TEST_CASE("Dimensions2D should not allow negative values", "[types][dimensions][illegal]") {
-//    SECTION("Width cannot be -1") {
-//        REQUIRE_THROWS(types::Dimensions2D{-1, height});
-//    }
-//    SECTION("Height cannot be -1") {
-//        REQUIRE_THROWS(types::Dimensions2D{width, -1});
-//    }
-//}
+
+TEST_CASE("Dimensions2D should not allow negative values", "[types][dimensions][exception]") {
+    SECTION("Width cannot be -1") {
+        REQUIRE_THROWS(types::Dimensions2D{-1, height});
+    }
+    SECTION("Height cannot be -1") {
+        REQUIRE_THROWS(types::Dimensions2D{width, -1});
+    }
+}
