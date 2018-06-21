@@ -27,7 +27,7 @@ namespace spelunker::math {
 
     std::shared_ptr<RNG> RNG::getRNG() noexcept {
         if (!rng) {
-            rng = std::make_unique<DefaultRNG>();
+            rng = std::make_shared<DefaultRNG>();
         }
         return rng;
     }

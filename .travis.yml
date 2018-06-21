@@ -6,9 +6,9 @@ compiler: clang
 addons:
   apt:
     sources:
-      - llvm-toolchain-trusty-5.0
+      - llvm-toolchain-trusty-6.0
     packages:
-      - clang-5.0
+      - clang-6.0
       - libboost-all-dev
 
 before_install:
@@ -16,10 +16,14 @@ before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq qt59-meta-minimal
 - source /opt/qt59/bin/qt59-env.sh
+- export CXX=clang++-6.0
+- export CXXFLAGS="-std=c++17"
 
 before_script:
 - mkdir -p build
 - cd build
+- export CXX=clang++-6.0
+- export CXXFLAGS="-std=c++17"
 - cmake -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON ..
 
 script:
