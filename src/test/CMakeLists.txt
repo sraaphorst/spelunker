@@ -21,14 +21,14 @@ set(TEST_SUBDIRS
         )
 
 # We build up a file to execute all the test cases.
+configure_file(run_tests.sh run_tests.sh COPYONLY)
 set(test_script "${CMAKE_CURRENT_BINARY_DIR}/run_tests.sh")
-file(WRITE ${test_script} "#!/bin/bash\n")
 
 function(make_tests pkgname tests)
     foreach(testname ${tests})
         add_executable(${testname} "${pkgname}/${testname}.cpp" ${TEST_SOURCES})
         target_link_libraries(${testname} Catch spelunker)
-        file(APPEND ${test_script} "${CMAKE_CURRENT_BINARY_DIR}/${testname} && ")
+        file(APPEND ${test_script} "printname ${testname} && ${CMAKE_CURRENT_BINARY_DIR}/${testname} && \\\n")
     endforeach()
 endfunction()
 
@@ -40,6 +40,6 @@ endforeach ()
 
 # Terminate sequence of && with true.
 # TEST: deliberately fail to see if Travis reports as failure.
-file(APPEND ${test_script} "${testname} false")
+file(APPEND ${test_script} "true")
 file(COPY ${test_script} DESTINATION ${CMAKE_BINARY_DIR} FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
 file(REMOVE ${test_script})
