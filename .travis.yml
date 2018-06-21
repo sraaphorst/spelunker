@@ -7,20 +7,20 @@ addons:
       - llvm-toolchain-trusty-5.0
     packages:
       - clang-5.0
-      - boost1.67
 
 before_install:
 # Update cmake
 - wget -O cmake.sh https://cmake.org/files/v3.10/cmake-3.10.0-rc1-Linux-x86_64.sh
 - sudo sh cmake.sh --skip-license --exclude-subdir --prefix=/usr/local
-  sudo add-apt-repository ppa:beineri/opt-qt594-trusty
+- sudo add-apt-repository ppa:beineri/opt-qt594-trusty
+- sudo add-apt-repository ppa:mhier/libboost-latest
 - sudo apt-get update -qq
 
 install:
+- sudo apt-get install -qq libboost
 - sudo apt-get install -qq qt59-meta-minimal
 - QT_ENV_SCRIPT=$(find /opt -name 'qt*-env.sh')
 - source $QT_ENV_SCRIPT
-- sudo apt-get install libboost-all-dev
 - export CXX="clang++-6.0"
 - export CXX_FLAGS="-Wall -pedantic -Werror
 
