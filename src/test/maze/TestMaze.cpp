@@ -32,7 +32,7 @@ TEST_CASE("Maze should be able to serialize and deserialize", "[maze][serializat
     const auto ml1 = maze::Maze::load(ss1);
     const auto ml2 = maze::Maze::load(ss2);
 
-    // It is possible but vanishingly unlikely that this will fail.
+    // There is an incredibly small chance that this could fail.
     REQUIRE(m1 != m2);
     REQUIRE(m1 == ml1);
     REQUIRE(m2 == ml2);

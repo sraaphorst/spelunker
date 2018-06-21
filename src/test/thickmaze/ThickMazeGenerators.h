@@ -44,6 +44,7 @@ const ThickMazeGenerators createThickMazeGenerators(const types::Dimensions2D &d
         new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::AldousBroderMazeGenerator{dhalf}},
         new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::BFSMazeGenerator{dhalf}},
         new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::BinaryTreeMazeGenerator{dhalf}},
+        new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::DFSMazeGenerator{dhalf}},
         new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::EllerMazeGenerator{dhalf}},
         new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::GrowingTreeMazeGenerator{dhalf, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM}},
         new thickmaze::ThickMazeGeneratorByHomomorphism{new maze::HuntAndKillMazeGenerator{dhalf}},
