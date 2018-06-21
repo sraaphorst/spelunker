@@ -1,7 +1,7 @@
 # CMakeLists.txt
 # By Sebastian Raaphorst, 2018.
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9)
 project(spelunker_top)
 
 set(CMAKE_CXX_STANDARD 17)

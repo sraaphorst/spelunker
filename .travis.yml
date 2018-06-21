@@ -17,7 +17,7 @@ before_install:
 #- sudo sh cmake.sh --skip-license --exclude-subdir --prefix=/usr/local
 #- echo "Done."
 - sudo add-apt-repository -y ppa:beineri/opt-qt594-trusty
-- sudo add-apt-repository ppa:mhier/libboost-latest
+- sudo add-apt-repository -y ppa:mhier/libboost-latest
 - sudo apt-get update -qq
 
 install:
