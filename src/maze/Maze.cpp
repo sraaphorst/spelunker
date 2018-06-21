@@ -300,7 +300,7 @@ namespace spelunker::maze {
                     continue;
 
                 // We have a valid neighbour.
-                const auto nbr = nbrOpt.value();
+                const auto nbr = *nbrOpt;
                 const auto nbrWalls = numCellWallsInWI(nbr, wi);
                 if (nbrWalls < maxWalls)
                     continue;

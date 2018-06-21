@@ -27,10 +27,13 @@ using namespace std;
 
 #include "GridColouring.h"
 
+// std::gcc doesn't appear to work on Travis, so use Boost's gcd instead.
+#include <boost/math/common_factor.hpp>
+
 namespace spelunker::thickmaze {
     GridColouring::GridColouring(int p_ux, int p_vx, int p_vy)
             : ux(p_ux), vx(p_vx), vy(p_vy), numColours(p_ux * p_vy),
-              rows(p_ux * p_vy / std::gcd(p_vx, p_vy)) {
+              rows(p_ux * p_vy / boost::math::gcd(p_vx, p_vy)) {
 
         // Initialize the reverse lookup table to all -1.
         reverseLookup = ReverseLookup(numColours, std::make_pair(-1, -1));
