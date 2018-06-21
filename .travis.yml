@@ -21,7 +21,7 @@ install:
 - sudo apt-get install -qq qt59-meta-minimal
 - QT_ENV_SCRIPT=$(find /opt -name 'qt*-env.sh')
 - source $QT_ENV_SCRIPT
-- export CXX="clang++-6.0"
+- export CXX="clang++-5.0"
 - export CXX_FLAGS="-Wall -pedantic -Werror
 
 before_script:
