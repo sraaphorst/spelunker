@@ -20,8 +20,8 @@ namespace spelunker::thickmaze {
     public:
         /**
          * The constructor takes a MazeGenerator, and then, since the homomorphism
-         * from Maze to ThickMaze results in a ThickMaze that is twice the width
-         * and twice the height of the original, sets these parameters as such.
+         * from a Maze of size w by h is to a ThickMaze of size 2w-1 by 2h-1, it
+         * sets these parameters as such.
          * @param mg the MazeGenerator to wrap
          */
         ThickMazeGeneratorByHomomorphism(const maze::MazeGenerator *mg);
