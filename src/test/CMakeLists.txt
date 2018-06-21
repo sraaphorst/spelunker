@@ -14,6 +14,20 @@ set(TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 add_executable(tests ${TEST_SOURCES})
 target_link_libraries(tests Catch)
 
-add_subdirectory(types)
-add_subdirectory(maze)
-add_subdirectory(thickmaze)
+set(TEST_SUBDIRS
+        maze
+        thickmaze
+        types
+        )
+
+function(make_tests pkgname tests)
+    foreach(testname ${tests})
+        add_executable(${testname} "${pkgname}/${testname}.cpp" ${TEST_SOURCES})
+        target_link_libraries(${testname} Catch spelunker)
+    endforeach()
+endfunction()
+
+foreach (pkgname ${TEST_SUBDIRS})
+    add_subdirectory(${pkgname})
+    make_tests(${pkgname} "${${pkgname}_tests}")
+endforeach ()
