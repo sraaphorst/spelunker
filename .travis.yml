@@ -1,6 +1,8 @@
 language: cpp
 sudo: required
 
+compiler: clang
+
 addons:
   apt:
     sources:
@@ -10,14 +12,18 @@ addons:
 
 before_install:
 # Update cmake
-- wget -O cmake.sh https://cmake.org/files/v3.10/cmake-3.10.0-rc1-Linux-x86_64.sh
-- sudo sh cmake.sh --skip-license --exclude-subdir --prefix=/usr/local
+#- echo "Making CMake..."
+#- wget -O cmake.sh https://cmake.org/files/v3.10/cmake-3.10.0-rc1-Linux-x86_64.sh
+#- sudo sh cmake.sh --skip-license --exclude-subdir --prefix=/usr/local
+#- echo "Done."
 - sudo add-apt-repository ppa:beineri/opt-qt594-trusty
 - sudo add-apt-repository ppa:mhier/libboost-latest
 - sudo apt-get update -qq
 
 install:
+- echo "Installing Boost..."
 - sudo apt-get install -qq libboost
+- echo "Installing Qt..."
 - sudo apt-get install -qq qt59-meta-minimal
 - QT_ENV_SCRIPT=$(find /opt -name 'qt*-env.sh')
 - source $QT_ENV_SCRIPT
