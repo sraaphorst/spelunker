@@ -8,6 +8,14 @@
 
 #pragma once
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/optional.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/version.hpp>
+#include <boost/mpl/int.hpp>
+
 #include "CommonMazeAttributes.h"
 #include "Exceptions.h"
 #include "Dimensions2D.h"
@@ -24,7 +32,7 @@ namespace spelunker::types {
     class AbstractMaze {
     protected:
         AbstractMaze(const Dimensions2D &d, const PossibleCell &startPos, const CellCollection &endPos)
-            : dimensions{d}, startCell{startPos}, goalCells{endPos} {
+                : dimensions{d}, startCell{startPos}, goalCells{endPos} {
             if (d.getWidth() < 1 || d.getHeight() < 1)
                 throw types::IllegalDimensions(d.getWidth(), d.getHeight());
             if (startCell)
@@ -34,15 +42,21 @@ namespace spelunker::types {
         }
 
         AbstractMaze(const Dimensions2D &d)
-            : AbstractMaze{d, {}, CellCollection()} {}
+                : AbstractMaze{d, {}, CellCollection()} {}
 
         AbstractMaze(int w, int h, const PossibleCell &startPos, const CellCollection &endPos)
-            : AbstractMaze{Dimensions2D{w,h}, startPos, endPos} {}
+                : AbstractMaze{Dimensions2D{w, h}, startPos, endPos} {}
 
         AbstractMaze(int w, int h)
-            : AbstractMaze{Dimensions2D{w, h}, {}, CellCollection()} {}
+                : AbstractMaze{Dimensions2D{w, h}, {}, CellCollection()} {}
 
         virtual ~AbstractMaze() = default;
+
+        bool operator==(const AbstractMaze<T> &other) const noexcept {
+            return dimensions == other.dimensions &&
+                   startCell == other.startCell &&
+                   goalCells == other.goalCells;
+        }
 
     public:
         inline const Dimensions2D &getDimensions() const noexcept {
@@ -66,14 +80,14 @@ namespace spelunker::types {
         }
 
         /// We make this virtual since the start position may not be valid in some cases, e.g. a wall in a ThickMaze.
-        virtual void setStartingCell(const PossibleCell &startPos) {
+        virtual void setStartingCell(const PossibleCell &startPos) noexcept {
             if (startPos)
                 checkCell(*startPos);
             startCell = startPos;
         }
 
         /// We make this virtual since the goal positions may not be valid in some cases, e.g. a wall in a ThickMaze.
-        virtual void setGoalCells(const CellCollection &cells) {
+        virtual void setGoalCells(const CellCollection &cells) noexcept{
             for (const auto c: cells)
                 checkCell(c);
             goalCells = cells;
@@ -106,7 +120,7 @@ namespace spelunker::types {
          * @return true if the cell is in bounds, and false otherwise
          */
         virtual bool cellInBounds(const Cell &c) const noexcept {
-            const auto [x,y] = c;
+            const auto[x, y] = c;
             return cellInBounds(x, y);
         }
 
@@ -160,7 +174,7 @@ namespace spelunker::types {
          */
         const types::CellCollection findDeadEnds() const noexcept {
             types::CellCollection deadends;
-            const auto [width, height] = dimensions.values();
+            const auto[width, height] = dimensions.values();
             for (auto y = 0; y < height; ++y) {
                 for (auto x = 0; x < width; ++x) {
                     const auto c = types::cell(x, y);
@@ -171,9 +185,24 @@ namespace spelunker::types {
             return deadends;
         }
 
+        /**
+         * Empty constructor for serialization.
+         */
+        AbstractMaze()
+                : dimensions{Dimensions2D{1, 1}}, startCell{}, goalCells{CellCollection{}} {}
+
     private:
         const Dimensions2D dimensions;
         PossibleCell startCell;
         CellCollection goalCells;
+
+        template<typename Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+            ar & const_cast<Dimensions2D &>(dimensions);
+            ar & startCell;
+            ar & goalCells;
+        }
+
+        friend class boost::serialization::access;
     };
 }
