@@ -8,7 +8,9 @@
 
 #pragma once
 
-#include <optional>
+// We use Boost optional instead of STL optional for serialization purposes.
+#include <boost/optional.hpp>
+
 #include <tuple>
 #include <vector>
 
@@ -22,7 +24,7 @@ namespace spelunker::graphmaze {
     using VertexCell = int;
 
     /// A possible cell, used to represent, for example, the start vertex.
-    using PossibleVertexCell = std::optional<VertexCell>;
+    using PossibleVertexCell = boost::optional<VertexCell>;
 
     /// A collection or row of VertexCells.
     using VertexCellCollection = std::vector<VertexCell>;

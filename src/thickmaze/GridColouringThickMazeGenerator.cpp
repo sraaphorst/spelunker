@@ -4,9 +4,11 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+// We use Boost optional instead of STL optional for serialization purposes.
+#include <boost/optional.hpp>
+
 #include <algorithm>
 #include <cassert>
-#include <optional>
 #include <tuple>
 #include <vector>
 
@@ -172,7 +174,7 @@ namespace spelunker::thickmaze {
         return ThickMaze(width, height, contents);
     }
 
-    std::optional<GridColouringThickMazeGenerator::AggregateWall>
+    boost::optional<GridColouringThickMazeGenerator::AggregateWall>
             GridColouringThickMazeGenerator::offsetToAggregate(const types::Cell &c, const GridColouring::Offsets &offsets) const {
         AggregateWall wall;
 
