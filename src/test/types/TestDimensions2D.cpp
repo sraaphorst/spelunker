@@ -25,7 +25,7 @@ TEST_CASE("Dimensions2D should be able to serialize and deserialize", "[types][d
     std::stringstream ss;
     dim.save(ss);
 
-    const types::Dimensions2D dimL = types::Dimensions2D::load(ss);
+    const auto dimL = types::Dimensions2D::load(ss);
 
     REQUIRE(dim == dimL);
 }
@@ -49,7 +49,7 @@ TEST_CASE("Dimensions2D should have overloaded operators", "[types][dimensions][
 
     SECTION("Multiplication should be overloaded") {
         static constexpr auto factor = 2;
-        const types::Dimensions2D dim2 = factor * dim;
+        const auto dim2 = factor * dim;
         REQUIRE(dim2.getWidth() == factor * width);
         REQUIRE(dim2.getHeight() == factor * height);
     }
@@ -57,13 +57,13 @@ TEST_CASE("Dimensions2D should have overloaded operators", "[types][dimensions][
     SECTION("Addition should be overloaded") {
         static constexpr auto deltax = 1;
         static constexpr auto deltay = 2;
-        const types::Dimensions2D dim2 = dim + types::Dimensions2D{deltax, deltay};
+        const auto dim2 = dim + types::Dimensions2D{deltax, deltay};
         REQUIRE(types::Dimensions2D{width + deltax, height + deltay} == dim2);
     }
 
     SECTION("Division should be overloaded") {
         static constexpr auto denom = 5;
-        types::Dimensions2D dimby5 = dim / denom;
+        const auto dimby5 = dim / denom;
         REQUIRE(dimby5.getWidth() == width / denom);
         REQUIRE(dimby5.getHeight() == height / denom);
     }
@@ -83,8 +83,8 @@ TEST_CASE("Dimensions should be able to tell if a cell is in bounds", "[types][d
     }
 
     SECTION("Points out of bounds should be recognized as such") {
-        const int idxx[6] = {-3, -2, -1, width, width+1, width+2};
-        const int idxy[6] = {-3, -2, -1, height, height+1, height+2};
+        const auto idxx[6] = {-3, -2, -1, width, width+1, width+2};
+        const auto idxy[6] = {-3, -2, -1, height, height+1, height+2};
 
         for (auto x=0; x < width; ++x)
             for (auto y: idxy)
