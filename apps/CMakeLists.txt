@@ -17,12 +17,12 @@ set(apps
         recursive_division
         sidewinder
         wilson
-        test_braid
-        test_homomorphisms
-        test_symmetry
-        test_thickbraid
-        test_thickify
-        test_unicursal
+        app_test_braid
+        app_test_homomorphisms
+        app_test_symmetry
+        app_test_thickbraid
+        app_test_thickify
+        app_test_unicursal
         )
 
 function(build_app appname)

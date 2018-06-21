@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include <optional>
+// We need to use Boost's optional instead of STL's optional since it doesn't work with serialization.
+#include <boost/optional.hpp>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -35,7 +36,7 @@ namespace spelunker::types {
     Direction cellDirection(const Cell &c1, const Cell &c2);
 
     /// A possible cell: it may be defined, or not.
-    using PossibleCell = std::optional<Cell>;
+    using PossibleCell = boost::optional<Cell>;
 
     /// A position in a maze, i.e. a Cell and a Direction.
     using Position = std::pair<Cell, Direction>;

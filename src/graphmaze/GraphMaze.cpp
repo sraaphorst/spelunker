@@ -4,7 +4,7 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include <optional>
+#include <boost/optional.hpp>
 #include <vector>
 
 #include <boost/graph/adjacency_list.hpp>

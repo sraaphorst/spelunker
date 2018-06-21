@@ -11,6 +11,7 @@
 
 #include "Exceptions.h"
 #include "Dimensions2D.h"
+#include "AbstractMaze.h"
 
 namespace spelunker::types {
     Dimensions2D::Dimensions2D(int w, int h)
@@ -62,5 +63,11 @@ namespace spelunker::types {
     void Dimensions2D::save(std::ostream &s) const {
         boost::archive::text_oarchive oa{s};
         oa << *this;
+    }
+
+    template<typename Archive>
+    void Dimensions2D::serialize(Archive &ar, const unsigned int version) {
+        ar & const_cast<int&>(width);
+        ar & const_cast<int&>(height);
     }
 }

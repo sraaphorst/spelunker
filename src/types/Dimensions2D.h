@@ -6,11 +6,8 @@
 
 #pragma once
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/version.hpp>
 
-#include <iostream>
 #include <string>
 #include <tuple>
 
@@ -107,10 +104,7 @@ namespace spelunker::types {
         friend class boost::serialization::access;
 
         template<typename Archive>
-        void serialize(Archive &ar, const unsigned int version) {
-            ar & const_cast<int&>(width);
-            ar & const_cast<int&>(height);
-        }
+        void serialize(Archive &ar, const unsigned int version);
     };
 
     inline Dimensions2D operator*(int scalar, const Dimensions2D dim) noexcept {

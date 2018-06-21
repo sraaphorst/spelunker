@@ -4,6 +4,10 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+#include <boost/serialization/vector.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include <cassert>
 #include <functional>
 #include <map>
@@ -18,6 +22,7 @@
 #include <types/AbstractMaze.h>
 #include <types/CommonMazeAttributes.h>
 #include <types/Direction.h>
+#include <types/Dimensions2D.h>
 #include <types/Exceptions.h>
 #include <types/Symmetry.h>
 #include "MazeAttributes.h"
@@ -29,13 +34,13 @@ namespace spelunker::maze {
                const types::PossibleCell &start,
                const types::CellCollection &goals,
                const WallIncidence &walls)
-        : AbstractMaze{d, start, goals},
-          numWalls{calculateNumWalls(d)},
-          wallIncidence{walls} {}
+            : AbstractMaze{d, start, goals},
+              numWalls{calculateNumWalls(d)},
+              wallIncidence{walls} {}
 
     Maze::Maze(const types::Dimensions2D &d,
                const WallIncidence &walls)
-        : Maze{d, {}, types::CellCollection(), walls} {}
+            : Maze{d, {}, types::CellCollection(), walls} {}
 
     Maze::Maze(const int w,
                const int h,
@@ -62,8 +67,9 @@ namespace spelunker::maze {
     bool Maze::operator==(const Maze &other) const noexcept {
         // We can just compare the wall incidence vectors, since == on vectors of the
         // same size compares the contents.
-        return getDimensions() == other.getDimensions()
-            && wallIncidence == other.wallIncidence;
+        return types::AbstractMaze<Maze>::operator==(other) &&
+               getDimensions() == other.getDimensions()
+               && wallIncidence == other.wallIncidence;
     }
 
     int Maze::numCellWalls(const spelunker::types::Cell &c) const {
@@ -78,7 +84,7 @@ namespace spelunker::maze {
         std::function<WallID(const types::Position &)> mp;
 
         switch (s) {
-            case types::Symmetry ::IDENTITY:
+            case types::Symmetry::IDENTITY:
                 mp = [&ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
@@ -150,7 +156,7 @@ namespace spelunker::maze {
         const auto dirs = types::directions();
         auto nwi = WallIncidence(numWalls, true);
 
-        const auto [width, height] = getDimensions().values();
+        const auto[width, height] = getDimensions().values();
         for (auto x = 0; x < width; ++x)
             for (auto y = 0; y < height; ++y)
                 for (auto d : dirs) {
@@ -184,7 +190,7 @@ namespace spelunker::maze {
             return rankPositionS(ud, x, y, d);
         };
 
-        const auto [width, height] = getDimensions().values();
+        const auto[width, height] = getDimensions().values();
         for (auto y = 0; y < height; ++y) {
             auto y2 = 2 * y;
             for (auto x = 0; x < width; ++x) {
@@ -296,7 +302,7 @@ namespace spelunker::maze {
                     continue;
 
                 const auto nbrOpt = evaluatePosition(pos);
-                if (!nbrOpt.has_value())
+                if (!nbrOpt)
                     continue;
 
                 // We have a valid neighbour.
@@ -381,7 +387,7 @@ namespace spelunker::maze {
         dim.checkCell(x, y);
 
         // Get rid of all the boundary cases first to simplify, as these are easy to identify.
-        const auto [w, h] = dim.values();
+        const auto[w, h] = dim.values();
 
         if (x == 0 && dir == types::Direction::WEST) return -1;
         if (x == (w - 1) && dir == types::Direction::EAST) return -1;
@@ -403,5 +409,24 @@ namespace spelunker::maze {
 
         // Make the compiler happy.
         throw std::invalid_argument("Trying to rank illegal direction.");
+    }
+
+    Maze Maze::load(std::istream &s) {
+        Maze m;
+        boost::archive::text_iarchive ia{s};
+        ia >> m;
+        return m;
+    }
+
+    void Maze::save(std::ostream &s) const {
+        boost::archive::text_oarchive oa{s};
+        oa << *this;
+    }
+
+    template<typename Archive>
+    void Maze::serialize(Archive &ar, const unsigned int version) {
+        ar & boost::serialization::base_object<types::AbstractMaze<Maze>>(*this);
+        ar & const_cast<int &>(numWalls);
+        ar & const_cast<WallIncidence &>(wallIncidence);
     }
 }

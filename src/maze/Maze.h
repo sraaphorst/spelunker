@@ -9,7 +9,6 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
-#include <optional>
 
 #include <types/AbstractMaze.h>
 #include <types/CommonMazeAttributes.h>
@@ -48,8 +47,10 @@ namespace spelunker::maze {
      * range [0,z), and then represent their incidence by a vector of bool. For convenience of working with
      * cells, we have a function that takes a cell coordinates and a direction and returns the rank of the
      * wall, or -1 if the wall is a bounding wall.
+     *
+     * Note: This class was final, but serialization prevents it from being such.
      */
-    class Maze final: public types::AbstractMaze<Maze>, types::UnicursalizableMaze<Maze> {
+    class Maze : public types::AbstractMaze<Maze>, types::UnicursalizableMaze<Maze> {
     public:
         /// Create a maze bounded by dimensions, with a start and ending positions.
         /**
@@ -101,7 +102,7 @@ namespace spelunker::maze {
              int h,
              const WallIncidence &walls);
 
-        ~Maze() final = default;
+        ~Maze() = default;
 
         /// For a given position, determine if there is a wall.
         bool wall(const types::Position &p) const;
@@ -170,6 +171,8 @@ namespace spelunker::maze {
         /// A static function used by rankPosition, separated out for testing.
         static WallID rankPositionS(const types::Dimensions2D &dim, int x, int y, types::Direction dir);
 
+        static Maze load(std::istream &s);
+        void save(std::ostream &s) const;
     private:
         /// Determine the number of walls a cell has for an instance of WallIncidence.
         /**
@@ -206,7 +209,17 @@ namespace spelunker::maze {
         /// A function that maps a cell (x,y) and direction to wall ranks.
         WallID rankPosition(int x, int y, types::Direction d) const;
 
-        const int numWalls;
-        const WallIncidence wallIncidence;
+        /// Empty constructor for serialization.
+        Maze() = default;
+
+        friend class boost::serialization::access;
+
+        template<typename Archive>
+        void serialize(Archive &ar, const unsigned int version);
+
+        int numWalls;
+        WallIncidence wallIncidence;
     };
 }
+
+BOOST_CLASS_VERSION(spelunker::maze::Maze, 1)

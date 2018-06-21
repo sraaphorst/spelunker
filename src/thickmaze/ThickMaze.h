@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <sstream>
-#include <string>
+#include <iostream>
 
 #include <types/AbstractMaze.h>
 #include <types/Dimensions2D.h>
@@ -30,7 +29,7 @@ namespace spelunker::thickmaze {
      * odd width and height where walls are all contiguous cells of odd length >= 3. The mapping to this subset
      * is surjective, and thus Mazes and ThickMazes with this property are isomorphic.
      */
-    class ThickMaze final : public types::AbstractMaze<ThickMaze> {
+    class ThickMaze : public types::AbstractMaze<ThickMaze> {
     public:
         /**
          * Create a ThickMaze with the given width, height, and contents.
@@ -48,7 +47,7 @@ namespace spelunker::thickmaze {
          * @param c the contents of the maze, minus boundary walls
          */
         ThickMaze(int w, int h, const CellContents &c);
-        ~ThickMaze() final = default;
+        ~ThickMaze() = default;
 
         /// Determine if two mazes are equal.
         bool operator==(const ThickMaze &other) const noexcept;
@@ -92,7 +91,8 @@ namespace spelunker::thickmaze {
          */
         const ThickMaze braid(double probability) const noexcept override;
 
-
+        static ThickMaze load(std::istream &s);
+        void save(std::ostream &s) const;
     private:
         /// Determine the number of walls a cell has for an instance of Contents.
         /**
@@ -105,6 +105,16 @@ namespace spelunker::thickmaze {
          */
         int numCellWallsInContents(const types::Cell &c, const CellContents &cc) const;
 
+        /// Empty constructor for serialization.
+        ThickMaze() = default;
+
+        friend class boost::serialization::access;
+
+        template<typename Archive>
+        void serialize(Archive &ar, const unsigned int version);
+
         const CellContents contents;
     };
 }
+
+BOOST_CLASS_VERSION(spelunker::thickmaze::ThickMaze, 1)

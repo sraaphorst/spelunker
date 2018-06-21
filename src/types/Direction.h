@@ -6,6 +6,10 @@
 
 #pragma once
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/version.hpp>
+
 #include <string>
 #include <vector>
 
@@ -23,6 +27,12 @@ namespace spelunker::types {
         SOUTH,
         WEST,
     };
+
+    /// Function to serialize a Direction.
+    template <typename Archive>
+    void serialize(Archive &ar, Direction &d, const unsigned int version) {
+        ar & d;
+    }
 
     /**
      * Given a direction, return its opposite.
@@ -45,6 +55,8 @@ namespace spelunker::types {
         return static_cast<unsigned int>(d);
     }
 }
+
+BOOST_CLASS_VERSION(spelunker::types::Direction, 1)
 
 
 namespace spelunker::typeclasses {

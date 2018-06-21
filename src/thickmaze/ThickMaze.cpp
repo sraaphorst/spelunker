@@ -4,6 +4,10 @@
  * By Sebastian Raaphorst, 2018.
  */
 
+#include <boost/serialization/vector.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #include <functional>
 
 #include <types/CommonMazeAttributes.h>
@@ -26,8 +30,8 @@ namespace spelunker::thickmaze {
     bool ThickMaze::operator==(const ThickMaze &other) const noexcept {
         // We can just compare the wall incidence vectors, since == on vectors of the
         // same size compares the contents.
-        return getDimensions() == other.getDimensions()
-               && contents == other.contents;
+        return types::AbstractMaze<ThickMaze>::operator==(other) &&
+               contents == other.contents;
     }
 
     const CellType ThickMaze::cellIs(int x, int y) const {
@@ -199,5 +203,23 @@ namespace spelunker::thickmaze {
         if (y == getHeight()-1 || cc[x][y+1] == CellType::WALL) ++numCellWalls;
 
         return numCellWalls;
+    }
+
+    ThickMaze ThickMaze::load(std::istream &s) {
+        ThickMaze tm;
+        boost::archive::text_iarchive ia{s};
+        ia >> tm;
+        return tm;
+    }
+
+    void ThickMaze::save(std::ostream &s) const {
+        boost::archive::text_oarchive oa{s};
+        oa << *this;
+    }
+
+    template<typename Archive>
+    void ThickMaze::serialize(Archive &ar, const unsigned int version) {
+        ar & boost::serialization::base_object<types::AbstractMaze<ThickMaze>>(*this);
+        ar & const_cast<CellContents&>(contents);
     }
 }
