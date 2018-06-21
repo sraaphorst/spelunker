@@ -9,7 +9,9 @@
 
 #pragma once
 
-#include <optional>
+// We use Boost optional instead of STL optional for serialization purposes.
+#include <boost/optional.hpp>
+
 #include <tuple>
 #include <vector>
 
@@ -47,7 +49,7 @@ namespace spelunker::thickmaze {
          * @param offsets the offsets to apply to the positions
          * @return the concrete positions if they exist, and nothing otherwise
          */
-        std::optional<AggregateWall> offsetToAggregate(const types::Cell &c, const GridColouring::Offsets &offsets) const;
+        boost::optional<AggregateWall> offsetToAggregate(const types::Cell &c, const GridColouring::Offsets &offsets) const;
 
         /**
          * Given an aggregate wall, find the one or two rooms that it connects.
