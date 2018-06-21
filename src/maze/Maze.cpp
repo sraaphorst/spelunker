@@ -4,9 +4,6 @@
  * By Sebastian Raaphorst, 2018.
  */
 
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/optional.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>

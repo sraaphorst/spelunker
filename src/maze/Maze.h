@@ -6,18 +6,9 @@
 
 #pragma once
 
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/optional.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/version.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 #include <iostream>
 #include <algorithm>
 #include <functional>
-#include <optional>
 
 #include <types/AbstractMaze.h>
 #include <types/CommonMazeAttributes.h>

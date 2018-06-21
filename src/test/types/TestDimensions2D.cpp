@@ -83,8 +83,8 @@ TEST_CASE("Dimensions should be able to tell if a cell is in bounds", "[types][d
     }
 
     SECTION("Points out of bounds should be recognized as such") {
-        const auto idxx[6] = {-3, -2, -1, width, width+1, width+2};
-        const auto idxy[6] = {-3, -2, -1, height, height+1, height+2};
+        const int idxx[6] = {-3, -2, -1, width, width+1, width+2};
+        const int idxy[6] = {-3, -2, -1, height, height+1, height+2};
 
         for (auto x=0; x < width; ++x)
             for (auto y: idxy)
