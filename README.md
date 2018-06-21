@@ -1,5 +1,7 @@
 # spelunker
 
+Current status: [![Build Status](https://travis-ci.com/sraaphorst/spelunker.svg?branch=master)](https://travis-ci.com/sraaphorst/spelunker)
+
 `spelunker` is a work-in-progress C++17 library for generating and solving different types of mazes:
 
 1. [Mazes](#mazes)
