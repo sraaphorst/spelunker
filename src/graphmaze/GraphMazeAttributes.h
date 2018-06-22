@@ -70,12 +70,23 @@ namespace spelunker::graphmaze {
         return m;
     }
 
+    /// Creates a matrix of VertexCells, increasing along rows.
+    /**
+     * Creates a matrix of VertexCells, increasing along rows. Paths in a GridGraph
+     * should respect this pattern for consistency.
+     * @param d dimensions of the grid
+     * @return an initialized grid with position (0,0) = 0 and increasing along rows
+     */
+    inline const VertexCellGrid createVertexCellGrid(const types::Dimensions2D &d) {
+        return createVertexCellGrid(d.getWidth(), d.getHeight());
+    }
+
     /**
      * Creates a reverse lookup to createVertexCellGrid, i.e. takes a vertex number
      * and returns the pair (row,col) in which the vertex appears in the grid.
      * @param width the width of the grid
      * @param height the height of the grid
-     * @return
+     * @return a map from vertex number to grid cell
      */
     inline const CellFromVertexCellMap createCellLookup(int width, int height) {
         if (width <= 0 || height <= 0)
@@ -88,5 +99,15 @@ namespace spelunker::graphmaze {
                 m[v++] = std::make_pair(x, y);
 
         return m;
+    }
+
+    /**
+     * Creates a reverse lookup to createVertexCellGrid, i.e. takes a vertex number
+     * and returns the pair (row,col) in which the vertex appears in the grid.
+     * @param d the dimensions of the grid
+     * @return a map from vertex number to grid cell
+     */
+    inline const CellFromVertexCellMap createCellLookup(const types::Dimensions2D &d) {
+        return createCellLookup(d.getWidth(), d.getHeight());
     }
 };

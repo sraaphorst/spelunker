@@ -16,6 +16,7 @@
 #include <types/Direction.h>
 #include <types/Symmetry.h>
 #include <types/UnicursalizableMaze.h>
+
 #include "MazeAttributes.h"
 
 namespace spelunker::maze {
@@ -50,7 +51,7 @@ namespace spelunker::maze {
      *
      * Note: This class was final, but serialization prevents it from being such.
      */
-    class Maze : public types::AbstractMaze<Maze>, types::UnicursalizableMaze<Maze> {
+    class Maze : public types::AbstractMaze<Maze>, public types::UnicursalizableMaze<Maze> {
     public:
         /// Create a maze bounded by dimensions, with a start and ending positions.
         /**

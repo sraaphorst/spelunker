@@ -22,7 +22,7 @@
 
 namespace spelunker::thickmaze {
     ThickMaze::ThickMaze(const types::Dimensions2D &d, const thickmaze::CellContents &c)
-        : AbstractMaze{d}, contents{c} {}
+        : AbstractMaze<ThickMaze>{d}, contents{c} {}
 
     ThickMaze::ThickMaze(const int w, const int h, const CellContents &c)
         : AbstractMaze{types::Dimensions2D{w, h}}, contents{c} {}

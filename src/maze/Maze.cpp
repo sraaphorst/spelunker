@@ -28,7 +28,7 @@ namespace spelunker::maze {
                const types::PossibleCell &start,
                const types::CellCollection &goals,
                const WallIncidence &walls)
-            : AbstractMaze{d, start, goals},
+            : types::AbstractMaze<Maze>{d, start, goals},
               numWalls{calculateNumWalls(d)},
               wallIncidence{walls} {}
 

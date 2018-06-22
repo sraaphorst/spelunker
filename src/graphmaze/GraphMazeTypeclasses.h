@@ -45,7 +45,7 @@ namespace spelunker::typeclasses {
                 wi[wallID] = false;
             }
 
-            return maze::Maze(w, h, m.getStartingCell(), m.getEndingCells(), wi);
+            return maze::Maze(w, h, m.getStartingCell(), m.getGoalCells(), wi);
         }
 
         static constexpr bool is_instance = true;
