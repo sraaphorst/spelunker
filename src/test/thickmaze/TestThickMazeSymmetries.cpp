@@ -27,13 +27,14 @@ TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[
     const auto dim_1 = types::Dimensions2D{width-1, height-1};
 
     // Get all the generators and all the symmetries.
-    auto gens = createThickMazeGenerators(dim);
+    auto tmg = thickmaze::ThickMazeGenerators(dim);
+    auto &gens = tmg.getGenerators();
     const auto syms = types::symmetries();
 
     SECTION("All generators produce ThickMazes of the correct size: " +
             typeclasses::Show<types::Dimensions2D>::show(dim) + " or " +
             typeclasses::Show<types::Dimensions2D>::show(dim_1)) {
-        for (const auto gen: gens) {
+        for (const auto &gen: gens) {
             const auto m = gen->generate();
 
             // Use approx to allow width / height or width - 1 / height - 1 (for the hommorphism constructions).
@@ -53,7 +54,7 @@ TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[
                 if (sc == types::Symmetry::REFLECTION_IN_NESW || sc == types::Symmetry::REFLECTION_IN_NWSE)
                     continue;
 
-                for (const auto gen: gens) {
+                for (const auto &gen: gens) {
                     const auto m = gen->generate();
                     const auto ms = m.applySymmetry(s1).applySymmetry(s2);
                     const auto mc = m.applySymmetry(sc);
@@ -63,7 +64,7 @@ TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[
         }
     }
 
-    SECTION("Attempts to operate on a rectangular ThickMaze with diagonal symmetries should cause an exception") {
+    SECTION("Attempts to operate on a non-square ThickMaze with diagonal symmetries results in an exception") {
         for (const auto s1: syms) {
             for (const auto s2: syms) {
                 const auto sc = types::composeSymmetries(s1, s2);
@@ -71,16 +72,13 @@ TEST_CASE("Rectangular ThickMazes can be manipulated via certain symmetries", "[
                     s2 != types::Symmetry::REFLECTION_IN_NESW && s2 != types::Symmetry::REFLECTION_IN_NWSE &&
                     sc != types::Symmetry::REFLECTION_IN_NESW && sc != types::Symmetry::REFLECTION_IN_NWSE)
                     continue;
-                for (const auto gen: gens) {
+                for (const auto &gen: gens) {
                     const auto m = gen->generate();
                     REQUIRE_THROWS(m.applySymmetry(s1).applySymmetry(s2) == m.applySymmetry(sc));
                 }
             }
         }
     }
-
-    // Delete the generators.
-    deleteThickMazeGenerators(gens);
 }
 
 TEST_CASE("Square ThickMazes can be manipulated via all symmetries", "[thickmaze][symmetry][square]") {
@@ -91,13 +89,14 @@ TEST_CASE("Square ThickMazes can be manipulated via all symmetries", "[thickmaze
     const auto dim_1 = types::Dimensions2D{side-1, side-1};
 
     // Get all the generators and all the symmetries.
-    auto gens = createThickMazeGenerators(dim);
+    auto tmg = thickmaze::ThickMazeGenerators(dim);
+    auto &gens = tmg.getGenerators();
     const auto syms = types::symmetries();
 
     SECTION("All generators produce ThickMazes of the correct size: " +
             typeclasses::Show<types::Dimensions2D>::show(dim) + " or " +
             typeclasses::Show<types::Dimensions2D>::show(dim_1)) {
-        for (const auto gen: gens) {
+        for (const auto &gen: gens) {
             const auto m = gen->generate();
 
             // Use approx to allow width / height or width - 1 / height - 1 (for the hommorphism constructions).
@@ -111,7 +110,7 @@ TEST_CASE("Square ThickMazes can be manipulated via all symmetries", "[thickmaze
             for (const auto s2: syms) {
                 const auto sc = types::composeSymmetries(s1, s2);
 
-                for (const auto gen: gens) {
+                for (const auto &gen: gens) {
                     const auto m = gen->generate();
                     const auto ms = m.applySymmetry(s1).applySymmetry(s2);
                     const auto mc = m.applySymmetry(sc);
@@ -120,7 +119,4 @@ TEST_CASE("Square ThickMazes can be manipulated via all symmetries", "[thickmaze
             }
         }
     }
-
-    // Delete the generators.
-    deleteThickMazeGenerators(gens);
 }

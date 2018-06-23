@@ -27,7 +27,6 @@ set(_THICKMAZE_SOURCE_FILES
         ThickMaze.cpp
         ThickMazeAttributes.cpp
         ThickMazeGenerator.cpp
-        ThickMazeGeneratorByHomomorphism.cpp
         PARENT_SCOPE
         )
 
