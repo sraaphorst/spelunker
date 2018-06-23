@@ -121,7 +121,6 @@ namespace spelunker::thickmaze {
             // Iterate over all partitions.
             try {
                 for (spelunker::math::partition::iterator iter(numColours - 1);; ++iter) {
-                    spelunker::math::partition[*iter];
                     // Stop if we've reached the maximum size.
                     if (maxSize != -1 && configurations.size() >= maxSize) {
                         aborted = true;
