@@ -21,11 +21,23 @@
 #include "ThickMaze.h"
 
 namespace spelunker::thickmaze {
+    ThickMaze::ThickMaze(const types::Dimensions2D &d,
+                         const types::PossibleCell &start,
+                         const types::CellCollection &goals,
+                         const CellContents &c)
+        : types::AbstractMaze<ThickMaze>{d, start, goals}, contents{c} {}
+
     ThickMaze::ThickMaze(const types::Dimensions2D &d, const thickmaze::CellContents &c)
-        : AbstractMaze<ThickMaze>{d}, contents{c} {}
+        : ThickMaze{d, {}, types::CellCollection(), c} {}
+
+    ThickMaze::ThickMaze(const int w, const int h,
+                         const types::PossibleCell &start,
+                         const types::CellCollection &goals,
+                         const CellContents &c)
+            : ThickMaze{types::Dimensions2D{w, h}, start, goals, c} {}
 
     ThickMaze::ThickMaze(const int w, const int h, const CellContents &c)
-        : AbstractMaze{types::Dimensions2D{w, h}}, contents{c} {}
+        : ThickMaze{types::Dimensions2D{w, h}, {}, types::CellCollection{}, c} {}
 
     bool ThickMaze::operator==(const ThickMaze &other) const noexcept {
         // We can just compare the wall incidence vectors, since == on vectors of the
