@@ -32,12 +32,38 @@ namespace spelunker::thickmaze {
     class ThickMaze : public types::AbstractMaze<ThickMaze> {
     public:
         /**
+         * Create a ThickMaze with the given dimensions, start position, goal positions,
+         * and contents.
+         * @param d the dimensions of the maze, minus boundary cells
+         * @param start an optional starting position
+         * @param goals a collection of the goal positions
+         * @param c the contents of the maze, minus boundary walls
+         */
+        ThickMaze(const types::Dimensions2D &d,
+                  const types::PossibleCell &start,
+                  const types::CellCollection &goals,
+                  const CellContents &c);
+
+        /**
          * Create a ThickMaze with the given width, height, and contents.
-         * This class is effectively immutable.
          * @param d the dimensions of the maze, minus boundary walls
          * @param c the contents of the maze, minus boundary walls
          */
         ThickMaze(const types::Dimensions2D &d, const CellContents &c);
+
+        /**
+         * Create a ThickMaze with the given dimensions, start position, goal positions,
+         * and contents.
+         * @param w the width of the maze, minus boundary walls
+         * @param h the height of the maze, minus boundary walls
+         * @param start an optional starting position
+         * @param goals a collection of the goal positions
+         * @param c the contents of the maze, minus boundary walls
+         */
+        ThickMaze(int w, int h,
+                  const types::PossibleCell &start,
+                  const types::CellCollection &goals,
+                  const CellContents &c);
 
         /**
          * Create a ThickMaze with the given width, height, and contents.
