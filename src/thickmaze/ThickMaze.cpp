@@ -133,7 +133,7 @@ namespace spelunker::thickmaze {
         for (auto y=0; y < height; ++y)
             for (auto x=0; x < width; ++x)
                 invContents[x][y] = contents[x][y] == CellType::FLOOR ?CellType::WALL : CellType::FLOOR;
-        return ThickMaze(getDimensions(), invContents);
+        return ThickMaze{getDimensions(), invContents};
     }
 
     const ThickMaze ThickMaze::braid(double probability) const noexcept {
