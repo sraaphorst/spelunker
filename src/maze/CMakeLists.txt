@@ -13,6 +13,7 @@ set(_MAZE_PUBLIC_HEADER_FILES
         Maze.h
         MazeAttributes.h
         MazeGenerator.h
+        MazeGeneratorSignalDescriptors.h
         MazeRenderer.h
         MazeTypeclasses.h
         PrimMazeGenerator.h

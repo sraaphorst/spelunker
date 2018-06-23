@@ -8,6 +8,8 @@ set(_TYPES_PUBLIC_HEADER_FILES
         Dimensions2D.h
         Direction.h
         Exceptions.h
+        Observable.h
+        Observer.h
         ReversibleMaze.h
         Symmetry.h
         UnicursalizableMaze.h
