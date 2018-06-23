@@ -92,4 +92,13 @@ namespace spelunker::types {
      * @return a Position representing the Cell and the Direction
      */
     inline Position pos(const Cell &c, Direction d) { return std::make_pair(c, d); }
+
+    /// An enumeration to specify the types of special cells in a maze.
+    enum class SpecialCellType {
+        START = 0,
+        GOAL,
+    };
+
+    /// Represent a @see{SpecialCellType} by a descriptive string.
+    std::string specialCellTypeName(const SpecialCellType c);
 }

@@ -17,8 +17,8 @@ using namespace spelunker::thickmaze;
 
 int main(int argc, char *argv[]) {
     CellularAutomatonThickMazeGenerator::settings s{};
-    CellularAutomatonThickMazeGenerator gen(100, 50, s);
-    ThickMaze tm = gen.generate();//.reverse();
+    CellularAutomatonThickMazeGenerator gen{100, 50, s};
+    ThickMaze tm = gen.generate();
     std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
     return 0;
 }

@@ -68,4 +68,23 @@ namespace spelunker::types {
                    + ", so cannot perform symmetry: " + typeclasses::Show<types::Symmetry>::show(s);
         }
     };
+
+    /// Thrown if the user tries to specify a start or goal cell that is not legally placed.
+    /**
+     * Thrown if the user tries to specify a start or goal cell that is not legally placed.
+     * Note that this is reserved strictly for cells that is <b>in bounds.</b>
+     * Cells that are <b>out of bounds</b> are reported by @see{OutOfBoundsCoordinates}.
+     */
+     class IllegalCellPosition : public Exception {
+     public:
+         IllegalCellPosition(const types::Cell &c, const types::SpecialCellType ct) : Exception{msg(c, ct)} {}
+         IllegalCellPosition(const int x, const int y, const types::SpecialCellType ct)
+            : IllegalCellPosition{types::cell(x, y), ct} {}
+
+     private:
+         static std::string msg(const types::Cell &c, const types::SpecialCellType ct) {
+             return "The cell " + typeclasses::Show<types::Cell>::show(c) + " is not a legal " +
+                     types::specialCellTypeName(ct) + " cell.";
+         }
+     };
 }
