@@ -132,7 +132,9 @@ namespace spelunker::thickmaze {
         };
 
         CellularAutomatonThickMazeGenerator(const types::Dimensions2D &d, const settings &s);
+        CellularAutomatonThickMazeGenerator(const types::Dimensions2D &d);
         CellularAutomatonThickMazeGenerator(int w, int h, const settings &s);
+        CellularAutomatonThickMazeGenerator(int w, int h);
         ~CellularAutomatonThickMazeGenerator() final = default;
 
         const ThickMaze generate() const noexcept final;

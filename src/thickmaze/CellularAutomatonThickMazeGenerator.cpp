@@ -140,8 +140,14 @@ namespace spelunker::thickmaze {
     CellularAutomatonThickMazeGenerator::CellularAutomatonThickMazeGenerator(const types::Dimensions2D &d, const settings &s)
         : ThickMazeGenerator{d}, st{s} {}
 
+    CellularAutomatonThickMazeGenerator::CellularAutomatonThickMazeGenerator(const types::Dimensions2D &d)
+        : CellularAutomatonThickMazeGenerator{d, settings{}} {}
+
     CellularAutomatonThickMazeGenerator::CellularAutomatonThickMazeGenerator(int w, int h, const settings &s)
         : CellularAutomatonThickMazeGenerator{types::Dimensions2D{w, h}, s} {}
+
+    CellularAutomatonThickMazeGenerator::CellularAutomatonThickMazeGenerator(int w, int h)
+        : CellularAutomatonThickMazeGenerator{types::Dimensions2D{w, h}, settings{}} {}
 
     const ThickMaze CellularAutomatonThickMazeGenerator::generate() const noexcept {
         const auto [width, height] = getDimensions().values();

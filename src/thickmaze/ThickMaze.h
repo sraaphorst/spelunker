@@ -12,6 +12,7 @@
 
 #include <types/AbstractMaze.h>
 #include <types/Dimensions2D.h>
+#include <types/ReversibleMaze.h>
 #include <types/Symmetry.h>
 
 #include "ThickMazeAttributes.h"
@@ -29,7 +30,7 @@ namespace spelunker::thickmaze {
      * odd width and height where walls are all contiguous cells of odd length >= 3. The mapping to this subset
      * is surjective, and thus Mazes and ThickMazes with this property are isomorphic.
      */
-    class ThickMaze : public types::AbstractMaze<ThickMaze> {
+    class ThickMaze : public types::AbstractMaze<ThickMaze>, public types::ReversibleMaze<ThickMaze> {
     public:
         /**
          * Create a ThickMaze with the given dimensions, start position, goal positions,
@@ -82,7 +83,10 @@ namespace spelunker::thickmaze {
         bool operator!=(const ThickMaze &other) const noexcept {
             return !(*this == other);
         }
+
         const CellType cellIs(int x, int y) const;
+
+        const CellType cellIs(const types::Cell &c) const;
 
         /// Determine the number of walls a cell has.
         int numCellWalls(const types::Cell &c) const override;
@@ -95,7 +99,7 @@ namespace spelunker::thickmaze {
          * cellular automata algorithms, which are sometimes more wall-connected than floor-connected.
          * @return the reverse of the original maze, with walls and floors swapper.
          */
-        const ThickMaze reverse() const noexcept;
+        const ThickMaze reverse() const noexcept override;
 
         /// Make a ThickMaze into a braid maze, clearing dead ends with the given probability.
         /**

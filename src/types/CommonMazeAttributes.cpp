@@ -34,4 +34,13 @@ namespace spelunker::types {
         const auto [width, height] = d.values();
         return CellIndicator(width, CellRowIndicator(height, def));
     }
+
+    std::string specialCellTypeName(const SpecialCellType c) {
+        switch (c) {
+            case SpecialCellType::START:
+                return "start";
+            case SpecialCellType::GOAL:
+                return "goal";
+        }
+    }
 }

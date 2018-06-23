@@ -25,7 +25,15 @@ namespace spelunker::thickmaze {
                          const types::PossibleCell &start,
                          const types::CellCollection &goals,
                          const CellContents &c)
-        : types::AbstractMaze<ThickMaze>{d, start, goals}, contents{c} {}
+        : types::AbstractMaze<ThickMaze>{d, start, goals}, contents{c} {
+
+        if (start && cellIs(*start) == CellType::WALL)
+            throw types::IllegalCellPosition{*start, types::SpecialCellType::START};
+
+        for (auto gc: goals)
+            if (cellIs(gc) == CellType::WALL)
+                throw types::IllegalCellPosition{gc, types::SpecialCellType::GOAL};
+    }
 
     ThickMaze::ThickMaze(const types::Dimensions2D &d, const thickmaze::CellContents &c)
         : ThickMaze{d, {}, types::CellCollection(), c} {}
@@ -49,6 +57,11 @@ namespace spelunker::thickmaze {
     const CellType ThickMaze::cellIs(int x, int y) const {
         checkCell(x, y);
         return contents[x][y];
+    }
+
+    const CellType ThickMaze::cellIs(const spelunker::types::Cell &c) const {
+        const auto [x, y] = c;
+        return cellIs(x, y);
     }
 
     int ThickMaze::numCellWalls(const types::Cell &c) const {
@@ -133,7 +146,7 @@ namespace spelunker::thickmaze {
         for (auto y=0; y < height; ++y)
             for (auto x=0; x < width; ++x)
                 invContents[x][y] = contents[x][y] == CellType::FLOOR ?CellType::WALL : CellType::FLOOR;
-        return ThickMaze(getDimensions(), invContents);
+        return ThickMaze{getDimensions(), invContents};
     }
 
     const ThickMaze ThickMaze::braid(double probability) const noexcept {
