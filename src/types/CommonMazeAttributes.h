@@ -51,11 +51,11 @@ namespace spelunker::types {
         const CellDistances distances;
     };
 
-    /// An indicator as to whether or not we've processed a Cell for a row.
-    using CellRowIndicator = std::vector<bool>;
+    /// An indicator as to whether or not we've processed a Cell for a column.
+    using CellColumnIndicator = std::vector<bool>;
 
     /// An indicator as to whether or not we've processed a Cell.
-    using CellIndicator = std::vector<CellRowIndicator>;
+    using CellIndicator = std::vector<CellColumnIndicator>;
 
     /// Determine what direction two adjacent cells are apart.
     Direction cellDirection(const Cell &c1, const Cell &c2);

@@ -22,8 +22,8 @@ namespace spelunker::thickmaze {
     };
 
     /// A container of contents of a ThickMaze, minus the boundary walls.
-    using CellRow = std::vector<CellType>;
-    using CellContents = std::vector<CellRow>;
+    using CellColumnContents = std::vector<CellType>;
+    using CellContents = std::vector<CellColumnContents>;
 
     /// Create an empty layout.
     CellContents createThickMazeLayout(int width, int height, CellType c = CellType::FLOOR);

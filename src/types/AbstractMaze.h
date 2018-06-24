@@ -8,6 +8,10 @@
 
 #pragma once
 
+#include <queue>
+#include <set>
+#include <vector>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/optional.hpp>
@@ -220,11 +224,50 @@ namespace spelunker::types {
          * of the colour for the component as we get further away) can be
          * visually displayed through a UI.
          *
+         * Unfortunately, as this is a template, we insantiate this long bit of code here.
          * Subclasses will have to check that the given start cell is in bounds.
          * @param start the starting cell
          * @return the data collected during the BFS
          */
-        //const types::BFSResults performBFSFrom(const types::Cell &start) const = 0;
+        const types::BFSResults performBFSFrom(const types::Cell &start) const {
+            // Keep track of the cells to which we're connected.
+            types::CellCollection connectedCells;
+
+            // Keep track of the distances of the cells.
+            // start is the only cell at position zero so record it.
+            types::CellDistances distances{1};
+
+            // Prepare the queue for BFS. The cell info comprises a cell and its distance.
+            using cellInfo = std::pair<const types::Cell, const int>;
+            std::queue<cellInfo> cellQueue{};
+            cellQueue.push(cellInfo{start, 0});
+
+            // We also want to keep track of the cells visited.
+            auto ci = types::initializeCellIndicator(getDimensions(), false);
+
+            while (!cellQueue.empty()) {
+                const auto[cell, dist] = cellQueue.front();
+                const auto[cellx, celly] = cell;
+                cellQueue.pop();
+
+                // If this cell has already been visited, ignore.
+                if (ci[cellx][celly])
+                    continue;
+
+                // Mark the cell visited, the distance and add the neighbours.
+                ci[cellx][celly] = true;
+                connectedCells.emplace_back(cell);
+                if (distances.size() <= dist)
+                    distances.resize(dist+1);
+                distances[dist].insert(cell);
+
+                const auto nbrs = neighbours(cell);
+                for (auto n: nbrs)
+                    cellQueue.push(cellInfo{n, dist + 1});
+            }
+
+            return types::BFSResults{start, connectedCells, distances};
+        }
 
     private:
         const Dimensions2D dimensions;

@@ -32,7 +32,7 @@ namespace spelunker::types {
 
     CellIndicator initializeCellIndicator(const Dimensions2D &d, bool def) {
         const auto [width, height] = d.values();
-        return CellIndicator(width, CellRowIndicator(height, def));
+        return CellIndicator(width, CellColumnIndicator(height, def));
     }
 
     const Cell applyDirectionToCell(const Cell &c, Direction d) noexcept {
