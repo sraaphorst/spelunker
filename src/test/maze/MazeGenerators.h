@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <types/Dimensions2D.h>
@@ -23,32 +24,41 @@
 #include <maze/RecursiveDivisionMazeGenerator.h>
 #include <maze/SidewinderMazeGenerator.h>
 #include <maze/WilsonMazeGenerator.h>
-using namespace spelunker;
+namespace spelunker::maze {
+    /**
+     * This is just a quick and dirty class of all MazeGenerators, used
+     * strictly for testing purposes.
+     */
+    class MazeGenerators {
+    public:
+        using MazeGeneratorCollection = std::vector<std::unique_ptr<maze::MazeGenerator>>;
+        static auto constexpr width  = 50;
+        static auto constexpr height = 40;
 
-// Return a list of all MazeGenerators.
-using MazeGenerators = std::vector<maze::MazeGenerator*>;
+        explicit MazeGenerators(const types::Dimensions2D &d = types::Dimensions2D{width, height})
+            : dim{d} {
 
-MazeGenerators createMazeGenerators(const types::Dimensions2D &d) {
-    return MazeGenerators {
-        new maze::AldousBroderMazeGenerator{d},
-        new maze::BFSMazeGenerator{d},
-        new maze::BinaryTreeMazeGenerator{d},
-        new maze::EllerMazeGenerator{d},
-        new maze::GrowingTreeMazeGenerator{d, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM},
-        new maze::HuntAndKillMazeGenerator{d},
-        new maze::KruskalMazeGenerator{d},
-        new maze::PrimMazeGenerator{d},
-        new maze::Prim2MazeGenerator{d},
-        new maze::RecursiveDivisionMazeGenerator{d},
-        new maze::SidewinderMazeGenerator{d},
-        new maze::WilsonMazeGenerator{d}
+            gens.emplace_back(std::make_unique<maze::AldousBroderMazeGenerator>(maze::AldousBroderMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::BFSMazeGenerator>(maze::BFSMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::BinaryTreeMazeGenerator>(maze::BinaryTreeMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::DFSMazeGenerator>(maze::DFSMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::EllerMazeGenerator>(maze::EllerMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::GrowingTreeMazeGenerator>(maze::GrowingTreeMazeGenerator{d, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM}));
+            gens.emplace_back(std::make_unique<maze::HuntAndKillMazeGenerator>(maze::HuntAndKillMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::KruskalMazeGenerator>(maze::KruskalMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::PrimMazeGenerator>(maze::PrimMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::Prim2MazeGenerator>(maze::Prim2MazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::RecursiveDivisionMazeGenerator>(maze::RecursiveDivisionMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::SidewinderMazeGenerator>(maze::SidewinderMazeGenerator{d}));
+            gens.emplace_back(std::make_unique<maze::WilsonMazeGenerator>(maze::WilsonMazeGenerator{d}));
+        }
+
+        inline const MazeGeneratorCollection &getGenerators() const {
+            return gens;
+        }
+
+    private:
+        const types::Dimensions2D dim;
+        MazeGeneratorCollection gens;
     };
-}
-
-void deleteMazeGenerators(MazeGenerators &mgs) {
-    while (!mgs.empty()) {
-        auto mg = mgs.back();
-        mgs.pop_back();
-        delete mg;
-    }
 }

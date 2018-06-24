@@ -22,11 +22,11 @@
 
 using namespace spelunker;
 
-TEST_CASE("ThicMaze should be able to serialize and deserialize", "[thickmaze][serialization]") {
+TEST_CASE("ThickMaze should be able to serialize and deserialize", "[thickmaze][serialization]") {
     constexpr auto width = 25;
     constexpr auto height = 20;
     const types::Dimensions2D dim{width, height};
-    thickmaze::ThickMazeGeneratorByHomomorphism dfs{new maze::DFSMazeGenerator{dim}};
+    thickmaze::ThickMazeGeneratorByHomomorphism dfs{maze::DFSMazeGenerator{dim}};
 
     const auto tm1 = dfs.generate();
     const auto tm2 = dfs.generate();
