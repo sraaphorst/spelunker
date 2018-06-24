@@ -1,7 +1,9 @@
 #!/bin/bash
 printf "\n\n\e[1m\e[40m\e[32m"
 printf "***************************\n"
+printf "\n\n\e[1m\e[40m\e[32m"
 printf "***** EXECUTING TESTS *****\n"
+printf "\n\n\e[1m\e[40m\e[32m"
 printf "***************************"
 printf "\e[0m\n\n"
 
