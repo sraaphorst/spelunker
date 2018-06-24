@@ -24,7 +24,7 @@ If you have any interest in contributing to `spelunker`, please contact me at sr
 
 A `Maze`, in spelunker, is a grid of width `w` and height `h` of cells, where walls are represented as lines between cells.
 
-`spelunker` currently offers two unique but entirely equivalent representations of `Maze`s:
+In addition to `Maze`, spelunker offers a `GraphMaze`, which is a generalization of a `Maze`.
 
 1. [maze](src/maze/README.md): An internal representation where a cell `(x,y)` and a cardinal direction `d` are mapped to walls, and those walls are either recorded to be present or absent.
 
@@ -169,13 +169,17 @@ Here is a list of features that are currently lacking of incomplete that will be
 
 2. Add the ability for listeners to subcribe to `MazeGenerator` instances to receive events when a maze is extended. This will allow, say, drawing of a maze as it is being generated to show how the algorithms work.
 
-5. Generate extensive statistics about each maze.
+3. Generate extensive statistics about each maze.
 
-6. Add various maze solvers, and also make them subscribable so that it is possible to draw, step-by-step, the path taken through the maze.
+4. Add various maze solvers, and also make them subscribable so that it is possible to draw, step-by-step, the path taken through the maze.
 
-7. Write a Qt UI (as a binary independent of the library) to display all these features (maze step-by-step generation, maze step-by-step solving, etc) in a visually pleasant way.
+5. Write a Qt UI (as a binary independent of the library) to display all these features (maze step-by-step generation, maze step-by-step solving, etc) in a visually pleasant way.
 
-8. Be able to export mazes in JSON using https://github.com/nlohmann/json.
+6. Be able to export mazes in JSON using https://github.com/nlohmann/json.
+
+7. Implement other maze types, such as mazes on surfaces, such as cylinders and toruses, as well as circular mazes. This may require a substantial refactoring.
+
+8. Sparsifying mazes.
 
 
 # References
