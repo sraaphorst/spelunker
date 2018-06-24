@@ -7,7 +7,6 @@ configure_file(
         SpelunkerConfig.h.in
         SpelunkerConfig.h
 )
-configure_file(Travis.h Travis.h COPYONLY)
 
 set(SUBDIRS
         graphmaze

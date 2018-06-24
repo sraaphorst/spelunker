@@ -24,7 +24,7 @@ before_script:
 - cd build
 - export CXX=clang++-5.0
 - export CXXFLAGS="-std=c++17"
-- cmake -DTRAVIS=1 -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON ..
+- cmake -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON ..
 
 script:
 - make

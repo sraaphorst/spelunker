@@ -6,7 +6,6 @@
 
 #include <catch.hpp>
 
-#include <Travis.h>
 #include <string>
 
 #include <types/Dimensions2D.h>

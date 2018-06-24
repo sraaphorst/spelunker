@@ -15,6 +15,7 @@ CTestTestfile.cmake
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 /cmake-build-*/
+build/
 *-prefix
 *-prefix/**
 *.dSYM

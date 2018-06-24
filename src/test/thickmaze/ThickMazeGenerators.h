@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Travis.h>
 #include <memory>
 #include <vector>
 
@@ -48,24 +47,25 @@ namespace spelunker::thickmaze {
 
             const auto dhalf = d / 2;
 
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::AldousBroderMazeGenerator>>(maze::AldousBroderMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::BFSMazeGenerator>>(maze::BFSMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::BinaryTreeMazeGenerator>>(maze::BinaryTreeMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::DFSMazeGenerator>>(maze::DFSMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::EllerMazeGenerator>>(maze::EllerMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::GrowingTreeMazeGenerator>>(maze::GrowingTreeMazeGenerator{dhalf, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::HuntAndKillMazeGenerator>>(maze::HuntAndKillMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::KruskalMazeGenerator>>(maze::KruskalMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::PrimMazeGenerator>>(maze::PrimMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::Prim2MazeGenerator>>(maze::Prim2MazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::RecursiveDivisionMazeGenerator>>(maze::RecursiveDivisionMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::SidewinderMazeGenerator>>(maze::SidewinderMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::ThickMazeGeneratorByHomomorphism<maze::WilsonMazeGenerator>>(maze::WilsonMazeGenerator{dhalf}));
-            gens.emplace_back(std::make_unique<thickmaze::CellularAutomatonThickMazeGenerator>(thickmaze::CellularAutomatonThickMazeGenerator{dim, caSettings}));
+            // I want to use std::make_unique here, but no matter what I do, Travis fails.
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::AldousBroderMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::AldousBroderMazeGenerator>(maze::AldousBroderMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::BFSMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::BFSMazeGenerator>(maze::BFSMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::BinaryTreeMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::BinaryTreeMazeGenerator>(maze::BinaryTreeMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::DFSMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::DFSMazeGenerator>(maze::DFSMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::EllerMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::EllerMazeGenerator>(maze::EllerMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::GrowingTreeMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::GrowingTreeMazeGenerator>(maze::GrowingTreeMazeGenerator{dhalf, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::HuntAndKillMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::HuntAndKillMazeGenerator>(maze::HuntAndKillMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::KruskalMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::KruskalMazeGenerator>(maze::KruskalMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::PrimMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::PrimMazeGenerator>(maze::PrimMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::Prim2MazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::Prim2MazeGenerator>(maze::Prim2MazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::RecursiveDivisionMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::RecursiveDivisionMazeGenerator>(maze::RecursiveDivisionMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::SidewinderMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::SidewinderMazeGenerator>(maze::SidewinderMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::ThickMazeGeneratorByHomomorphism<maze::WilsonMazeGenerator>>(new thickmaze::ThickMazeGeneratorByHomomorphism<maze::WilsonMazeGenerator>(maze::WilsonMazeGenerator{dhalf})));
+            gens.emplace_back(std::unique_ptr<thickmaze::CellularAutomatonThickMazeGenerator>(new thickmaze::CellularAutomatonThickMazeGenerator{dim, caSettings}));
 
             const thickmaze::GridColouring::CandidateConfigurationCollection cfgColl = gridColouring.wallCandidates(10);
             const thickmaze::GridColouring::CandidateConfiguration cfg = math::RNG::randomElement(cfgColl);
-            gens.emplace_back(std::make_unique<thickmaze::GridColouringThickMazeGenerator>(dim, gridColouring, cfg));
+            gens.emplace_back(std::unique_ptr<thickmaze::GridColouringThickMazeGenerator>(new thickmaze::GridColouringThickMazeGenerator(dim, gridColouring, cfg)));
         }
 
         inline const ThickMazeGeneratorCollection &getGenerators() const {

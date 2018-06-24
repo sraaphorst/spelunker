@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Travis.h>
 #include <memory>
 #include <vector>
 
@@ -39,19 +38,20 @@ namespace spelunker::maze {
         explicit MazeGenerators(const types::Dimensions2D &d = types::Dimensions2D{width, height})
             : dim{d} {
 
-            gens.emplace_back(std::make_unique<maze::AldousBroderMazeGenerator>(maze::AldousBroderMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::BFSMazeGenerator>(maze::BFSMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::BinaryTreeMazeGenerator>(maze::BinaryTreeMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::DFSMazeGenerator>(maze::DFSMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::EllerMazeGenerator>(maze::EllerMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::GrowingTreeMazeGenerator>(maze::GrowingTreeMazeGenerator{d, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM}));
-            gens.emplace_back(std::make_unique<maze::HuntAndKillMazeGenerator>(maze::HuntAndKillMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::KruskalMazeGenerator>(maze::KruskalMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::PrimMazeGenerator>(maze::PrimMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::Prim2MazeGenerator>(maze::Prim2MazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::RecursiveDivisionMazeGenerator>(maze::RecursiveDivisionMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::SidewinderMazeGenerator>(maze::SidewinderMazeGenerator{d}));
-            gens.emplace_back(std::make_unique<maze::WilsonMazeGenerator>(maze::WilsonMazeGenerator{d}));
+            // I want to use std::make_unique here, but no matter what I do, Travis fails.
+            gens.emplace_back(std::unique_ptr<maze::AldousBroderMazeGenerator>(new maze::AldousBroderMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::BFSMazeGenerator>(new maze::BFSMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::BinaryTreeMazeGenerator>(new maze::BinaryTreeMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::DFSMazeGenerator>(new maze::DFSMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::EllerMazeGenerator>(new maze::EllerMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::GrowingTreeMazeGenerator>(new maze::GrowingTreeMazeGenerator{d, maze::GrowingTreeMazeGenerator::CellSelectionStrategy::RANDOM}));
+            gens.emplace_back(std::unique_ptr<maze::HuntAndKillMazeGenerator>(new maze::HuntAndKillMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::KruskalMazeGenerator>(new maze::KruskalMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::PrimMazeGenerator>(new maze::PrimMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::Prim2MazeGenerator>(new maze::Prim2MazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::RecursiveDivisionMazeGenerator>(new maze::RecursiveDivisionMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::SidewinderMazeGenerator>(new maze::SidewinderMazeGenerator{d}));
+            gens.emplace_back(std::unique_ptr<maze::WilsonMazeGenerator>(new maze::WilsonMazeGenerator{d}));
         }
 
         inline const MazeGeneratorCollection &getGenerators() const {
