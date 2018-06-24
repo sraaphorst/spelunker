@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #ifdef TRAVIS
 namespace std {
     template<typename T, typename... Args>

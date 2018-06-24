@@ -13,6 +13,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Boost 1.54 COMPONENTS serialization REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# My Travis configuration, which works locally, is missing some essential
+# things like std::make_unique, so use this to force it to define some
+# necessary things for compilation.
+if (${TRAVIS})
+  add_definitions(-DTRAVIS)
+endif()
+
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
 add_subdirectory(src)
