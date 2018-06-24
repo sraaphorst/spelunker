@@ -87,7 +87,7 @@ namespace spelunker::types {
         }
 
         /// We make this virtual since the goal positions may not be valid in some cases, e.g. a wall in a ThickMaze.
-        virtual void setGoalCells(const CellCollection &cells) noexcept{
+        virtual void setGoalCells(const CellCollection &cells) noexcept {
             for (const auto c: cells)
                 checkCell(c);
             goalCells = cells;
@@ -99,39 +99,44 @@ namespace spelunker::types {
          * @param c the cell
          * @throws OutOfBoundsException
          */
-        virtual void checkCell(const Cell &c) const {
+        void checkCell(const Cell &c) const {
             dimensions.checkCell(c);
         }
 
         /**
          * Given a set of coordinates, check to see if they are in the dimensions.
          * If not, an OutOfBounds exception is thrown.
+         * This is also the case if a cell has no outedges, which should be
+         * the case of a wall or other out-of-bounds area.
          * @param x the x coordinate
          * @param y the y coordinate
          * @throws OutOfBoundsException
          */
-        virtual void checkCell(int x, int y) const {
-            dimensions.checkCell(x, y);
+        void checkCell(int x, int y) const {
+            checkCell(types::cell(x, y));
         }
 
         /**
-         * Goven a set of coordinates, check to see if they are in the dimensions.
+         * Given a set of coordinates, check to see if they are in the dimensions.
+         * For mazes with out of bounds zones, such as ThickMaze, this will
+         * return false if a wall.
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
-        virtual bool cellInBounds(const Cell &c) const noexcept {
-            const auto[x, y] = c;
-            return cellInBounds(x, y);
+        bool cellInBounds(const Cell &c) const noexcept {
+            return dimensions.cellInBounds(c) && numCellWalls(c) < 4;
         }
 
         /**
          * Given a cell, check to see if the cell is in the dimensions.
+         * For mazes with out of bounds zones, such as ThickMaze, this will
+         * return false if a wall.
          * @param x the x coodinate
          * @param y the y coordinate
          * @return true if the cell is in bounds, and false otherwise
          */
-        virtual bool cellInBounds(int x, int y) const noexcept {
-            return dimensions.cellInBounds(x, y);
+        bool cellInBounds(int x, int y) const noexcept {
+            return cellInBounds(cell(x, y));
         }
 
         /**
@@ -190,6 +195,36 @@ namespace spelunker::types {
          */
         AbstractMaze()
                 : dimensions{Dimensions2D{1, 1}}, startCell{}, goalCells{CellCollection{}} {}
+
+        /// Find the neighbours of a given cell.
+        /**
+         * Given a cell c, find its neighbours in the maze.
+         * This will allow us to implement BFS here in AbstractMaze.
+         * @param c the cell in question
+         * @return a list of its direct neighbours
+         */
+        virtual const types::CellCollection neighbours(const types::Cell &c) const = 0;
+
+        /// Performs a BFS from the given input cell and returns the results.
+        /**
+         * This algorithm begins at the specified starting cell, and returns
+         * the BFSResults information as described in
+         * @see{CommonMazeAttrinbutes::BFSResults}. It will be the basis for:
+         * 1. Finding the "best" start and end positon in a maze;
+         * 2. Finding the connected components of a maze; and
+         * 3. Being able to apply solutions to all maze types through
+         *    `AbstractMaze`.
+         *
+         * It will also emit events so that the process of finding connected
+         * components and the cells at various distances (perhaps by darkening
+         * of the colour for the component as we get further away) can be
+         * visually displayed through a UI.
+         *
+         * Subclasses will have to check that the given start cell is in bounds.
+         * @param start the starting cell
+         * @return the data collected during the BFS
+         */
+        //const types::BFSResults performBFSFrom(const types::Cell &start) const = 0;
 
     private:
         const Dimensions2D dimensions;

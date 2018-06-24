@@ -99,4 +99,20 @@ namespace spelunker::graphmaze {
         ar & const_cast<VertexCellGrid&>(vertices);
         ar & const_cast<CellFromVertexCellMap&>(lookup);
     }
+
+    const types::CellCollection GraphMaze::neighbours(const types::Cell &c) const {
+        checkCell(c);
+        const auto [x, y] = c;
+        const auto v = vertices[x][y];
+
+        types::CellCollection cc;
+        auto [i, end] = boost::adjacent_vertices(v, graph);
+        for (; i != end; ++i) {
+            const auto w = *i;
+            const auto [nx, ny] = lookup[w];
+            cc.emplace_back(types::cell(nx, ny));
+        }
+
+        return cc;
+    }
 }

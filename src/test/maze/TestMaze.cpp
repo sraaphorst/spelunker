@@ -38,3 +38,39 @@ TEST_CASE("Maze should be able to serialize and deserialize", "[maze][serializat
     REQUIRE(m2 == ml2);
     REQUIRE(ml1 != ml2);
 }
+
+// We can say much less here about Maze than ThickMaze due to
+// the possibility of cells being cut off by braiding.
+TEST_CASE("Maze neighbours should obey expected rules") {
+    constexpr auto width = 50;
+    constexpr auto height = 40;
+    const maze::DFSMazeGenerator dfs{width, height};
+    const auto m = dfs.generate();
+
+    SECTION("Every cell has beween 0 and 4 neighbours") {
+        for (auto x = 0; x < m.getWidth(); ++x)
+            for (auto y = 0; y < m.getHeight(); ++y) {
+                const types::Cell c = types::cell(x, y);
+                REQUIRE(m.neighbours(c).size() >= 0);
+                REQUIRE(m.neighbours(c).size() <= 4);
+            }
+    }
+    SECTION("Every cell has between 0 and 4 walls") {
+        for (auto x = 0; x < m.getWidth(); ++x)
+            for (auto y = 0; y < m.getHeight(); ++y) {
+                const types::Cell c = types::cell(x, y);
+                REQUIRE(m.numCellWalls(c) >= 0);
+                REQUIRE(m.numCellWalls(c) <= 4);
+            }
+    }
+    SECTION("For a given cell, the number of neighbours and the number of walls should sum to four") {
+        for (auto x = 0; x < m.getWidth(); ++x)
+            for (auto y = 0; y < m.getHeight(); ++y) {
+                const types::Cell c = types::cell(x, y);
+                const auto numNbrs = m.neighbours(c).size();
+                const auto numWalls = m.numCellWalls(c);
+                if (numNbrs + numWalls != 4)
+                    REQUIRE(numNbrs + numWalls == 4);
+            }
+    }
+}

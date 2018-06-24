@@ -28,11 +28,11 @@ namespace spelunker::thickmaze {
         : types::AbstractMaze<ThickMaze>{d, start, goals}, contents{c} {
 
         if (start && cellIs(*start) == CellType::WALL)
-            throw types::IllegalCellPosition{*start, types::SpecialCellType::START};
+            throw types::IllegalSpecialCellPosition{*start, types::SpecialCellType::START};
 
         for (auto gc: goals)
             if (cellIs(gc) == CellType::WALL)
-                throw types::IllegalCellPosition{gc, types::SpecialCellType::GOAL};
+                throw types::IllegalSpecialCellPosition{gc, types::SpecialCellType::GOAL};
     }
 
     ThickMaze::ThickMaze(const types::Dimensions2D &d, const thickmaze::CellContents &c)
@@ -220,8 +220,10 @@ namespace spelunker::thickmaze {
     int ThickMaze::numCellWallsInContents(const types::Cell &c, const CellContents &cc) const {
         checkCell(c);
         const auto [x,y] = c;
-        auto numCellWalls = 0;
+        if (contents[x][y] == CellType::WALL)
+            return 4;
 
+        auto numCellWalls = 0;
         if (x == 0 || cc[x-1][y] == CellType::WALL)             ++numCellWalls;
         if (x == getWidth()-1 || cc[x+1][y] == CellType::WALL)  ++numCellWalls;
         if (y == 0 || cc[x][y-1] == CellType::WALL)             ++numCellWalls;
@@ -246,5 +248,21 @@ namespace spelunker::thickmaze {
     void ThickMaze::serialize(Archive &ar, const unsigned int version) {
         ar & boost::serialization::base_object<types::AbstractMaze<ThickMaze>>(*this);
         ar & const_cast<CellContents&>(contents);
+    }
+
+    const types::CellCollection ThickMaze::neighbours(const types::Cell &c) const {
+        checkCell(c);
+
+        types::CellCollection cc;
+        if (cellIs(c) == CellType::WALL)
+            return cc;
+
+        for (auto d: types::directions()) {
+            const types::Cell nc = types::applyDirectionToCell(c, d);
+            if (cellInBounds(nc) && cellIs(nc) == CellType::FLOOR)
+                cc.emplace_back(nc);
+        }
+
+        return cc;
     }
 }

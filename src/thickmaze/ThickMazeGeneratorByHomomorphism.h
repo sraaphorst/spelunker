@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <memory>
-
 #include <typeclasses/Homomorphism.h>
 #include <maze/Maze.h>
 #include <maze/MazeGenerator.h>
