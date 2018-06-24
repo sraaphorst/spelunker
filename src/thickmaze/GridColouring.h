@@ -30,13 +30,6 @@ namespace spelunker::thickmaze {
         using ReverseLookup = std::vector<std::pair<int, int>>;
 
         /**
-         * Settings for the GridColouring.
-         */
-        struct settings {
-
-        };
-
-        /**
          * This is a candidate that satisfies the three requirements for a maze algorithm:
          * 1. Every room (represented by roomColour
          */
