@@ -123,6 +123,10 @@ namespace spelunker::thickmaze {
 
         static ThickMaze load(std::istream &s);
         void save(std::ostream &s) const;
+
+    protected:
+        const types::CellCollection neighbours(const types::Cell &c) const;
+        
     private:
         /// Determine the number of walls a cell has for an instance of Contents.
         /**

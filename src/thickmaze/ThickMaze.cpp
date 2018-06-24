@@ -220,8 +220,10 @@ namespace spelunker::thickmaze {
     int ThickMaze::numCellWallsInContents(const types::Cell &c, const CellContents &cc) const {
         checkCell(c);
         const auto [x,y] = c;
-        auto numCellWalls = 0;
+        if (contents[x][y] == CellType::WALL)
+            return 0;
 
+        auto numCellWalls = 0;
         if (x == 0 || cc[x-1][y] == CellType::WALL)             ++numCellWalls;
         if (x == getWidth()-1 || cc[x+1][y] == CellType::WALL)  ++numCellWalls;
         if (y == 0 || cc[x][y-1] == CellType::WALL)             ++numCellWalls;
@@ -246,5 +248,20 @@ namespace spelunker::thickmaze {
     void ThickMaze::serialize(Archive &ar, const unsigned int version) {
         ar & boost::serialization::base_object<types::AbstractMaze<ThickMaze>>(*this);
         ar & const_cast<CellContents&>(contents);
+    }
+
+    const types::CellCollection ThickMaze::neighbours(const types::Cell &c) const {
+        getDimensions().checkCell(c);
+        const auto [x, y] = c;
+
+        types::CellContents cc;
+        for (auto d: types::directions()) {
+            const cell cn = types::applyDirectionToCell(c, d);
+            const auto [cnx, cny] = cn;
+            if (getDimensions().cellIsInBounds(cn) && contents[cnx][cny] == CellType::FLOOR)
+                cc.emplace_back(cn);
+        }
+
+        return cc;
     }
 }

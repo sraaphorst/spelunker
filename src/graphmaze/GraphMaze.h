@@ -31,66 +31,67 @@ namespace spelunker::graphmaze {
      */
     class GraphMaze : public types::AbstractMaze<GraphMaze>, public types::UnicursalizableMaze<GraphMaze> {
     public:
+        /// Create a graph maze bounded by the dimensions given, with a start and end position.
+        GraphMaze(const types::Dimensions2D &d,
+                  const types::PossibleCell &start,
+                  const types::CellCollection &goals,
+                  const VertexCellPathCollection &ps);
 
-    /// Create a graph maze bounded by the dimensions given, with a start and end position.
-    GraphMaze(const types::Dimensions2D &d,
-              const types::PossibleCell &start,
-              const types::CellCollection &goals,
-              const VertexCellPathCollection &ps);
+        /// Create a graph maze bounded by width and height, with a start and end position.
+        GraphMaze(int w,
+                  int h,
+                  const types::PossibleCell &s,
+                  const types::CellCollection &ends,
+                  const VertexCellPathCollection &ps);
 
-    /// Create a graph maze bounded by width and height, with a start and end position.
-    GraphMaze(int w,
-              int h,
-              const types::PossibleCell &s,
-              const types::CellCollection &ends,
-              const VertexCellPathCollection &ps);
+        /// Create a maze bounded by the dimensions given.
+        GraphMaze(const types::Dimensions2D &d,
+                  const VertexCellPathCollection &ps);
 
-    /// Create a maze bounded by the dimensions given.
-    GraphMaze(const types::Dimensions2D &d,
-              const VertexCellPathCollection &ps);
+        /// Create a maze bounded by width and height.
+        GraphMaze(int w,
+                  int h,
+                  const VertexCellPathCollection &ps);
 
-    /// Create a maze bounded by width and height.
-    GraphMaze(int w,
-              int h,
-              const VertexCellPathCollection &ps);
+        ~GraphMaze() = default;
 
-    ~GraphMaze() = default;
+        inline const GridGraph &getUnderlyingGraph() const noexcept { return graph; }
 
-    inline const GridGraph &getUnderlyingGraph() const noexcept { return graph; }
+        inline const CellFromVertexCellMap &getCellLookup() const noexcept { return lookup; }
 
-    inline const CellFromVertexCellMap &getCellLookup() const noexcept { return lookup; }
+        int numCellWalls(const types::Cell &c) const override;
 
-    int numCellWalls(const types::Cell &c) const override;
+        const GraphMaze applySymmetry(types::Symmetry s) const override;
 
-    const GraphMaze applySymmetry(types::Symmetry s) const override;
+        const GraphMaze makeUnicursal() const override;
 
-    const GraphMaze makeUnicursal() const override;
+        const GraphMaze braid(double probability) const noexcept override;
 
-    const GraphMaze braid(double probability) const noexcept override;
+        static GraphMaze load(std::istream &s);
 
-    static GraphMaze load(std::istream &s);
+        void save(std::ostream &s) const;
 
-    void save(std::ostream &s) const;
+    protected:
+        const types::CellCollection neighbours(const types::Cell &c) const;
 
     private:
+        GraphMaze() = default;
 
-    GraphMaze() = default;
+        friend class boost::serialization::access;
 
-    friend class boost::serialization::access;
+        template<typename Archive>
+        void serialize(Archive &ar, const unsigned int version);
 
-    template<typename Archive>
-    void serialize(Archive &ar, const unsigned int version);
+        static GridGraph graphFromPaths(vertex_size_t numcells, const VertexCellPathCollection &ps);
 
-    static GridGraph graphFromPaths(vertex_size_t numcells, const VertexCellPathCollection &ps);
+        const GridGraph graph;
 
-    const GridGraph graph;
+        // The matrix of vertices: maps (row,col) to vertex.
+        const VertexCellGrid vertices;
 
-    // The matrix of vertices: maps (row,col) to vertex.
-    const VertexCellGrid vertices;
-
-    // The reverse lookup: maps vertex to (row,col).
-    const CellFromVertexCellMap lookup;
-};
+        // The reverse lookup: maps vertex to (row,col).
+        const CellFromVertexCellMap lookup;
+    };
 }
 
 BOOST_CLASS_VERSION(spelunker::graphmaze::GraphMaze, 1)

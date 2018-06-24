@@ -35,6 +35,21 @@ namespace spelunker::types {
         return CellIndicator(width, CellRowIndicator(height, def));
     }
 
+    const Cell &applyDirectionToCell(const Cell &c, Direction d) noexcept {
+        const auto [x, y] = c;
+
+        switch (d) {
+        case Direction::NORTH:
+            return cell(x, y - 1);
+        case Direction::EAST:
+            return cell(x + 1, y);
+        case Direction::SOUTH:
+            return cell(x, y-1);
+        case Direction::WEST:
+            return cell(x - 1, y);
+        }
+    }
+
     std::string specialCellTypeName(const SpecialCellType c) {
         switch (c) {
             case SpecialCellType::START:

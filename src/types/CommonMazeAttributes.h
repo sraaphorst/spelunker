@@ -10,6 +10,7 @@
 
 // We need to use Boost's optional instead of STL's optional since it doesn't work with serialization.
 #include <boost/optional.hpp>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -25,6 +26,30 @@ namespace spelunker::types {
 
     /// A collection of cells.
     using CellCollection = std::vector<Cell>;
+
+    /// A way of indicating cells at certain distances from a given cell.
+    /**
+     * Given a cell c (the only cell in the set at position 0 of the vector),
+     * we receive a vector of cells where the cells in the set at position i
+     * of the vector are the cells that have a shortest path of length i from
+     * the initial cell c.
+     */
+    using CellDistances = std::vector<std::set<Cell>>;
+
+    /// The results of a BFS.
+    /**
+     * Performing a BFS starting at a fixed cell, the BFS will return the
+     * following data structure, comprising:
+     * 1. The initial cell (given).
+     * 2. A CellCollection of all cells visited.
+     * 3. A CellDistances structure recording the distances of the cells in
+     *    (2) above.
+     */
+    struct BFSResults {
+        const Cell start;
+        const CellCollection connectedCells;
+        const CellDistances distances
+    };
 
     /// An indicator as to whether or not we've processed a Cell for a row.
     using CellRowIndicator = std::vector<bool>;
@@ -92,6 +117,18 @@ namespace spelunker::types {
      * @return a Position representing the Cell and the Direction
      */
     inline Position pos(const Cell &c, Direction d) { return std::make_pair(c, d); }
+
+    /// Apply a Direction to a Cell to get the new coordinates of the new Cell.
+    /**
+     * Given a Cell and a Direction, apply the Direction to the Cell to find the
+     * new Cell that would be encountered by moving in that Direction.
+     * Note that there is no guarantee that that the returned cell is in
+     * bounds, as this just applies the direction to the (x,y) coordinates.
+     * @params c the cell in consideration
+     * @params d the directon in which to move
+     * @return coordinates of the cell (perhaps illegal) in direction d from c
+     */
+    const Cell &applyDirectionToCell(const Cell &c, Direction d) noexcept;
 
     /// An enumeration to specify the types of special cells in a maze.
     enum class SpecialCellType {

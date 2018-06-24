@@ -423,4 +423,18 @@ namespace spelunker::maze {
         ar & const_cast<int &>(numWalls);
         ar & const_cast<WallIncidence &>(wallIncidence);
     }
+
+    const types::CellCollection Maze::neighbours(const types::Cell &c) const {
+        checkCell(c);
+        const auto [x, y] = c;
+
+        types::CellCollection cc;
+        for (const auto d: types::directions()) {
+            auto rk = rankPosition(x, y, d);
+            if (rk != -1 && !wallIncidence[rk])
+                cc.emplace_back(types::applyDirectionToCell(c, d));
+        }
+
+        return cc;
+    }
 }

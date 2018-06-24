@@ -40,17 +40,23 @@ namespace spelunker::types {
         return Dimensions2D{width / scalar, height / scalar};
     }
 
+    bool Dimensions2D::cellInBounds(const Cell &c) const noexcept {
+        const auto [x, y] = c;
+        return cellInBounds(x, y);
+    }
+
     bool Dimensions2D::cellInBounds(const int x, const int y) const noexcept {
         return x >= 0 && x < width && y >= 0 && y < height;
-    }
-    void Dimensions2D::checkCell(int x, int y) const {
-        if (!cellInBounds(x, y))
-            throw OutOfBoundsCoordinates(x, y);
     }
 
     void Dimensions2D::checkCell(const Cell &c) const {
         const auto [x,y] = c;
         checkCell(x, y);
+    }
+
+    void Dimensions2D::checkCell(int x, int y) const {
+        if (!cellInBounds(x, y))
+            throw OutOfBoundsCoordinates(x, y);
     }
 
     Dimensions2D Dimensions2D::load(std::istream &s) {

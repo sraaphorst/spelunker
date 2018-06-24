@@ -64,6 +64,15 @@ namespace spelunker::types {
             return width == height;
         }
 
+        /// Determine whether or not the given coordinates are in bounds.
+        /**
+         * Check if the cell is in bounds, i.e. in x in [0,w) and y in [0,h).
+         * @param c the coordinates of the cell
+         * @return true if the cell is in bounds, and false otherwise.
+         */
+        bool cellInBounds(const Cell &c) const noexcept;
+
+        /// Determine whether or not the given coordinates are in bounds.
         /**
          * Check if the cell is in bounds, i.e. in x in [0,w) and y in [0,h).
          * @param x the x coordinate
@@ -75,19 +84,19 @@ namespace spelunker::types {
         /// Checks is a cell is in bounds, and if not, throw an OutOfBoundsException.
         /**
          * Checks if a cell is in bounds, and if not, throws an OutOfBoundsException.
+         * @param the cell
+         * @throws OutOfBoundsException
+         */
+        void checkCell(const Cell &c) const;
+
+        /// Checks is a cell is in bounds, and if not, throw an OutOfBoundsException.
+        /**
+         * Checks if a cell is in bounds, and if not, throws an OutOfBoundsException.
          * @param x the x coordinate
          * @param y the y coordinate
          * @throws OutOfBoundsException
          */
         void checkCell(int x, int y) const;
-
-        /// Checks is a cell is in bounds, and if not, throw an OutOfBoundsException.
-        /**
-         * Checks if a cell is in bounds, and if not, throws an OutOfBoundsException.
-         * @param the cell
-         * @throws OutOfBoundsException
-         */
-        void checkCell(const Cell &c) const;
 
         static Dimensions2D load(std::istream &s);
         void save(std::ostream &s) const;
@@ -124,4 +133,3 @@ namespace spelunker::typeclasses {
         using type = types::Dimensions2D;
     };
 }
-

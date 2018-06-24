@@ -99,4 +99,13 @@ namespace spelunker::graphmaze {
         ar & const_cast<VertexCellGrid&>(vertices);
         ar & const_cast<CellFromVertexCellMap&>(lookup);
     }
+
+    const types::CellCollection GraphMaze::neighbours(const types::Cell &c) const {
+        getDimensions().checkCell(c);
+        const auto [x, y] = c;
+
+        types::CellCollection cc;
+        for (const auto nc: graph.out_edge_list(v))
+            cc.emplace_back(lookup(nc));
+    }
 }
