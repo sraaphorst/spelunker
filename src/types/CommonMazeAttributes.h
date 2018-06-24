@@ -48,7 +48,7 @@ namespace spelunker::types {
     struct BFSResults {
         const Cell start;
         const CellCollection connectedCells;
-        const CellDistances distances
+        const CellDistances distances;
     };
 
     /// An indicator as to whether or not we've processed a Cell for a row.

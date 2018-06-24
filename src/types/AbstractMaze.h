@@ -87,7 +87,7 @@ namespace spelunker::types {
         }
 
         /// We make this virtual since the goal positions may not be valid in some cases, e.g. a wall in a ThickMaze.
-        virtual void setGoalCells(const CellCollection &cells) noexcept{
+        virtual void setGoalCells(const CellCollection &cells) noexcept {
             for (const auto c: cells)
                 checkCell(c);
             goalCells = cells;
@@ -99,8 +99,10 @@ namespace spelunker::types {
          * @param c the cell
          * @throws OutOfBoundsException
          */
-        void checkCell(const Cell &c) const final {
-            dimensions.checkCell(c) && numCellWalls(c) > 0;
+        void checkCell(const Cell &c) const {
+            dimensions.checkCell(c);
+            if (numCellWalls(c) == 0)
+                throw InaccessibleCellPosition(c);
         }
 
         /**
@@ -112,7 +114,7 @@ namespace spelunker::types {
          * @param y the y coordinate
          * @throws OutOfBoundsException
          */
-        void checkCell(int x, int y) const final {
+        void checkCell(int x, int y) const {
             checkCell(types::cell(x, y));
         }
 
@@ -121,7 +123,7 @@ namespace spelunker::types {
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
-        bool cellInBounds(const Cell &c) const noexcept final {
+        bool cellInBounds(const Cell &c) const noexcept {
             return dimensions.cellInBounds(c) && numCellWalls(c) > 0;
         }
 
@@ -133,7 +135,7 @@ namespace spelunker::types {
          * @param y the y coordinate
          * @return true if the cell is in bounds, and false otherwise
          */
-        bool cellInBounds(int x, int y) const noexcept final {
+        bool cellInBounds(int x, int y) const noexcept {
             return dimensions.cellInBounds(x, y);
         }
 
@@ -202,7 +204,7 @@ namespace spelunker::types {
          * @param c the cell in question
          * @return a list of its direct neighbours
          */
-        const types::CellCollection neighbours(const types::Cell &c) const = 0;
+        virtual const types::CellCollection neighbours(const types::Cell &c) const = 0;
 
         /// Performs a BFS from the given input cell and returns the results.
         /**

@@ -101,11 +101,18 @@ namespace spelunker::graphmaze {
     }
 
     const types::CellCollection GraphMaze::neighbours(const types::Cell &c) const {
-        getDimensions().checkCell(c);
+        checkCell(c);
         const auto [x, y] = c;
+        const auto v = vertices[x][y];
 
         types::CellCollection cc;
-        for (const auto nc: graph.out_edge_list(v))
-            cc.emplace_back(lookup(nc));
+        auto [i, end] = boost::adjacent_vertices(v, graph);
+        for (; i != end; ++i) {
+            const auto w = *i;
+            const auto [nx, ny] = lookup[w];
+            cc.emplace_back(types::cell(nx, ny));
+        }
+
+        return cc;
     }
 }

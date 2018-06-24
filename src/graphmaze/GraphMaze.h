@@ -72,7 +72,7 @@ namespace spelunker::graphmaze {
         void save(std::ostream &s) const;
 
     protected:
-        const types::CellCollection neighbours(const types::Cell &c) const;
+        const types::CellCollection neighbours(const types::Cell &c) const override;
 
     private:
         GraphMaze() = default;

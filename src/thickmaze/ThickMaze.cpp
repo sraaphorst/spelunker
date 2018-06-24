@@ -28,11 +28,11 @@ namespace spelunker::thickmaze {
         : types::AbstractMaze<ThickMaze>{d, start, goals}, contents{c} {
 
         if (start && cellIs(*start) == CellType::WALL)
-            throw types::IllegalCellPosition{*start, types::SpecialCellType::START};
+            throw types::IllegalSpecialCellPosition{*start, types::SpecialCellType::START};
 
         for (auto gc: goals)
             if (cellIs(gc) == CellType::WALL)
-                throw types::IllegalCellPosition{gc, types::SpecialCellType::GOAL};
+                throw types::IllegalSpecialCellPosition{gc, types::SpecialCellType::GOAL};
     }
 
     ThickMaze::ThickMaze(const types::Dimensions2D &d, const thickmaze::CellContents &c)
@@ -251,15 +251,15 @@ namespace spelunker::thickmaze {
     }
 
     const types::CellCollection ThickMaze::neighbours(const types::Cell &c) const {
-        getDimensions().checkCell(c);
+        checkCell(c);
         const auto [x, y] = c;
 
-        types::CellContents cc;
+        types::CellCollection cc;
         for (auto d: types::directions()) {
-            const cell cn = types::applyDirectionToCell(c, d);
-            const auto [cnx, cny] = cn;
-            if (getDimensions().cellIsInBounds(cn) && contents[cnx][cny] == CellType::FLOOR)
-                cc.emplace_back(cn);
+            const types::Cell nc = types::applyDirectionToCell(c, d);
+            const auto [nx, ny] = nc;
+            if (cellInBounds(nc) && contents[nx][ny] == CellType::FLOOR)
+                cc.emplace_back(nc);
         }
 
         return cc;
