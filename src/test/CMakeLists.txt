@@ -39,7 +39,6 @@ foreach (pkgname ${TEST_SUBDIRS})
 endforeach ()
 
 # Terminate sequence of && with true.
-# TEST: deliberately fail to see if Travis reports as failure.
 file(APPEND ${test_script} "true")
 file(COPY ${test_script} DESTINATION ${CMAKE_BINARY_DIR} FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
 file(REMOVE ${test_script})

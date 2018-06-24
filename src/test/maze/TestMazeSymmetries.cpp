@@ -18,16 +18,17 @@
 using namespace spelunker;
 
 TEST_CASE("Rectangular Mazes can be manipulated via certain symmetries", "[maze][symmetry][rectangle]") {
-    constexpr auto width = 50;
+    constexpr auto width  = 50;
     constexpr auto height = 40;
-    const auto dim = types::Dimensions2D{width, height};
+    const types::Dimensions2D &dim{ width, height };
 
     // Get all the generators and all the symmetries.
-    auto gens = createMazeGenerators(dim);
-    const auto syms = types::symmetries();
+    const auto mg    = maze::MazeGenerators{dim};
+    const auto &gens = mg.getGenerators();
+    const auto syms  = types::symmetries();
 
     SECTION("All generators produce mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
-        for (const auto gen: gens) {
+        for (const auto &gen: gens) {
             const auto m = gen->generate();
             REQUIRE(m.getWidth() == width);
             REQUIRE(m.getHeight() == height);
@@ -45,7 +46,7 @@ TEST_CASE("Rectangular Mazes can be manipulated via certain symmetries", "[maze]
                 if (sc == types::Symmetry::REFLECTION_IN_NESW || sc == types::Symmetry::REFLECTION_IN_NWSE)
                     continue;
 
-                for (const auto gen: gens) {
+                for (const auto &gen: gens) {
                     const auto m = gen->generate();
                     const auto ms = m.applySymmetry(s1).applySymmetry(s2);
                     const auto mc = m.applySymmetry(sc);
@@ -63,16 +64,13 @@ TEST_CASE("Rectangular Mazes can be manipulated via certain symmetries", "[maze]
                     s2 != types::Symmetry::REFLECTION_IN_NESW && s2 != types::Symmetry::REFLECTION_IN_NWSE &&
                     sc != types::Symmetry::REFLECTION_IN_NESW && sc != types::Symmetry::REFLECTION_IN_NWSE)
                     continue;
-                for (const auto gen: gens) {
+                for (const auto &gen: gens) {
                     const auto m = gen->generate();
                     REQUIRE_THROWS(m.applySymmetry(s1).applySymmetry(s2) == m.applySymmetry(sc));
                 }
             }
         }
     }
-
-    // Delete the generators.
-    deleteMazeGenerators(gens);
 }
 
 TEST_CASE("Square Mazes can be manipulated via all symmetries", "[maze][symmetry][square]") {
@@ -80,11 +78,12 @@ TEST_CASE("Square Mazes can be manipulated via all symmetries", "[maze][symmetry
     const auto dim = types::Dimensions2D{side, side};
 
     // Get all the generators and all the symmetries.
-    auto gens = createMazeGenerators(dim);
+    const auto mg    = maze::MazeGenerators{dim};
+    const auto &gens = mg.getGenerators();
     const auto syms = types::symmetries();
 
     SECTION("All generators produce Mazes of the correct size: " + typeclasses::Show<types::Dimensions2D>::show(dim)) {
-        for (const auto gen: gens) {
+        for (const auto &gen: gens) {
             const auto m = gen->generate();
             REQUIRE(m.getWidth() == side);
             REQUIRE(m.getHeight() == side);
@@ -96,7 +95,7 @@ TEST_CASE("Square Mazes can be manipulated via all symmetries", "[maze][symmetry
             for (const auto s2: syms) {
                 const auto sc = types::composeSymmetries(s1, s2);
 
-                for (const auto gen: gens) {
+                for (const auto &gen: gens) {
                     const auto m = gen->generate();
                     const auto ms = m.applySymmetry(s1).applySymmetry(s2);
                     const auto mc = m.applySymmetry(sc);
@@ -105,7 +104,4 @@ TEST_CASE("Square Mazes can be manipulated via all symmetries", "[maze][symmetry
             }
         }
     }
-
-    // Delete the generators.
-    deleteMazeGenerators(gens);
 }

@@ -6,7 +6,12 @@
 
 #pragma once
 
+#include <memory>
+
+#include <typeclasses/Homomorphism.h>
+#include <maze/Maze.h>
 #include <maze/MazeGenerator.h>
+#include <maze/MazeTypeclasses.h>
 #include "ThickMazeGenerator.h"
 
 namespace spelunker::thickmaze {
@@ -16,6 +21,7 @@ namespace spelunker::thickmaze {
      * Note that the object takes ownership of the pointer passed in, and deletes it
      * when this object is deleted.
      */
+    template<typename MG>
     class ThickMazeGeneratorByHomomorphism final : public ThickMazeGenerator {
     public:
         /**
@@ -24,12 +30,22 @@ namespace spelunker::thickmaze {
          * sets these parameters as such.
          * @param mg the MazeGenerator to wrap
          */
-        ThickMazeGeneratorByHomomorphism(const maze::MazeGenerator *mg);
-        ~ThickMazeGeneratorByHomomorphism() override;
+        explicit ThickMazeGeneratorByHomomorphism(MG&& mg)
+                : ThickMazeGenerator{types::Dimensions2D{2 * mg.getWidth() - 1, 2 * mg.getHeight() - 1}}, mazeGenerator{std::move(mg)} {}
+        explicit ThickMazeGeneratorByHomomorphism(const MG&& mg)
+                : ThickMazeGenerator{types::Dimensions2D{2 * mg.getWidth() - 1, 2 * mg.getHeight() - 1}}, mazeGenerator{std::move(mg)} {}
+        explicit ThickMazeGeneratorByHomomorphism(const MG &mg)
+                : ThickMazeGenerator{types::Dimensions2D{2 * mg.getWidth() - 1, 2 * mg.getHeight() - 1}}, mazeGenerator{mg} {}
 
-        const ThickMaze generate() const noexcept override;
+        ~ThickMazeGeneratorByHomomorphism() override = default;
+
+        const ThickMaze generate() const noexcept override {
+            const auto m = mazeGenerator.generate();
+            const ThickMaze tm = typeclasses::Homomorphism<maze::Maze, ThickMaze>::morph(m);
+            return tm;
+        }
 
     private:
-        const maze::MazeGenerator *mazeGenerator;
+        const MG mazeGenerator;
     };
 }
