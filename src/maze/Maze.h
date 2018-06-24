@@ -175,7 +175,6 @@ namespace spelunker::maze {
         static Maze load(std::istream &s);
         void save(std::ostream &s) const;
 
-    protected:
         const types::CellCollection neighbours(const types::Cell &c) const override;
 
     private:

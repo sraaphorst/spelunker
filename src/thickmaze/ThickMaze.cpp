@@ -221,7 +221,7 @@ namespace spelunker::thickmaze {
         checkCell(c);
         const auto [x,y] = c;
         if (contents[x][y] == CellType::WALL)
-            return 0;
+            return 4;
 
         auto numCellWalls = 0;
         if (x == 0 || cc[x-1][y] == CellType::WALL)             ++numCellWalls;
@@ -254,10 +254,12 @@ namespace spelunker::thickmaze {
         checkCell(c);
 
         types::CellCollection cc;
+        if (cellIs(c) == CellType::WALL)
+            return cc;
+
         for (auto d: types::directions()) {
             const types::Cell nc = types::applyDirectionToCell(c, d);
-            const auto [nx, ny] = nc;
-            if (cellInBounds(nc) && contents[nx][ny] == CellType::FLOOR)
+            if (cellInBounds(nc) && cellIs(nc) == CellType::FLOOR)
                 cc.emplace_back(nc);
         }
 

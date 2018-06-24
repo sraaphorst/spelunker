@@ -124,7 +124,7 @@ namespace spelunker::types {
          * @return true if the cell is in bounds, and false otherwise
          */
         bool cellInBounds(const Cell &c) const noexcept {
-            return dimensions.cellInBounds(c) && numCellWalls(c) > 0;
+            return dimensions.cellInBounds(c) && numCellWalls(c) < 4;
         }
 
         /**
@@ -196,7 +196,6 @@ namespace spelunker::types {
         AbstractMaze()
                 : dimensions{Dimensions2D{1, 1}}, startCell{}, goalCells{CellCollection{}} {}
 
-    protected:
         /// Find the neighbours of a given cell.
         /**
          * Given a cell c, find its neighbours in the maze.

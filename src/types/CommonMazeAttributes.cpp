@@ -44,7 +44,7 @@ namespace spelunker::types {
         case Direction::EAST:
             return cell(x + 1, y);
         case Direction::SOUTH:
-            return cell(x, y-1);
+            return cell(x, y + 1);
         case Direction::WEST:
             return cell(x - 1, y);
         }
