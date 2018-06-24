@@ -252,7 +252,6 @@ namespace spelunker::thickmaze {
 
     const types::CellCollection ThickMaze::neighbours(const types::Cell &c) const {
         checkCell(c);
-        const auto [x, y] = c;
 
         types::CellCollection cc;
         for (auto d: types::directions()) {

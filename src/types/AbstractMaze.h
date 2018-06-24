@@ -101,8 +101,6 @@ namespace spelunker::types {
          */
         void checkCell(const Cell &c) const {
             dimensions.checkCell(c);
-            if (numCellWalls(c) == 0)
-                throw InaccessibleCellPosition(c);
         }
 
         /**
@@ -119,7 +117,9 @@ namespace spelunker::types {
         }
 
         /**
-         * Goven a set of coordinates, check to see if they are in the dimensions.
+         * Given a set of coordinates, check to see if they are in the dimensions.
+         * For mazes with out of bounds zones, such as ThickMaze, this will
+         * return false if a wall.
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
@@ -129,14 +129,14 @@ namespace spelunker::types {
 
         /**
          * Given a cell, check to see if the cell is in the dimensions.
-         * For mazes with out of bounds zones, such as ThickMaze, this should
-         * be overridden to return false if a wall.
+         * For mazes with out of bounds zones, such as ThickMaze, this will
+         * return false if a wall.
          * @param x the x coodinate
          * @param y the y coordinate
          * @return true if the cell is in bounds, and false otherwise
          */
         bool cellInBounds(int x, int y) const noexcept {
-            return dimensions.cellInBounds(x, y);
+            return cellInBounds(cell(x, y));
         }
 
         /**
