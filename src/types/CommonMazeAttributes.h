@@ -128,7 +128,7 @@ namespace spelunker::types {
      * @params d the directon in which to move
      * @return coordinates of the cell (perhaps illegal) in direction d from c
      */
-    const Cell &applyDirectionToCell(const Cell &c, Direction d) noexcept;
+    const Cell applyDirectionToCell(const Cell &c, Direction d) noexcept;
 
     /// An enumeration to specify the types of special cells in a maze.
     enum class SpecialCellType {

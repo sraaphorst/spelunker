@@ -35,7 +35,7 @@ namespace spelunker::types {
         return CellIndicator(width, CellRowIndicator(height, def));
     }
 
-    const Cell &applyDirectionToCell(const Cell &c, Direction d) noexcept {
+    const Cell applyDirectionToCell(const Cell &c, Direction d) noexcept {
         const auto [x, y] = c;
 
         switch (d) {
