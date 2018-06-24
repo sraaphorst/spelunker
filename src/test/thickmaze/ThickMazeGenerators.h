@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Travis.h>
 #include <memory>
 #include <vector>
 
