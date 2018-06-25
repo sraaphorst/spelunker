@@ -122,8 +122,7 @@ namespace spelunker::types {
 
         /**
          * Given a set of coordinates, check to see if they are in the dimensions.
-         * For mazes with out of bounds zones, such as ThickMaze, this will
-         * return false if a wall.
+         * A cell with four walls, which would be the case for wall cells in ThickMazes, this returns false.
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
@@ -229,13 +228,15 @@ namespace spelunker::types {
          * @param start the starting cell
          * @return the data collected during the BFS
          */
-        const types::BFSResults performBFSFrom(const types::Cell &start) const {
+        const BFSResults performBFSFrom(const types::Cell &start) const {
+            checkCell(start);
+
             // Keep track of the cells to which we're connected.
-            types::CellCollection connectedCells;
+            CellCollection connectedCells;
 
             // Keep track of the distances of the cells.
             // start is the only cell at position zero so record it.
-            types::CellDistances distances{1};
+            CellDistances distances{1};
 
             // Prepare the queue for BFS. The cell info comprises a cell and its distance.
             using cellInfo = std::pair<const types::Cell, const int>;
@@ -243,7 +244,7 @@ namespace spelunker::types {
             cellQueue.push(cellInfo{start, 0});
 
             // We also want to keep track of the cells visited.
-            auto ci = types::initializeCellIndicator(getDimensions(), false);
+            auto ci = initializeCellIndicator(getDimensions(), false);
 
             while (!cellQueue.empty()) {
                 const auto[cell, dist] = cellQueue.front();
@@ -259,14 +260,54 @@ namespace spelunker::types {
                 connectedCells.emplace_back(cell);
                 if (distances.size() <= dist)
                     distances.resize(dist+1);
-                distances[dist].insert(cell);
+                distances[dist].emplace_back(cell);
 
                 const auto nbrs = neighbours(cell);
                 for (auto n: nbrs)
                     cellQueue.push(cellInfo{n, dist + 1});
             }
 
-            return types::BFSResults{start, connectedCells, distances};
+            return BFSResults{start, connectedCells, distances};
+        }
+
+        /**
+         * This method looks through the cells of the maze, and returns those that are considered invalid, i.e.
+         * those that have four walls.
+         * @return a collection of the invalid cells
+         */
+        const CellCollection findInvalidCells() const noexcept {
+            CellCollection cc;
+            for (auto y = 0; y < getHeight(); ++y)
+                for (auto x = 0; x < getWidth(); ++x)
+                    if (!cellInBounds(x, y))
+                        cc.emplace_back(cell(x, y));
+            return cc;
+        }
+
+        const ConnectedComponents findConnectedComponents() const noexcept {
+            ConnectedComponents cc;
+
+            // We need to keep track of which cells we've visited.
+            // Start by marking the out-of-bound cells as "visited", since we don't want to visit them.
+            CellIndicator ci = initializeCellIndicator(dimensions);
+            const auto invalidCells = findInvalidCells();
+            for (const auto ic: invalidCells) {
+                const auto [x, y] = ic;
+                ci[x][y] = true;
+            }
+
+            for (auto y = 0; y < getHeight(); ++y)
+                for (auto x = 0; x < getWidth(); ++x) {
+                    if (ci[x][y]) continue;
+                    const auto bfsResults = performBFSFrom(cell(x, y));
+                    const auto comp = bfsResults.connectedCells;
+                    for (const auto c: comp) {
+                        const auto[cx, cy] = c;
+                        ci[cx][cy] = true;
+                    }
+                    cc.emplace_back(comp);
+                }
+            return cc;
         }
 
     private:

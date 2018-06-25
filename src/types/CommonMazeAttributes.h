@@ -34,7 +34,17 @@ namespace spelunker::types {
      * of the vector are the cells that have a shortest path of length i from
      * the initial cell c.
      */
-    using CellDistances = std::vector<std::set<Cell>>;
+    using CellDistances = std::vector<CellCollection>;
+
+    /// A connected component of a graph.
+    using ConnectedComponent = CellCollection;
+
+    /// A collection of the connected components of a graph.
+    /**
+     * A collection of the connected components of a graph.
+     * We could represent these with disjoint_sets, but this will be easier.
+     */
+     using ConnectedComponents = std::vector<ConnectedComponent>;
 
     /// The results of a BFS.
     /**
