@@ -50,7 +50,13 @@ TEST_CASE("Ensure that the BFS starting from a cell in a ThickMaze works consist
         for (auto x = 0; x < width; ++x) {
             const auto c1  = types::cell(x, y);
             const auto rk1 = ranker(c1);
-            const auto [start, comp, dist] = tm.performBFSFrom(c1);
+            
+            // Of course, Travis doesn't like this:
+            //const auto [start, comp, dist] = tm.performBFSFrom(c1);
+            const auto bfsResult = tm.performBFSFrom(c1);
+            const auto start = bfsResult.start;
+            const auto comp  = bfsResult.connectedCells;
+            const auto dist  = bfsResult.distances;
 
             // The start position must have been properly recorded.
             REQUIRE(start == c1);

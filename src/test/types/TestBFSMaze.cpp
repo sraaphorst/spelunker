@@ -48,7 +48,13 @@ TEST_CASE("Ensure that BFS starting from a cell in a Maze works consistently", "
         for (auto x = 0; x < width; ++x) {
             const auto c1  = types::cell(x, y);
             const auto rk1 = ranker(c1);
-            const auto [start, comp, dist] = m.performBFSFrom(c1);
+
+            // Of course, Travis doesn't like this:
+            //const auto [start, comp, dist] = m.performBFSFrom(c1);
+            const auto bfsResult = m.performBFSFrom(c1);
+            const auto start = bfsResult.start;
+            const auto comp  = bfsResult.connectedCells;
+            const auto dist  = bfsResult.distances;
 
             // The start position must have been properly recorded.
             REQUIRE(start == c1);
