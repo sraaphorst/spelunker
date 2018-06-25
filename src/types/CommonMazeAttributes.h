@@ -24,6 +24,19 @@ namespace spelunker::types {
     /// An (x,y) cell in a maze.
     using Cell = std::pair<int, int>;
 
+    /// An algorithm to compare cells.
+    /**
+     * Compare two cells lexicographically.
+     * @param c1 the first cell
+     * @param c2 the second cell
+     * @return -1 if c1 < c2, 0 if c1 == c2, and 1 if c1 > c2
+     */
+    inline int compareCells(const Cell &c1, const Cell &c2) {
+        if (c1.first < c2.first || (c1.first == c2.first && c1.second < c2.second)) return -1;
+        if (c1.first == c2.first && c1.second == c2.second) return 0;
+        return 1;
+    }
+
     /// A collection of cells.
     using CellCollection = std::vector<Cell>;
 
@@ -72,6 +85,20 @@ namespace spelunker::types {
 
     /// A possible cell: it may be defined, or not.
     using PossibleCell = boost::optional<Cell>;
+
+    /// A list of pairs of cells.
+    using CellPairList = std::vector<std::pair<Cell, Cell>>;
+
+    /// A structure to provide the information about the furthest apart cells in the maze.
+    /**
+     * This structure is used to provide data about the cells that have the longest shortest path between
+     * them in the maze. The cells in cellList are at distance distance from one another, and thus would make
+     * good candidates for start / goal cells.
+     */
+    struct FurthestCellResults {
+        const int distance;
+        const CellPairList cellList;
+    };
 
     /// A position in a maze, i.e. a Cell and a Direction.
     using Position = std::pair<Cell, Direction>;

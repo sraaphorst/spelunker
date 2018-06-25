@@ -18,6 +18,7 @@ set(apps
         sidewinder
         wilson
         app_test_braid
+        app_test_furthest_cells
         app_test_homomorphisms
         app_test_symmetry
         app_test_thickbraid
