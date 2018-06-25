@@ -325,12 +325,15 @@ namespace spelunker::types {
          * of points. To do so, we can find the shortest distance between any two vertices and
          * then take the maximum.
          *
-         * As our graphs are undirected and unweighted, the best known algorithm to do this is by
-         * using BFS from every node.
-         *
          * Instead of using performBFSFrom, we implement an optimized algorithm that only stores
          * the necessary information instead of the information stored at every node in performBFSFrom.
          * This cuts the algorithm execution time down dramatically.
+         *
+         * I attempted a number of all-pairs shortest path algorithms here. A good source for them
+         * can be found here:
+         * http://jeffe.cs.illinois.edu/teaching/algorithms/notes/22-apsp.pdf
+         * Regardless, this approach was much faster than any of them.
+         *
          * @return a structure with the distance and a list of the pairs of cells at that distance
          */
         const FurthestCellResults findDiameter() const noexcept {
@@ -379,162 +382,6 @@ namespace spelunker::types {
             return FurthestCellResults{longestDistance, winners};
         }
 
-        // A dynamic programming approach from:
-        // http://jeffe.cs.illinois.edu/teaching/algorithms/notes/22-apsp.pdf
-        const void findDiameter2() const noexcept {
-            // Use this to represent infinite length.
-            constexpr int infinity = INT_MAX;
-            const int width = getWidth();
-            const int height = getHeight();
-            const int numCells = width * height;
-
-            // Pre-rank everything for efficiency.
-            std::vector<std::vector<int>> ranker(width, std::vector<int>(height, 0));
-            int rk = 0;
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    ranker[x][y] = rk++;
-                }
-            }
-
-            // dist[u,v,k] = length of shortest path between u and v using at most k edges.
-            std::vector<std::vector<std::vector<int>>> dist(numCells,
-                    std::vector<std::vector<int>>(numCells, std::vector<int>(numCells, -1)));
-
-            // Initialize the distances from cells to themselves to 0.
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    const auto u = ranker[x][y];
-                    for (auto k = 0; k < numCells; ++k) {
-                        dist[u][u][k] = 0;
-                    }
-                }
-            }
-
-            // Iterate over the possible distances.
-            for (auto k = 1; k < numCells; ++k) {
-                // For all vertices:
-                for (auto uy = 0; uy < height; ++uy) {
-                    for (auto ux = 0; ux < width; ++ux) {
-                        const auto u = ranker[ux][uy];
-
-                        // For all vertices v != u:
-                        for (auto vy = 0; vy < height; ++vy) {
-                            for (auto vx = 0; vx < width; ++vx) {
-                                const auto v = ranker[vx][vy];
-                                if (u == v) continue;
-
-                                // We already marked dist[u,v,k] to infinity in initialization.
-                                // For all the edges of v:
-                                const auto v_nbrs = neighbours(cell(vx, vy));
-                                for (const auto e: v_nbrs) {
-                                    const auto [xx, xy] = e;
-                                    const auto x = ranker[xx][xy];
-                                    if (dist[u][v][k] > dist[u][x][k-1] + 1)
-                                        dist[u][v][k] = dist[u][x][k-1] + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        const void findDiameter3() const noexcept {
-            // Use this to represent infinite length.
-            constexpr int infinity = INT_MAX;
-            const int width = getWidth();
-            const int height = getHeight();
-            const int numCells = width * height;
-
-            // Pre-rank everything for efficiency.
-            std::vector<std::vector<int>> ranker(width, std::vector<int>(height, 0));
-            int rk = 0;
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    ranker[x][y] = rk++;
-                }
-            }
-
-            // dist[u, v] is distance from u to v.
-            // Initialize neighbours to have weight 1.
-            std::vector<std::vector<int>> dist(numCells, std::vector<int>(numCells, infinity));
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    const auto u = ranker[x][y];
-                    dist[u][u] = 0;
-
-                    const auto nbrs = neighbours(cell(x, y));
-                    for (const auto n : nbrs) {
-                        const auto[vx, vy] = n;
-                        const auto v = ranker[vx][vy];
-                        dist[u][v] = 1;
-                    }
-
-                }
-            }
-
-            const int upperBound = static_cast<int>(ceil(log2(numCells)));
-            for (auto i = 1; i <= upperBound; ++i) {
-                std::cout << "i=" << i << std::endl;
-                for (auto u = 0; u < numCells; ++u) {
-                    for (auto v = 0; v < numCells; ++v) {
-                        for (auto w = 0; w < numCells; ++w) {
-                            if (dist[u][v] > dist[u][w] + dist[w][v])
-                                dist[u][v] = dist[u][w] + dist[w][v];
-                        }
-                    }
-                }
-            }
-
-        }
-
-        const void findDiameter4() const noexcept {
-            // Use this to represent infinite length.
-            constexpr int infinity = INT_MAX;
-            const int width = getWidth();
-            const int height = getHeight();
-            const int numCells = width * height;
-
-            // Pre-rank everything for efficiency.
-            std::vector<std::vector<int>> ranker(width, std::vector<int>(height, 0));
-            int rk = 0;
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    ranker[x][y] = rk++;
-                }
-            }
-
-            // dist[u, v] is distance from u to v.
-            // Initialize neighbours to have weight 1.
-            std::vector<std::vector<int>> dist(numCells, std::vector<int>(numCells, infinity));
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    const auto u = ranker[x][y];
-                    dist[u][u] = 0;
-
-                    const auto nbrs = neighbours(cell(x, y));
-                    for (const auto n : nbrs) {
-                        const auto [vx, vy] = n;
-                        const auto v = ranker[vx][vy];
-                        dist[u][v] = 1;
-                    }
-
-                }
-            }
-
-            for (auto r = 0; r < numCells; ++r) {
-                std::cout << "r=" << r << std::endl;
-                for (auto u = 0; u < numCells; ++u) {
-                    for (auto v = 0; v < numCells; ++v) {
-                        if (dist[u][v] > dist[u][r] + dist[r][v])
-                            dist[u][v] = dist[u][r] + dist[r][v];
-                    }
-                }
-            }
-        }
-
         /**
          * Find the diameter of the graph. This consists of the longest distance between any pair
          * of points. To do so, we can find the shortest distance between any two vertices and
@@ -544,33 +391,6 @@ namespace spelunker::types {
          * cases, we know the BFS algorithm works, so for now, we use it instead of reimplementing.
          * @return a structure with the distance and a list of the pairs of cells at that distance
          */
-        const FurthestCellResults findDiameter5() const noexcept {
-            int longestDistance = 0;
-            CellPairList cellPairList;
-
-            for (auto y = 0; y < getHeight(); ++y) {
-                for (auto x = 0; x < getWidth(); ++x) {
-                    const Cell start{x, y};
-                    const auto bfsResults = performBFSFrom(start);
-
-                    const auto distance = bfsResults.distances.size();
-                    if (distance < longestDistance)
-                        continue;
-                    if (distance > longestDistance) {
-                        longestDistance = distance;
-                        cellPairList.clear();
-                    }
-
-                    // Push all the cells at the furthest distance onto the cellPairList.
-                    const auto furthestCells = bfsResults.distances.back();
-                    for (const auto c: furthestCells)
-                        if (compareCells(start, c) < 0)
-                            cellPairList.emplace_back(std::make_pair(start, c));
-                }
-            }
-
-            return FurthestCellResults{longestDistance, cellPairList};
-        }
 
 
     private:
