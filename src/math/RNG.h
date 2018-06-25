@@ -77,7 +77,8 @@ namespace spelunker::math {
         static void shuffle(Container &c) {
             auto r = getRNG();
 
-            const auto maxPos = c.size() - 1;
+            // c.size is unsigned, so we must cast to int for the case that it is 0.
+            const auto maxPos = static_cast<int>(c.size()) - 1;
             for (auto i=0; i < maxPos; ++i) {
                 // Find a random element and swap it with begin.
                 const auto idx = randomRange(i, c.size());

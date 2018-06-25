@@ -4,6 +4,7 @@
 
 set(thickmaze_tests
         TestThickMaze
+        TestThickMazeBraiding
         TestThickMazeSymmetries
         PARENT_SCOPE
         )

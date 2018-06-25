@@ -4,6 +4,7 @@
 
 set(maze_tests
         TestMaze
+        TestMazeBraiding
         TestMazeSymmetries
         TestRankPosition
         TestUnrankWallMap
