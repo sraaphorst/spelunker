@@ -196,4 +196,6 @@ Here is a list of features that are currently lacking of incomplete that will be
 
 6. https://www.gamasutra.com/blogs/HermanTulleken/20161005/282629/Algorithms_for_making_more_interesting_mazes.php
 
+7. http://jeffe.cs.illinois.edu/teaching/algorithms/notes/22-apsp.pdf
+
 [Back to top](#spelunker)
