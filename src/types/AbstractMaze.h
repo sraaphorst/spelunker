@@ -8,9 +8,12 @@
 
 #pragma once
 
+#include <climits>
+#include <cmath>
 #include <queue>
 #include <set>
 #include <vector>
+#include <iostream>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -224,7 +227,7 @@ namespace spelunker::types {
          * visually displayed through a UI.
          *
          * Unfortunately, as this is a template, we insantiate this long bit of code here.
-         * Subclasses will have to check that the given start cell is in bounds.
+         * Note that this algorithm is quite slow, so it should not be repeated many times.
          * @param start the starting cell
          * @return the data collected during the BFS
          */
@@ -284,6 +287,13 @@ namespace spelunker::types {
             return cc;
         }
 
+        /// Find the connected components of the maze.
+        /**
+         * Find the connected components of the Maze. Note that this does not include invalid cells, i.e.
+         * the findInvalidCells method will return the final class in a partitioning of the cells along with
+         * this method.
+         * @return a collection of connected components
+         */
         const ConnectedComponents findConnectedComponents() const noexcept {
             ConnectedComponents cc;
 
@@ -310,6 +320,79 @@ namespace spelunker::types {
             return cc;
         }
 
+        /**
+         * Find the diameter of the graph. This consists of the longest distance between any pair
+         * of points. To do so, we can find the shortest distance between any two vertices and
+         * then take the maximum.
+         *
+         * Instead of using performBFSFrom, we implement an optimized algorithm that only stores
+         * the necessary information instead of the information stored at every node in performBFSFrom.
+         * This cuts the algorithm execution time down dramatically.
+         *
+         * I attempted a number of all-pairs shortest path algorithms here. A good source for them
+         * can be found here:
+         * http://jeffe.cs.illinois.edu/teaching/algorithms/notes/22-apsp.pdf
+         * Regardless, this approach was much faster than any of them.
+         *
+         * @return a structure with the distance and a list of the pairs of cells at that distance
+         */
+        const FurthestCellResults findDiameter() const noexcept {
+            int longestDistance = 0;
+            std::vector<std::pair<Cell, Cell>> winners;
+            using cellInfo = std::pair<const Cell, const int>;
+            auto ranker = [this](int x, int y) { return y * getWidth() + x; };
+
+            // For speed, use array to keep track of cells visited.
+            const int numCells = getWidth() * getHeight();
+
+            for (auto y = 0; y < getHeight(); ++y) {
+                for (auto x = 0; x < getWidth(); ++x) {
+                    // We can't just clear this: it doesn't work.
+                    std::vector<bool> visited(numCells, false);
+
+                    std::queue<cellInfo> cellQueue;
+                    types::Cell stc{x,y};
+                    cellQueue.push(cellInfo{stc, 0});
+
+                    while (!cellQueue.empty()) {
+                        const auto[c, cd] = cellQueue.front();
+                        const auto[cx, cy] = c;
+                        const auto rk = ranker(cx, cy);
+                        cellQueue.pop();
+                        if (visited[rk]) continue;
+
+                        visited[rk] = true;
+                        if (cd > longestDistance) {
+                            longestDistance = cd;
+                            winners.clear();
+                            winners.emplace_back(std::make_pair(stc, c));
+                        } else if (cd == longestDistance) {
+                            if (compareCells(stc, c) < 0)
+                                winners.emplace_back(std::make_pair(stc, c));
+                        }
+
+                        const auto nbrs = neighbours(c);
+                        for (const auto &n: nbrs) {
+                            cellQueue.push(cellInfo{n, cd + 1});
+                        }
+                    }
+                }
+            }
+
+            return FurthestCellResults{longestDistance, winners};
+        }
+
+        /**
+         * Find the diameter of the graph. This consists of the longest distance between any pair
+         * of points. To do so, we can find the shortest distance between any two vertices and
+         * then take the maximum.
+         * Find all the pairs of cells who have the longest shortest path between them in a maze.
+         * We could optimize this by not storing all the intermediate information, but by the test
+         * cases, we know the BFS algorithm works, so for now, we use it instead of reimplementing.
+         * @return a structure with the distance and a list of the pairs of cells at that distance
+         */
+
+
     private:
         const Dimensions2D dimensions;
         PossibleCell startCell;
@@ -325,3 +408,4 @@ namespace spelunker::types {
         friend class boost::serialization::access;
     };
 }
+
