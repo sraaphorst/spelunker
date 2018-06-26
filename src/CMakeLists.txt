@@ -12,6 +12,7 @@ set(SUBDIRS
         graphmaze
         math
         maze
+        squashedmaze
         thickmaze
         typeclasses
         types
