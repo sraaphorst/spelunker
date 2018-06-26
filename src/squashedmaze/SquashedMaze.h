@@ -77,7 +77,9 @@ namespace spelunker::squashedmaze {
                     deadEnds.pop_back();
 
                     const WeightedGraphVertex u = boost::add_vertex(graph);
+                    vertexCell[deadEnd] = u;
                     edgeQueue.emplace(EdgeStart{u, types::CellCollection{deadEnd}});
+
                     // Mark the cell as visited.
                     const auto [dx, dy] = deadEnd;
                     ci[dx][dy] = true;
@@ -106,6 +108,8 @@ namespace spelunker::squashedmaze {
                 // Close the edge up and add it to our edge list.
                 if (unvisitedNbrs.size() == 0 || unvisitedNbrs.size() == 2 || unvisitedNbrs.size() == 3) {
                     const auto v = boost::add_vertex(graph);
+                    vertexCell[curCell] = v;
+
                     const auto[e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
                     edges[e] = edgeStart.cells;
                     cout << "Adding edge " << e << " for vertices " << edgeStart.u << " and " << v << " with weight " << *((int*)e.m_eproperty) << " and cells:"
@@ -144,6 +148,7 @@ namespace spelunker::squashedmaze {
 
                     // Create a vertex and loop in the graph with these cells.
                     const auto v = boost::add_vertex(graph);
+                    vertexCell[types::cell(x, y)] = v;
                     const auto [e, success] = boost::add_edge(v, v, 0, graph);
 
                     // Mark all the cells as visited and add a disconnected vertex in a loop to the graph.
@@ -159,13 +164,18 @@ namespace spelunker::squashedmaze {
             return edges;
         }
 
+        using CellVertexMap = std::map<types::Cell, WeightedGraphVertex>;
+
         const WeightedGraph &getGraph() const noexcept {
             return graph;
         }
 
     private:
         // Each edge covers multiple cells. We map between cells and edges.
-        std::map<WeightedGraphEdge, types::CellCollection> edges;
+        EdgeCellMap edges;
+
+        // Each vertex of the squashed maze is associated with a cell in the original maze.
+        CellVertexMap vertexCell;
 
         // The graph that represents the squashed maze.
         WeightedGraph graph;
