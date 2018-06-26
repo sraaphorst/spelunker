@@ -4,5 +4,6 @@
 
 set(squashedmaze_tests
         TestSquashedMaze
+        TestSquashedThickMaze
         PARENT_SCOPE
         )

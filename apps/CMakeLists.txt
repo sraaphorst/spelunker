@@ -21,6 +21,7 @@ set(apps
         app_test_furthest_cells
         app_test_homomorphisms
         app_test_squishedmaze
+        app_test_squishedthickmaze
         app_test_symmetry
         app_test_thickbraid
         app_test_thickify

@@ -13,12 +13,15 @@
 
 using namespace spelunker;
 
-TEST_CASE("SquashedMaze should process a maze", "[squashedmaze]") {
+TEST_CASE("SquashedMaze should process a Maze", "[squashedmaze][maze]") {
     constexpr auto width = 20;
     constexpr auto height = 20;
     const maze::DFSMazeGenerator dfs{width, height};
     const auto m = dfs.generate();
 
     const auto sm = squashedmaze::SquashedMaze(m);
+
+    const auto &mp = sm.getMap();
+    const auto &g = sm.getGraph();
     REQUIRE(true == true);
 }

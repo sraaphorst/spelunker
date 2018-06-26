@@ -19,8 +19,8 @@ using namespace spelunker;
 using namespace std;
 
 int main() {
-    constexpr auto width = 5;
-    constexpr auto height = 5;
+    constexpr auto width = 1000;
+    constexpr auto height = 1000;
     const maze::DFSMazeGenerator dfs{width, height};
     const auto m = dfs.generate();
     cout << typeclasses::Show<maze::Maze>::show(m);
