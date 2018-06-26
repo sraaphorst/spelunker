@@ -244,7 +244,7 @@ namespace spelunker::types {
             // Prepare the queue for BFS. The cell info comprises a cell and its distance.
             using cellInfo = std::pair<const types::Cell, const int>;
             std::queue<cellInfo> cellQueue{};
-            cellQueue.push(cellInfo{start, 0});
+            cellQueue.emplace(cellInfo{start, 0});
 
             // We also want to keep track of the cells visited.
             auto ci = initializeCellIndicator(getDimensions(), false);
@@ -267,7 +267,7 @@ namespace spelunker::types {
 
                 const auto nbrs = neighbours(cell);
                 for (auto n: nbrs)
-                    cellQueue.push(cellInfo{n, dist + 1});
+                    cellQueue.emplace(cellInfo{n, dist + 1});
             }
 
             return BFSResults{start, connectedCells, distances};
@@ -352,7 +352,7 @@ namespace spelunker::types {
 
                     std::queue<cellInfo> cellQueue;
                     types::Cell stc{x,y};
-                    cellQueue.push(cellInfo{stc, 0});
+                    cellQueue.emplace(cellInfo{stc, 0});
 
                     while (!cellQueue.empty()) {
                         const auto[c, cd] = cellQueue.front();
@@ -373,7 +373,7 @@ namespace spelunker::types {
 
                         const auto nbrs = neighbours(c);
                         for (const auto &n: nbrs) {
-                            cellQueue.push(cellInfo{n, cd + 1});
+                            cellQueue.emplace(cellInfo{n, cd + 1});
                         }
                     }
                 }

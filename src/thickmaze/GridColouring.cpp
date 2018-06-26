@@ -350,7 +350,7 @@ namespace spelunker::thickmaze {
                     auto[ndx, ndy] = nd;
                     auto nc = cellColour(cx + ndx, cy + ndy);
                     if (contains(cwall, nc))
-                        posQueue.push(posdata{{dx + ndx, dy + ndy}, nc});
+                        posQueue.emplace(posdata{{dx + ndx, dy + ndy}, nc});
                 }
             }
 
@@ -367,7 +367,7 @@ namespace spelunker::thickmaze {
 
         // Put the first cell in the queue.
         std::queue<Colour> cellsToProcess;
-        cellsToProcess.push(colours[0]);
+        cellsToProcess.emplace(colours[0]);
         while (!cellsToProcess.empty()) {
             auto cell = cellsToProcess.front();
             cellsToProcess.pop();
@@ -376,7 +376,7 @@ namespace spelunker::thickmaze {
             auto nbrs = neighbourhood(ColourCollection{cell});
             for (auto n: nbrs)
                 if (visited.find(n) == visited.end() && contains(colours, n))
-                    cellsToProcess.push(n);
+                    cellsToProcess.emplace(n);
         }
 
         // We can tell purely on size if every cell was visited.

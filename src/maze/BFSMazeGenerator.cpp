@@ -38,7 +38,7 @@ namespace spelunker::maze {
         std::queue<types::Cell> queue;
         const auto startNbrs = unvisitedNeighbours(types::cell(startX, startY), ci);
         for (auto startNbr : startNbrs)
-            queue.push(startNbr.first);
+            queue.emplace(startNbr.first);
 
         while (!queue.empty()) {
             // Pick the front cell from the queue. If it has somehow been visited,
@@ -58,7 +58,7 @@ namespace spelunker::maze {
             // Add the unvisited neighbours to the queue.
             const auto unbrs = unvisitedNeighbours(cell, ci);
             for (auto unbr : unbrs)
-                queue.push(unbr.first);
+                queue.emplace(unbr.first);
         }
 
         return Maze(getDimensions(), wi);

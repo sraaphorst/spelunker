@@ -52,23 +52,32 @@ namespace spelunker::squashedmaze {
 
             // Create the queue, which comprises a starting vertex, and a list of the covered cells.
             struct EdgeStart {
-                const vertex u;
+                const WeightedGraphVertex u;
                 types::CellCollection cells;
             };
             std::queue<EdgeStart> edgeQueue;
 
             while (!deadEnds.empty()) {
-                cout << "Dead ends: " << deadEnds.size() << ", Queue: " << edgeQueue.size() << endl;
-
                 // If the queue is empty, make a new start at a dead end for it.
                 if (edgeQueue.empty()) {
-                    cout << "\tedgeQueue empty: popping dead end." << endl;
+                    // Keep popping dead ends until we find an unvisited one.
+                    while (!deadEnds.empty()) {
+                        const auto [x, y] = deadEnds.back();
+                        if (ci[x][y])
+                            deadEnds.pop_back();
+                        else
+                            break;
+                    }
+
+                    // If we are out of dead ends, then we are done.
+                    if (deadEnds.empty())
+                        break;
+
                     const auto deadEnd = deadEnds.back();
                     deadEnds.pop_back();
 
-                    const vertex u = boost::add_vertex(graph);
-                    edgeQueue.push(EdgeStart{u, types::CellCollection{deadEnd}});
-                    cout << "\teqgeQueue size=" << edgeQueue.size() << endl;
+                    const WeightedGraphVertex u = boost::add_vertex(graph);
+                    edgeQueue.emplace(EdgeStart{u, types::CellCollection{deadEnd}});
                     // Mark the cell as visited.
                     const auto [dx, dy] = deadEnd;
                     ci[dx][dy] = true;
@@ -84,9 +93,9 @@ namespace spelunker::squashedmaze {
 
                 // Get the neighbours of the last cell in the queue, and remove all vertices that
                 // have already been visited.
-                const types::CellCollection nbrs = m.neighbours(edgeStart.cells.back());
-                types::CellCollection unvisitedNbrs(nbrs.size()-1);
-                for (const types::Cell &c: nbrs) {
+                const types::CellCollection nbrs0 = m.neighbours(edgeStart.cells.back());
+                types::CellCollection unvisitedNbrs;
+                for (const types::Cell &c: nbrs0) {
                     const auto [cx, cy] = c;
                     if (!ci[cx][cy])
                         unvisitedNbrs.emplace_back(c);
@@ -97,22 +106,25 @@ namespace spelunker::squashedmaze {
                 // Close the edge up and add it to our edge list.
                 if (unvisitedNbrs.size() == 0 || unvisitedNbrs.size() == 2 || unvisitedNbrs.size() == 3) {
                     const auto v = boost::add_vertex(graph);
-                    const auto [e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
+                    const auto[e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
                     edges[e] = edgeStart.cells;
-                }
+                    cout << "Adding edge " << e << " for vertices " << edgeStart.u << " and " << v << " with weight " << *((int*)e.m_eproperty) << " and cells:"
+                         << endl << "\t";
+                    for (const auto c: edgeStart.cells) {
+                        cout << "(" << c.first << "," << c.second << ") ";
+                    }
+                    cout << endl;
 
-                if (unvisitedNbrs.size() == 1) {
+                    // If there are unvisited neighbours, we are at a T juncture or a + juncture.
+                    // Create new EdgeStarts for each unvisited neighbour and enqueue them.
+                    for (const auto &n: unvisitedNbrs) {
+                        edgeQueue.emplace(EdgeStart{v, types::CellCollection{curCell, n}});
+                    }
+                } else if (unvisitedNbrs.size() == 1) {
                     // If we have one, we are in a passage that is ongoing.
                     // Add the neighbour to the cell, and enqueue it again.
                     edgeStart.cells.emplace_back(unvisitedNbrs[0]);
                     edgeQueue.emplace(edgeStart);
-                } else if (unvisitedNbrs.size() == 2 || unvisitedNbrs.size() == 3) {
-                    // We are at a T juncture or a + juncture.
-                    // Create new EdgeStarts for each unvisited neighbour and enqueue them.
-                    for (const auto n: unvisitedNbrs) {
-                        const auto nv = boost::add_vertex(graph);
-                        edgeQueue.emplace(EdgeStart{nv, types::CellCollection{n}});
-                    }
                 }
             }
 
@@ -132,7 +144,7 @@ namespace spelunker::squashedmaze {
 
                     // Create a vertex and loop in the graph with these cells.
                     const auto v = boost::add_vertex(graph);
-                    const auto [e, success] = boost::add_edge(v, v, graph);
+                    const auto [e, success] = boost::add_edge(v, v, 0, graph);
 
                     // Mark all the cells as visited and add a disconnected vertex in a loop to the graph.
                     edges[e] = loop;
@@ -142,14 +154,20 @@ namespace spelunker::squashedmaze {
 
         ~SquashedMaze() = default;
 
-        using vertex = WeightedGraph::vertex_descriptor;
-        using edge = WeightedGraph::edge_descriptor;
+        using EdgeCellMap = std::map<WeightedGraphEdge, types::CellCollection>;
+        const EdgeCellMap &getMap() const noexcept {
+            return edges;
+        }
+
+        const WeightedGraph &getGraph() const noexcept {
+            return graph;
+        }
 
     private:
-
         // Each edge covers multiple cells. We map between cells and edges.
-        std::map<edge, types::CellCollection> edges;
+        std::map<WeightedGraphEdge, types::CellCollection> edges;
 
+        // The graph that represents the squashed maze.
         WeightedGraph graph;
     };
 }
