@@ -30,8 +30,10 @@ namespace spelunker::squashedmaze {
      * Given an AbstractMaze, the squashed maze has one vertex for:
      * 1. Each dead end in the original maze;
      * 2. Each junction (or decision point) in the original maze;
-     * 3. An independent vertex for any isolated loops; and
-     * 4. Edges weighted by the number of cells they cover.
+     * 3. An independent vertex for any isolated loops;
+     * 4. Each room found by the RoomFinder.
+     *
+     * Edges are weighted by the number of cells they cover.
      *
      * Each edge covers a number of cells in the initial graph: we maintain this information as well. Some cells
      * appear in multiple edges, i.e. the cells at junctures appear in the 3-4 edges they represent.

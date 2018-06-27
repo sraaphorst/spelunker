@@ -1,5 +1,5 @@
 /**
- * RoomCollapser.h
+ * RoomFinder.h
  *
  * By Sebastian Raaphorst, 2018.
  *
@@ -15,9 +15,6 @@
 
 #include <types/AbstractMaze.h>
 #include <types/CommonMazeAttributes.h>
-
-#include <iostream>
-using namespace std;
 
 namespace spelunker::squashedmaze {
     /**
@@ -54,7 +51,7 @@ namespace spelunker::squashedmaze {
         using RoomContents = std::map<RoomID, types::CellCollection>;
 
         RoomFinder(const types::AbstractMaze<T> &maze)
-            : cellToRoom(maze.getWidth(), CellToRoomColumn(maze.getHeight(), -1)) {
+            : cellToRoom(maze.getWidth(), CellToRoomColumn(maze.getHeight(), -1)), roomContents{} {
 
             const auto width  = maze.getWidth();
             const auto height = maze.getHeight();
@@ -169,8 +166,6 @@ namespace spelunker::squashedmaze {
         const RoomContents &getRoomContents() const noexcept {
             return roomContents;
         }
-
-        ///
 
     private:
         CellToRoom cellToRoom;

@@ -3,7 +3,8 @@
 # By Sebastian Raaphorst, 2018.
 
 set(squashedmaze_tests
-        TestRoomFinder
+        TestRoomFinderMaze
+        TestRoomFinderThickMaze
         TestSquashedMaze
         TestSquashedThickMaze
         PARENT_SCOPE
