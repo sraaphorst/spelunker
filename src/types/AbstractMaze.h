@@ -129,7 +129,7 @@ namespace spelunker::types {
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
-        bool cellInBounds(const Cell &c) const noexcept {
+        virtual bool cellInBounds(const Cell &c) const noexcept {
             return dimensions.cellInBounds(c) && numCellWalls(c) < 4;
         }
 

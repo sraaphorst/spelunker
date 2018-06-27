@@ -84,6 +84,11 @@ namespace spelunker::thickmaze {
             return !(*this == other);
         }
 
+        bool cellInBounds(const types::Cell &c) const noexcept override {
+            const auto [x, y] = c;
+            return getDimensions().cellInBounds(c) && contents[x][y] == CellType::FLOOR;
+        }
+
         const CellType cellIs(int x, int y) const;
 
         const CellType cellIs(const types::Cell &c) const;

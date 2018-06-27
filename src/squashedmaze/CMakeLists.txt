@@ -2,6 +2,7 @@
 # By Sebastian Raaphorst, 2018.
 
 set(_SQUASHEDMAZE_PUBLIC_HEADER_FILES
+        RoomFinder.h
         SquashedMaze.h
         SquashedMazeAttributes.h
         PARENT_SCOPE

@@ -20,6 +20,7 @@ set(apps
         app_test_braid
         app_test_furthest_cells
         app_test_homomorphisms
+        app_test_roomfinder
         app_test_squishedmaze
         app_test_squishedthickmaze
         app_test_symmetry

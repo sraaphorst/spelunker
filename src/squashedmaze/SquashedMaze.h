@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include <queue>
+#include <stdexcept>
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -62,7 +64,7 @@ namespace spelunker::squashedmaze {
                 if (edgeQueue.empty()) {
                     // Keep popping dead ends until we find an unvisited one.
                     while (!deadEnds.empty()) {
-                        const auto [x, y] = deadEnds.back();
+                        const auto[x, y] = deadEnds.back();
                         if (ci[x][y])
                             deadEnds.pop_back();
                         else
@@ -81,7 +83,7 @@ namespace spelunker::squashedmaze {
                     edgeQueue.emplace(EdgeStart{u, types::CellCollection{deadEnd}});
 
                     // Mark the cell as visited.
-                    const auto [dx, dy] = deadEnd;
+                    const auto[dx, dy] = deadEnd;
                     ci[dx][dy] = true;
                 }
 
@@ -90,45 +92,92 @@ namespace spelunker::squashedmaze {
 
                 // Mark this cell as visited.
                 const auto &curCell = edgeStart.cells.back();
-                const auto [curX, curY] = curCell;
+                const auto[curX, curY] = curCell;
+                bool wasVisited = ci[curX][curY];
                 ci[curX][curY] = true;
 
                 // Get the neighbours of the last cell in the queue, and remove all vertices that
                 // have already been visited.
-                const types::CellCollection nbrs0 = m.neighbours(edgeStart.cells.back());
+                const types::CellCollection nbrs = m.neighbours(edgeStart.cells.back());
                 types::CellCollection unvisitedNbrs;
-                for (const types::Cell &c: nbrs0) {
-                    const auto [cx, cy] = c;
-                    if (!ci[cx][cy])
+                for (const types::Cell &c: nbrs) {
+                    const auto[cx, cy] = c;
+                    if (!(ci[cx][cy]))
                         unvisitedNbrs.emplace_back(c);
                 }
 
                 // We act depending on the number of neighbours.
-                // If we have 0, 2, or 3 neighbours, we are at the end of this edge.
-                // Close the edge up and add it to our edge list.
-                if (unvisitedNbrs.size() == 0 || unvisitedNbrs.size() == 2 || unvisitedNbrs.size() == 3) {
+                // If we have 0 neighbours, then we are an isolated cell.
+                // If we have 1 neighbour and 0 unvisited neighbours, we are at the end of a passage.
+                // If we have 2 neighbours, we are in a passage.
+                // If we have 3 neighbours, we are at a T intersection.
+                // If we have 4 neighbours, we are at a + intersection.
+                // In all cases but 2, we want to create an edge.
+                if (nbrs.size() == 0) {
+                    // Single isolated cell: close off.
+                    const auto[e, success] = boost::add_edge(edgeStart.u, edgeStart.u, 0, graph);
+                    edges[e] = edgeStart.cells;
+
+                    cout << "1. Adding edge " << e << " with weight " << *((int*)e.m_eproperty) << " and cells:" << endl << "\t";
+                    for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; }cout << endl;
+
+                } else if (nbrs.size() == 1 && unvisitedNbrs.size() == 0) {
+                    // End of a passage: add a final vertex and close off.
                     const auto v = boost::add_vertex(graph);
                     vertexCell[curCell] = v;
-
-                    const auto[e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
+                    const auto [e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
                     edges[e] = edgeStart.cells;
-                    cout << "Adding edge " << e << " for vertices " << edgeStart.u << " and " << v << " with weight " << *((int*)e.m_eproperty) << " and cells:"
-                         << endl << "\t";
-                    for (const auto c: edgeStart.cells) {
-                        cout << "(" << c.first << "," << c.second << ") ";
-                    }
-                    cout << endl;
 
-                    // If there are unvisited neighbours, we are at a T juncture or a + juncture.
-                    // Create new EdgeStarts for each unvisited neighbour and enqueue them.
-                    for (const auto &n: unvisitedNbrs) {
-                        edgeQueue.emplace(EdgeStart{v, types::CellCollection{curCell, n}});
-                    }
-                } else if (unvisitedNbrs.size() == 1) {
-                    // If we have one, we are in a passage that is ongoing.
-                    // Add the neighbour to the cell, and enqueue it again.
+                    cout << "2. Adding edge " << e << " with weight " << *((int*)e.m_eproperty) << " and cells:" << endl << "\t";
+                    for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; }cout << endl;
+
+                } else if ((nbrs.size() == 1 && unvisitedNbrs.size() == 1)
+                        || (nbrs.size() == 2 && unvisitedNbrs.size() == 1)) {
+                    // This covers two cases:
+                    // 1. nbrs=1: We are at the very start of a passage.
+                    // 2. nbrs=2: We are in the middle of a passage.
+                    // In either case, extend with the unvisited cell and enqueue.
                     edgeStart.cells.emplace_back(unvisitedNbrs[0]);
                     edgeQueue.emplace(edgeStart);
+
+                } else if (nbrs.size() == 2 && unvisitedNbrs.size() == 0) {
+                    // In this case, we are closing a loop.
+                    // Get the cell the loop closing cell ahead of us.
+                    const types::Cell &lastVisited = edgeStart.cells.back();
+                    const types::Cell &c = (lastVisited == nbrs[0]) ? nbrs[1] : nbrs[0];
+                    edgeStart.cells.emplace_back(c);
+                    const auto v = vertexCell[c];
+
+                    // Make sure this edge doesn't exist already: otherwise we could have gone around a loop twice!
+                    // We need .second since .first is the edge and .second is its existence.
+                    if (!boost::edge(edgeStart.u, v, graph).second) {
+                        const auto[e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
+
+                        cout << "3. Adding edge " << e << " with weight " << *((int *) e.m_eproperty) << " and cells:" << endl << "\t";
+                        for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; } cout << endl;
+                    }
+
+                } else if (nbrs.size() == unvisitedNbrs.size()) {
+                    // ERROR CONDITION: This can never happen.
+                    throw std::domain_error("Unexpected maze configuration.");
+
+                } else {
+                    // We are at a junction. Check to see if a vertex exists for this cell, and if not, create one.
+                    const auto iter = vertexCell.find(curCell);
+                    const auto v = (iter == vertexCell.end()) ? boost::add_vertex(graph) : iter->second;
+                    if (iter == vertexCell.end())
+                        vertexCell[curCell] = v;
+
+                    // Now end this edge, and create new edges for all the unvisited neighbours.
+                    const auto [e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
+                    edges[e] = edgeStart.cells;
+
+                    cout << "4s. Adding edge " << e << " with weight " << *((int*)e.m_eproperty) << " and cells:" << endl << "\t";
+                    for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; }cout << endl;
+
+                    // Create new EdgeStarts for each unvisited neighbour and enqueue them.
+                    for (const auto &n: unvisitedNbrs)
+                        edgeQueue.emplace(EdgeStart{v, types::CellCollection{curCell, n}});
                 }
             }
 
