@@ -211,6 +211,27 @@ namespace spelunker::types {
          */
         virtual const types::CellCollection neighbours(const types::Cell &c) const = 0;
 
+        /// Find the neighbours of a group of cells.
+        /**
+         * Given a CellCollection, find its neighbours int he maze.
+         *
+         */
+        const types::CellSet neighbours(const types::CellCollection &cc) const {
+            // Add all the neighbours of each cell.
+            types::CellSet nbrs;
+            for (const auto &c: cc) {
+                const auto cnbrs = neighbours(c);
+                for (const auto &c2: cnbrs)
+                    nbrs.insert(c2);
+            }
+
+            // Remove the original cells.
+            for (const auto &c: cc)
+                nbrs.erase(c);
+
+            return nbrs;
+        }
+
         /// Performs a BFS from the given input cell and returns the results.
         /**
          * This algorithm begins at the specified starting cell, and returns

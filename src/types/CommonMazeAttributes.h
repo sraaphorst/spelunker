@@ -8,7 +8,7 @@
 
 #pragma once
 
-// We need to use Boost's optional instead of STL's optional since it doesn't work with serialization.
+// We need to use Boost's optional instead of STL's optional since it doesn't work with Boost.Serialization.
 #include <boost/optional.hpp>
 #include <set>
 #include <stdexcept>
@@ -37,8 +37,12 @@ namespace spelunker::types {
         return 1;
     }
 
-    /// A collection of cells.
+    /// A list of cells.
     using CellCollection = std::vector<Cell>;
+
+    /// A set of cells.
+    // TODO: Try to use this more extensively than CellCollection.
+    using CellSet = std::set<Cell>;
 
     /// A way of indicating cells at certain distances from a given cell.
     /**
