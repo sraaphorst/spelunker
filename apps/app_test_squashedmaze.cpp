@@ -5,6 +5,8 @@
  */
 
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -21,19 +23,23 @@ using namespace std;
 int main() {
     constexpr auto width = 15;
     constexpr auto height = 15;
+    constexpr auto numCells = width * height;
+
     const maze::DFSMazeGenerator dfs{width, height};
     const auto m = dfs.generate().braidAll();
-    cout << typeclasses::Show<maze::Maze>::show(m);
-
+    cout << typeclasses::Show<maze::Maze>::show(m) << endl;
 
     const auto sm = squashedmaze::SquashedMaze(m);
-    const auto &mp = sm.getMap();
-    const auto &g  = sm.getGraph();
+    const auto &vm = sm.getVertexMap();
+    const auto &em = sm.getEdgeMap();
 
-//    const auto vertices = g.vertex_set();
-//    cout << "Number of vertices: " << vertices.size() << endl;
-//    for (const auto v: vertices) {
-//        const auto edges = g.out_edge_list(v);
-//        cout << "Number of edges for vertex " << v << ": " << edges.size() << endl;
-//    }
+    cout << "    Number of vertices in the squashed maze: " << setw(8) << right << vm.size()<< endl;
+    cout << "       Number of cells in the original maze: " << setw(8) << right << numCells << endl;
+    cout << "                    % size of squashed maze: " << setw(8) << setprecision(4) << right << ((100.0 * vm.size()) / numCells) << '%' << endl;
+    cout << endl;
+
+    const auto carvedWalls = m.numCarvedWalls();
+    cout << "       Number of edges in the squashed maze: " << setw(8) << right << em.size() << endl;
+    cout << "Number of carved walls in the original maze: " << setw(8) << right << carvedWalls << endl;
+    cout << "                    % size of squashed maze: " << setw(8) << setprecision(4) << right << ((100.0 * em.size()) / carvedWalls) << '%' << endl;
 }

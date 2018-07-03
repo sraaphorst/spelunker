@@ -23,7 +23,7 @@ TEST_CASE("SquashedMaze should process a ThickMaze", "[squashedmaze][thickmaze]"
 
     const auto sm = squashedmaze::SquashedMaze(tm);
 
-    const auto &mp = sm.getMap();
+    const auto &mp = sm.getEdgeMap();
     const auto &g = sm.getGraph();
     REQUIRE(true == true);
 }

@@ -22,12 +22,26 @@ using namespace std;
 using namespace spelunker::thickmaze;
 
 int main(int argc, char *argv[]) {
+    constexpr auto width = 50;
+    constexpr auto height = 50;
+    constexpr auto numCells = width * height;
+
     CellularAutomatonThickMazeGenerator::settings s{};
-    CellularAutomatonThickMazeGenerator gen{30, 30, s};
+    CellularAutomatonThickMazeGenerator gen{50, 50, s};
     ThickMaze tm = gen.generate();
-    std::cout << spelunker::typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm);
+    cout << typeclasses::Show<spelunker::thickmaze::ThickMaze>::show(tm) << endl;
 
     const auto sm = squashedmaze::SquashedMaze(tm);
-    const auto &mp = sm.getMap();
-    const auto &g  = sm.getGraph();
+    const auto &vm = sm.getVertexMap();
+    const auto &em = sm.getEdgeMap();
+
+    cout << "    Number of vertices in the squashed maze: " << setw(8) << right << vm.size()<< endl;
+    cout << "       Number of cells in the original maze: " << setw(8) << right << numCells << endl;
+    cout << "                    % size of squashed maze: " << setw(8) << setprecision(4) << right << ((100.0 * vm.size()) / numCells) << '%' << endl;
+    cout << endl;
+
+    const auto carvedWalls = tm.numCarvedWalls();
+    cout << "       Number of edges in the squashed maze: " << setw(8) << right << em.size() << endl;
+    cout << "Number of carved walls in the original maze: " << setw(8) << right << carvedWalls << endl;
+    cout << "                    % size of squashed maze: " << setw(8) << setprecision(4) << right << ((100.0 * em.size()) / carvedWalls) << '%' << endl;
 }

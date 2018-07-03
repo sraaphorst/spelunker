@@ -21,7 +21,7 @@ TEST_CASE("SquashedMaze should process a Maze", "[squashedmaze][maze]") {
 
     const auto sm = squashedmaze::SquashedMaze(m);
 
-    const auto &mp = sm.getMap();
+    const auto &mp = sm.getEdgeMap();
     const auto &g = sm.getGraph();
     REQUIRE(true == true);
 }

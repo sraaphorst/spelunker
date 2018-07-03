@@ -40,33 +40,47 @@ namespace spelunker::squashedmaze {
      * 1. Each dead end in the original maze;
      * 2. Each junction (or decision point) in the original maze;
      * 3. Each "entrance cell" inside a room found by the RoomFinder; and
-     * 4. Each loop in the graph.
-     *
-     * Edges are weighted by the number of cells they cover. If more than one path exists between two vertices,
-     * the one with the lower weight is selected.
+     * 4. Each isolated loop / isolated vertex in the maze.
      *
      * Each edge covers a number of cells in the initial graph: we maintain this information as well. Some cells
      * appear in multiple edges, i.e. the cells at junctures appear in the 3-4 edges they represent.
+     *
+     * Edges are weighted by the number of moves they take to get from the first cell to the terminal cell.
+     * If more than one path exists between two cells, the one with the lower weight is represented.
      *
      * Note that a SquashedMaze does not uniquely represent a maze, i.e. multiple mazes may generate the same
      * SquashedMaze. Like a hashcode, however, if two mazes generate different SquashedMazes, they are not equal.
      *
      * This class also provides us with a number of statistics:
-     * 1. Number of passages, as well as their length.
-     * 2. Number of T and + junctions (which could have been easily ascertained before).
+     * 1. Number of passages, as well as their length, with the exception that cells with two paths between them
+     *    are shrunk down to one path.
+     * 2. Number of T and + junctions.
+     * 3. Number of dead ends.
      * 3. Number of rooms and their size.
      */
     class SquashedMaze {
     public:
+        /**
+         * Given an AbstractMaze, use it to create the representative SquashedMaze, as detailed above.
+         * @tparam T the subclass of AbstractMaze
+         * @param m the original maze
+         */
         template<typename T>
         SquashedMaze(const types::AbstractMaze<T> &m);
 
         ~SquashedMaze() = default;
 
-        const EdgeCellMap &getMap() const noexcept {
+        /// Return the mapping from graph edge to the cells in the original maze.
+        const EdgeCellMap &getEdgeMap() const noexcept {
             return edges;
         }
 
+        /// Return the mapping from graph vertex to the corresponding cell in the original maze.
+        const CellVertexMap &getVertexMap() const noexcept {
+            return vertexCell;
+        }
+
+        /// Get the weighted graph representing the squashing of the maze.
         const WeightedGraph &getGraph() const noexcept {
             return graph;
         }
@@ -85,13 +99,13 @@ namespace spelunker::squashedmaze {
         template<typename T>
         types::CellCollection processRoom(const types::AbstractMaze<T> &m, const types::CellCollection &cc);
 
-        // Each edge covers multiple cells. We map between cells and edges.
+        /// Each edge covers multiple cells. We map between cells and edges.
         EdgeCellMap edges;
 
-        // Each vertex of the squashed maze is associated with a cell in the original maze.
+        /// Each vertex of the squashed maze is associated with a cell in the original maze.
         CellVertexMap vertexCell;
 
-        // The graph that represents the squashed maze.
+        /// The graph that represents the squashed maze.
         WeightedGraph graph;
     };
 
@@ -135,6 +149,8 @@ namespace spelunker::squashedmaze {
         /*** ROOM ENTRANCES ***/
         // Find the rooms in the maze and process.
         // Keep track of all the room cells, minus the entrances: we don't care about these.
+        // These are cells that are unnecessary to visit, as no path can be made shorter by doing so,
+        // so we avoid them entirely.
         types::CellCollection roomCells;
 
         RoomFinder roomFinder(m);
@@ -166,68 +182,66 @@ namespace spelunker::squashedmaze {
                 edgeQueue.emplace(EdgeStart{vertexCell[e], types::CellCollection{e}});
         }
 
-        /*** DEAD ENDS ***/
-        // Get a list of the dead ends. We start by covering dead ends and all that is left after
-        // that are isolated cells and loops.
-        auto deadEnds = m.findDeadEnds();
-        for (const auto &de: deadEnds) {
-            // Create a vertex for the dead end.
-            const auto v = boost::add_vertex(graph);
-            vertexCell[de] = v;
 
-            // Mark the dead end as visited.
-            const auto &[dx, dy] = de;
-            ci[dx][dy] = true;
+        // Code common for dead ends and junctions:
+        // Create a vertex for the cell, and then enqueue an EdgeStart for the cell to represent
+        // creating an edge beginning at this vertex in the squashed graph.
+        const auto collectionToVertices = [&](const types::CellCollection &cc) {
+            for (const auto &c: cc) {
+                // Create a vertex for the cell.
+                const auto v = boost::add_vertex(graph);
+                vertexCell[c] = v;
 
-            // Create and enqueue a node for each dead end.
-            edgeQueue.emplace(EdgeStart{v, types::CellCollection{de}});
-        }
+                // Mark the cell as visited.
+                const auto &[cx, cy] = c;
+                ci[cx][cy] = true;
+
+                // Enqueue an edge start.
+                edgeQueue.emplace(EdgeStart{v, types::CellCollection{c}});
+            }
+        };
 
 #ifdef DEBUG
-        cout << "Dead ends: " << typeclasses::Show<types::CellCollection>::show(deadEnds) << endl;
-        for (const auto &de: deadEnds)
-            cout << "\tDead end " << typeclasses::Show<types::Cell>::show(de) << " assigned to vertex "
-                 << vertexCell[de] << endl;
-        cout << endl;
+        // Print information about the collection and what cells were turned into what vertices.
+        const auto debugCollectionInformation = [&](const std::string name, const types::CellCollection &cc) {
+            cout << name << " list: " << typeclasses::Show<types::CellCollection>::show(cc) << endl;
+            for (const auto &c: cc)
+                cout << '\t' << name << ' ' << typeclasses::Show<types::Cell>::show(c) << " assigned to vertex "
+                     << vertexCell[c] << endl;
+            cout << endl;
+        };
+#endif
+
+
+        /*** DEAD ENDS ***/
+        // Get a list of the dead ends, create a vertex for each, and enqueue an edge start.
+        auto deadEnds = m.findDeadEnds();
+        collectionToVertices(deadEnds);
+#ifdef DEBUG
+        debugCollectionInformation("Dead end", deadEnds);
 #endif
 
         /*** JUNCTIONS ***/
+        // Get a list of the junctions in the maze. We create a vertex for each, and enqueue an edge start.
+        auto junctions = m.findJunctions();
+        collectionToVertices(junctions);
 #ifdef DEBUG
-        cout << "Analyzing junctions..." << endl;
-#endif
-        // Iterate and find all the junctions. Create a vertex for each and place in the maze.
-        for (auto y = 0; y < height; ++y) {
-            for (auto x = 0; x < width; ++x) {
-                // If this cell is already covered, it is either a dead end or part of a room: skip it.
-                if (ci[x][y]) continue;
-
-                // A cell is a junction if it only has 0 walls (+) or 1 wall (T).
-                const auto c = types::cell(x, y);
-                if (m.numCellWalls(c) > 1) continue;
-
-                // Create a vertex for the junction and mark it visited.
-                const auto v = boost::add_vertex(graph);
-                vertexCell[c] = v;
-                ci[x][y] = true;
-#ifdef DEBUG
-                cout << "\tJunction " << typeclasses::Show<types::Cell>::show(c) << " assigned to vertex "
-                     << vertexCell[c] << endl;
-#endif
-                // Create and eqneue a node.
-                edgeQueue.emplace(EdgeStart{v, types::CellCollection{c}});
-            }
-        }
-#ifdef DEBUG
-        cout << endl;
+        debugCollectionInformation("Junction", junctions);
 #endif
 
-        // Basic idea: get all neighbours.
-        // This is a bit more complicated: ignore neighbours that are non-entrance room cells since we don't care
-        //    about them.
-        // For unvisited neighbours, extend and enqueue.
-        // For visited neighbours, if they have a vertex, try to create an edge.
-        //    If already edge, remove and replace if our weight is smaller.
-        //    If they do not have an edge, extend and enqueue.
+        /**
+         * Basic idea of the queue:
+         * 1. If the queue is empty, complete.
+         * 2. Pick a cell from the queue beginning as vertex u and find its:
+         *    (a) visited neighbours, minus any non-entrance room cells and any cells visited already by this EdgeStart.
+         *    (b) unvisited neighbours, minus the same cells as in (a).
+         * 3. For a visited neighbour, check if the cell has a vertex associated with it, say v.
+         *    (a) If it does, then we consider the edge to be done and have weight equal to the number of moves it took
+         *        to get from the cell represented by vertex u to the cell represented by vertex v.
+         *        If there is no edge {u,v} or there is an edge {u,v} of higher weight, add / replace with this {u,v}.
+         *    (b) If it has no vertex associated with it, then extend by this cell and re-enqueue.
+         * 4. For an unvisited neighbour, extend by this cell and enqueue.
+         */
 
         // Create a couple simple lambdas to avoid clutter.
         const auto cellIn = [](const types::Cell &c, const types::CellCollection &cc) {
@@ -237,14 +251,13 @@ namespace spelunker::squashedmaze {
             return !cellIn(c, cc);
         };
 
+
         while (!edgeQueue.empty()) {
             const auto edgeStart = edgeQueue.front();
             edgeQueue.pop();
-#ifdef ADEBUG
-            cout << "Processing node starting at u: " << edgeStart.u
-                 << ", cells: " << typeclasses::Show<types::CellCollection>::show(edgeStart.cells) << endl;
-#endif
-            // Get all of the neighbours not in the cell list, and divide into visited and unvisited.
+
+            // Get all of the neighbours not in the previously visited cell list or the room cell list,
+            // and divide into visited and unvisited.
             const auto &cell = edgeStart.cells.back();
             const auto &[cellx, celly] = cell;
             ci[cellx][celly] = true;
@@ -278,61 +291,40 @@ namespace spelunker::squashedmaze {
 
             assert(neighbours.size() == roomNeighbours.size() + inEdgeStartNeighbours.size() + visitedNeighbours.size() + unvisitedNeighbours.size());
 
-#ifdef ADEBUG
-            cout << "Neighbours: " << typeclasses::Show<types::CellCollection>::show(neighbours) << endl;
-            cout << "In edge already: " << typeclasses::Show<types::CellCollection>::show(inEdgeStartNeighbours) << endl;
-            cout << "Visited neighbours: " << typeclasses::Show<types::CellCollection>::show(visitedNeighbours) << endl;
-#endif
+
             // For visited neighbours, if they have a vertex, attempt to create an edge.
-            // Otherwise, ignore.
+            // Otherwise, extend and enqueue.
             for (const auto &vn: visitedNeighbours) {
-#ifdef ADEBUG
-                cout << "\tConsidering neighbour " << typeclasses::Show<types::Cell>::show(vn) << ": ";
-#endif
-                // Extract second as first will be vn.
                 const auto iter = vertexCell.find(vn);
 
+                // If we cannot find a vertex for this cell, extend and enqueue.
                 if (iter == vertexCell.end()) {
-#ifdef ADEBUG
-                    cout << "Not a vertex cell. Extending path." << endl;
-#endif
                     auto newcells = edgeStart.cells;
                     newcells.emplace_back(vn);
                     edgeQueue.emplace(EdgeStart{edgeStart.u, newcells});
                     continue;
                 }
-                const auto v = iter->second;
-#ifdef ADEBUG
-                cout << "vertex is " << v << endl;
-#endif
+
                 // Check if there is already an edge, and replace it if this one is shorter.
+                const auto v = iter->second;
                 const auto weight = edgeStart.cells.size();
                 auto[e0, exists] = boost::edge(edgeStart.u, v, graph);
-#ifdef ADEBUG
-                if (exists)
-                    cout << "\t\tEdge " << e0 << " exists with weight " << wt(e0) << ", new weight is " << weight
-                         << endl;
-#endif
+
                 if (exists && weight < wt(e0)) {
-#ifdef ADEBUG
-                    cout << "\t\tRemoving old edge." << endl;
-#endif
                     boost::remove_edge(edgeStart.u, v, graph);
                     exists = false;
                 }
+
+                // If no edge exists at this point, add {u,v} with the weight.
                 if (!exists) {
                     const auto[e, success] = boost::add_edge(edgeStart.u, v, weight, graph);
                     edges[e] = edgeStart.cells;
 #ifdef DEBUG
-                    cout << "\t\tAdding edge " << e << " with weight " << weight << endl;
+                    cout << "Adding edge " << e << " with weight " << weight << endl;
 #endif
                 }
             }
 
-#ifdef ADEBUG
-            cout << "Unvisited neighbours: " << typeclasses::Show<types::CellCollection>::show(visitedNeighbours) << endl
-                 << endl;
-#endif
             // For unvisited neighbours, extend and enqueue.
             for (const auto &un: unvisitedNeighbours) {
                 auto newcells = edgeStart.cells;
@@ -341,34 +333,33 @@ namespace spelunker::squashedmaze {
             }
         }
 
-        /*** LEFTOVER LOOPS ***/
-        // Now we have taken care of all the dead ends: all that is left are isolated cells and loops.
-        // Iterate over the remaining cells.
+        /*** LEFTOVER ISOLATED CELLS / LOOPS ***/
+        // Now we have taken care of all the dead ends, rooms, and junctions.
+        // All that is left are isolated cells and loops. Iterate over the cells and pick these out.
         for (auto y = 0; y < height; ++y) {
             for (auto x = 0; x < width; ++x) {
                 // Skip visited cells.
                 if (ci[x][y]) continue;
 
-                // Perform a BFS starting here.
+                // We have an unvisited cell to process.
+                // Perform a simple BFS starting here.
                 const auto cell = types::cell(x, y);
                 const auto bfsResults = m.performBFSFrom(cell);
                 const auto &loop = bfsResults.connectedCells;
 
-                // Create a vertex and loop in the graph with these cells.
+                // Create a vertex for the cell, and add the edge for the loop.
                 const auto v = boost::add_vertex(graph);
                 vertexCell[cell] = v;
+                const auto[e, success] = boost::add_edge(v, v, loop.size() - 1, graph);
+                edges[e] = loop;
 
                 // Mark all cells in the loop as visited.
                 for (const auto &l: loop) {
                     const auto &[lx, ly] = l;
                     ci[lx][ly] = true;
                 }
-
-                // Add the edge for the loop.
-                const auto[e, success] = boost::add_edge(v, v, loop.size() - 1, graph);
-                edges[e] = loop;
 #ifdef DEBUG
-                cout << "\t\tAdding loop " << e << " with weight " << loop.size() - 1 << endl;
+                cout << "Adding loop " << e << " with weight " << loop.size() - 1 << endl;
 #endif
             }
         }

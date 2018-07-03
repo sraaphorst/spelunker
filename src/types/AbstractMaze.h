@@ -218,6 +218,24 @@ namespace spelunker::types {
              return junctions;
          }
 
+         /// Count the number of carved walls for the maze.
+         /**
+          * Count the number of walls that the maze has carved out.
+          * @return the number of carved walls
+          */
+         const int numCarvedWalls() const noexcept {
+             // TODO: If we generalize mazes further, cells may not have four walls. This will need to be changed.
+             // We do this by iterating over the cells and counting how many walls each cell is missing.
+             // Each missing wall falls between two cells, so it will be counted twice. Thus, we must dissolve the
+             // total by two.
+             int num = 0;
+             const auto [width, height] = dimensions.values();
+             for (auto y = 0; y < height; ++y)
+                 for (auto x = 0; x < width; ++x)
+                     num += (4 - numCellWalls(types::cell(x, y)));
+             return num / 2;
+         }
+
         /**
          * Empty constructor for serialization.
          */
