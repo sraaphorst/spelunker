@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <algorithm>
 #include <map>
 #include <queue>
@@ -18,10 +19,14 @@
 #include <maze/Maze.h>
 #include <types/CommonMazeAttributes.h>
 #include <types/AbstractMaze.h>
+#include <typeclasses/Show.h>
+#include "RoomFinder.h"
 #include "SquashedMazeAttributes.h"
 
+#ifdef DEBUG
 #include <iostream>
 using namespace std;
+#endif
 
 namespace spelunker::squashedmaze {
     /**
@@ -30,8 +35,8 @@ namespace spelunker::squashedmaze {
      * Given an AbstractMaze, the squashed maze has one vertex for:
      * 1. Each dead end in the original maze;
      * 2. Each junction (or decision point) in the original maze;
-     * 3. An independent vertex for any isolated loops;
-     * 4. Each room found by the RoomFinder.
+     * 3. Each "entrance cell" inside a room found by the RoomFinder; and
+     * 4. Each loop in the graph.
      *
      * Edges are weighted by the number of cells they cover.
      *
@@ -40,188 +45,40 @@ namespace spelunker::squashedmaze {
      *
      * Note that a SquashedMaze does not uniquely represent a maze, i.e. multiple mazes may generate the same
      * SquashedMaze. Like a hashcode, however, if two mazes generate different SquashedMazes, they are not equal.
+     *
+     * This class also provides us with a number of statistics:
+     * 1. Number of passages, as well as their length.
+     * 2. Number of T and + junctions (which could have been easily ascertained before).
+     * 3. Number of rooms and their size.
      */
     class SquashedMaze {
     public:
         template<typename T>
-        SquashedMaze(const types::AbstractMaze<T> &m) {
-            // Make sure that every cell is covered.
-            const auto width  = m.getWidth();
-            const auto height = m.getHeight();
-            auto ci = types::initializeCellIndicator(m.getDimensions());
-
-            // Get a list of the dead ends. We start by covering dead ends and all that is left after
-            // that are loops.
-            auto deadEnds = m.findDeadEnds();
-
-            // Create the queue, which comprises a starting vertex, and a list of the covered cells.
-            struct EdgeStart {
-                const WeightedGraphVertex u;
-                types::CellCollection cells;
-            };
-            std::queue<EdgeStart> edgeQueue;
-
-            while (!deadEnds.empty()) {
-                // If the queue is empty, make a new start at a dead end for it.
-                if (edgeQueue.empty()) {
-                    // Keep popping dead ends until we find an unvisited one.
-                    while (!deadEnds.empty()) {
-                        const auto[x, y] = deadEnds.back();
-                        if (ci[x][y])
-                            deadEnds.pop_back();
-                        else
-                            break;
-                    }
-
-                    // If we are out of dead ends, then we are done.
-                    if (deadEnds.empty())
-                        break;
-
-                    const auto deadEnd = deadEnds.back();
-                    deadEnds.pop_back();
-
-                    const WeightedGraphVertex u = boost::add_vertex(graph);
-                    vertexCell[deadEnd] = u;
-                    edgeQueue.emplace(EdgeStart{u, types::CellCollection{deadEnd}});
-
-                    // Mark the cell as visited.
-                    const auto[dx, dy] = deadEnd;
-                    ci[dx][dy] = true;
-                }
-
-                EdgeStart edgeStart = edgeQueue.front();
-                edgeQueue.pop();
-
-                // Mark this cell as visited.
-                const auto &curCell = edgeStart.cells.back();
-                const auto[curX, curY] = curCell;
-                bool wasVisited = ci[curX][curY];
-                ci[curX][curY] = true;
-
-                // Get the neighbours of the last cell in the queue, and remove all vertices that
-                // have already been visited.
-                const types::CellCollection nbrs = m.neighbours(edgeStart.cells.back());
-                types::CellCollection unvisitedNbrs;
-                for (const types::Cell &c: nbrs) {
-                    const auto[cx, cy] = c;
-                    if (!(ci[cx][cy]))
-                        unvisitedNbrs.emplace_back(c);
-                }
-
-                // We act depending on the number of neighbours.
-                // If we have 0 neighbours, then we are an isolated cell.
-                // If we have 1 neighbour and 0 unvisited neighbours, we are at the end of a passage.
-                // If we have 2 neighbours, we are in a passage.
-                // If we have 3 neighbours, we are at a T intersection.
-                // If we have 4 neighbours, we are at a + intersection.
-                // In all cases but 2, we want to create an edge.
-                if (nbrs.size() == 0) {
-                    // Single isolated cell: close off.
-                    const auto[e, success] = boost::add_edge(edgeStart.u, edgeStart.u, 0, graph);
-                    edges[e] = edgeStart.cells;
-
-                    cout << "1. Adding edge " << e << " with weight " << *((int*)e.m_eproperty) << " and cells:" << endl << "\t";
-                    for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; }cout << endl;
-
-                } else if (nbrs.size() == 1 && unvisitedNbrs.size() == 0) {
-                    // End of a passage: add a final vertex and close off.
-                    const auto v = boost::add_vertex(graph);
-                    vertexCell[curCell] = v;
-                    const auto [e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
-                    edges[e] = edgeStart.cells;
-
-                    cout << "2. Adding edge " << e << " with weight " << *((int*)e.m_eproperty) << " and cells:" << endl << "\t";
-                    for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; }cout << endl;
-
-                } else if ((nbrs.size() == 1 && unvisitedNbrs.size() == 1)
-                        || (nbrs.size() == 2 && unvisitedNbrs.size() == 1)) {
-                    // This covers two cases:
-                    // 1. nbrs=1: We are at the very start of a passage.
-                    // 2. nbrs=2: We are in the middle of a passage.
-                    // In either case, extend with the unvisited cell and enqueue.
-                    edgeStart.cells.emplace_back(unvisitedNbrs[0]);
-                    edgeQueue.emplace(edgeStart);
-
-                } else if (nbrs.size() == 2 && unvisitedNbrs.size() == 0) {
-                    // In this case, we are closing a loop.
-                    // Get the cell the loop closing cell ahead of us.
-                    const types::Cell &lastVisited = edgeStart.cells.back();
-                    const types::Cell &c = (lastVisited == nbrs[0]) ? nbrs[1] : nbrs[0];
-                    edgeStart.cells.emplace_back(c);
-                    const auto v = vertexCell[c];
-
-                    // Make sure this edge doesn't exist already: otherwise we could have gone around a loop twice!
-                    // We need .second since .first is the edge and .second is its existence.
-                    if (!boost::edge(edgeStart.u, v, graph).second) {
-                        const auto[e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
-
-                        cout << "3. Adding edge " << e << " with weight " << *((int *) e.m_eproperty) << " and cells:" << endl << "\t";
-                        for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; } cout << endl;
-                    }
-
-                } else if (nbrs.size() == unvisitedNbrs.size()) {
-                    // ERROR CONDITION: This can never happen.
-                    throw std::domain_error("Unexpected maze configuration.");
-
-                } else {
-                    // We are at a junction. Check to see if a vertex exists for this cell, and if not, create one.
-                    const auto iter = vertexCell.find(curCell);
-                    const auto v = (iter == vertexCell.end()) ? boost::add_vertex(graph) : iter->second;
-                    if (iter == vertexCell.end())
-                        vertexCell[curCell] = v;
-
-                    // Now end this edge, and create new edges for all the unvisited neighbours.
-                    const auto [e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
-                    edges[e] = edgeStart.cells;
-
-                    cout << "4s. Adding edge " << e << " with weight " << *((int*)e.m_eproperty) << " and cells:" << endl << "\t";
-                    for (const auto c: edgeStart.cells) { cout << "(" << c.first << "," << c.second << ") "; }cout << endl;
-
-                    // Create new EdgeStarts for each unvisited neighbour and enqueue them.
-                    for (const auto &n: unvisitedNbrs)
-                        edgeQueue.emplace(EdgeStart{v, types::CellCollection{curCell, n}});
-                }
-            }
-
-            // Now we have taken care of all the dead ends: all that is left are possible loops.
-            // Iterate over the cell coverage and perform a BFS on each uncovered cell.
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    if (ci[x][y]) continue;
-                    if (!m.cellInBounds(x, y)) {
-                        ci[x][y] = true;
-                        continue;
-                    }
-
-                    // Perform a BFS starting here.
-                    const types::BFSResults bfsResults = m.performBFSFrom(types::cell(x, y));
-                    const types::CellCollection &loop = bfsResults.connectedCells;
-
-                    // Create a vertex and loop in the graph with these cells.
-                    const auto v = boost::add_vertex(graph);
-                    vertexCell[types::cell(x, y)] = v;
-                    const auto [e, success] = boost::add_edge(v, v, 0, graph);
-
-                    // Mark all the cells as visited and add a disconnected vertex in a loop to the graph.
-                    edges[e] = loop;
-                }
-            }
-        };
+        SquashedMaze(const types::AbstractMaze<T> &m);
 
         ~SquashedMaze() = default;
 
-        using EdgeCellMap = std::map<WeightedGraphEdge, types::CellCollection>;
         const EdgeCellMap &getMap() const noexcept {
             return edges;
         }
-
-        using CellVertexMap = std::map<types::Cell, WeightedGraphVertex>;
 
         const WeightedGraph &getGraph() const noexcept {
             return graph;
         }
 
     private:
+        /**
+         * Process a room as found by @see[RoomFinder].
+         * For each room, we:
+         * 1. Find the entrances, and add a vertex for each;
+         * 2. Find the shortest path between each of the entrances and add an edge for each;
+         * @tparam T the maze type
+         * @param m the maze
+         * @param cc the collection of cells comprising the room
+         */
+        template<typename T>
+        void processRoom(const types::AbstractMaze<T> &m, const types::CellCollection &cc);
+
         // Each edge covers multiple cells. We map between cells and edges.
         EdgeCellMap edges;
 
@@ -231,5 +88,346 @@ namespace spelunker::squashedmaze {
         // The graph that represents the squashed maze.
         WeightedGraph graph;
     };
+
+
+
+    /****************************
+     *** FUNCTION DEFINITIONS ***
+     ****************************/
+
+    template<typename T>
+    SquashedMaze::SquashedMaze(const spelunker::types::AbstractMaze<T> &m) {
+        /*** PREPROCESSING ***/
+        // Make sure that every cell is covered.
+        const auto width  = m.getWidth();
+        const auto height = m.getHeight();
+        auto ci = types::initializeCellIndicator(m.getDimensions());
+
+        // Find the rooms in the maze and process.
+        RoomFinder roomFinder(m);
+        const auto &cellsToRooms = roomFinder.getCellToRoom();
+        const auto &roomContents = roomFinder.getRoomContents();
+        for (const auto &r: roomContents) {
+#ifdef DEBUG
+            cout << "Processing room " << r.first << ':' << endl;
+#endif
+            processRoom(m, r.second);
+        }
+
+        /*** PROCESSING ***/
+        // Get a list of the dead ends. We start by covering dead ends and all that is left after
+        // that are pure loops.
+        auto deadEnds = m.findDeadEnds();
+
+        // Create the queue, which comprises a starting vertex, and a list of the covered cells.
+        struct EdgeStart {
+            const WeightedGraphVertex u{};
+            types::CellCollection cells{};
+        };
+        std::queue<EdgeStart> edgeQueue;
+
+        while (!deadEnds.empty()) {
+            // If the queue is empty, make a new start at a dead end for it.
+            if (edgeQueue.empty()) {
+                // Keep popping dead ends until we find an unvisited one.
+                while (!deadEnds.empty()) {
+                    const auto &[x, y] = deadEnds.back();
+                    if (ci[x][y])
+                        deadEnds.pop_back();
+                    else
+                        break;
+                }
+
+                // If we are out of dead ends, then we are done.
+                if (deadEnds.empty())
+                    break;
+
+                const auto deadEnd = deadEnds.back();
+                deadEnds.pop_back();
+
+                const WeightedGraphVertex u = boost::add_vertex(graph);
+                vertexCell[deadEnd] = u;
+                edgeQueue.emplace(EdgeStart{u, types::CellCollection{deadEnd}});
+
+                // Mark the cell as visited.
+                const auto &[dx, dy] = deadEnd;
+                ci[dx][dy] = true;
+            }
+
+            EdgeStart edgeStart = edgeQueue.front();
+            edgeQueue.pop();
+
+            // Mark the current cell as visited.
+            const auto &curCell = edgeStart.cells.back();
+            const auto &[curX, curY] = curCell;
+            bool wasVisited = ci[curX][curY];
+            ci[curX][curY] = true;
+
+            // Get the neighbours of the last cell in the queue, and remove all vertices that
+            // have already been visited to get the unvisited neighbours.
+            // TODO: This can be written better using an STL algo.
+            const auto nbrs = m.neighbours(edgeStart.cells.back());
+            types::CellCollection unvisitedNbrs;
+            for (const types::Cell &c: nbrs) {
+                const auto[cx, cy] = c;
+                if (!(ci[cx][cy]))
+                    unvisitedNbrs.emplace_back(c);
+            }
+
+            // We act depending on the number of neighbours and the possibility that we entered a room.
+            // 1. If we are on a room cell, we have entered a room.
+            // 2. If we have 0 neighbours, then we are an isolated cell.
+            // 3. If we have 1 neighbour and 0 unvisited neighbours, we are at the end of a passage.
+            // 4. If we have 1 neighbour and 1 unvisited neighbours, we are at the start of a passage.
+            //    If we have 2 neighbours and 1 unvisited neighbour, we are in the middle of a passage.
+            // 5. If we have 2 neighbours and 0 univisted neighbours, we are in a loop.
+            // 6. If we have 3 neighbours, we are at a T intersection.
+            //    If we have 4 neighbours, we are at a + intersection.
+            // In all cases but 4, we want to create an edge.
+            // NOTE that we can get into some bizarre situations where the same EdgeStart seed ends up queued
+            //      up twice. This could happen, for example, if we have an edge (a,c) and (b,c) where c is a
+            //      junction node, and a and b both create these edges before the EdgeStart with c is run.
+
+            // Thus, to avoid these edge cases, we always check to make sure an edge is not already in our graph
+            //      before trying to add one. This tries to add an edge between edgeStart.u and v for the given rule.
+            const auto add_edge = [&](const int rule, const auto &v) {
+#ifdef DEBUG
+                cout << rule << ": ";
+#endif
+                const auto [e0, exists] = boost::edge(edgeStart.u, v, graph);
+                if (exists) {
+#ifdef DEBUG
+                    cout << "Edge " << e0 << " already exists. Skipping." << endl;
+#endif
+                } else {
+                    const auto [e, success] = boost::add_edge(edgeStart.u, v, edgeStart.cells.size() - 1, graph);
+                    if (!success) {
+#ifdef DEBUG
+                        cout << "FAILURE: could not find or add edge " << e << " over cells:" << endl;
+#endif
+                    } else {
+                        edges[e] = edgeStart.cells;
+#ifdef DEBUG
+                        cout << "Added edge " << e << " with weight " << *(reinterpret_cast<int*>(e.m_eproperty))
+                             << " and cells:" << endl;
+#endif
+                    }
+#ifdef DEBUG
+                    cout << '\t' << typeclasses::Show<types::CellCollection>::show(edgeStart.cells) << endl;
+#endif
+                }
+            };
+
+            // Lambda to add a vertex if we are processing a queue step.
+            const auto add_vertex = [&]() {
+                const auto v = boost::add_vertex(graph);
+                vertexCell[curCell] = v;
+                return v;
+            };
+
+            /*** 1 ***/
+            if (cellsToRooms[curX][curY] != -1) {
+                // We entered a room: close off.
+                const auto &v = vertexCell[curCell];
+                add_edge(1, v);
+            }
+
+            /*** 2 ***/
+            else if (nbrs.empty()) {
+                // Single isolated cell: close off.
+                add_edge(2, edgeStart.u);
+            }
+
+            /*** 3 ***/
+            else if (nbrs.size() == 1 && unvisitedNbrs.empty()) {
+                // End of a passage: add a final vertex and close off.
+                add_edge(3, add_vertex());
+            }
+
+            /*** 4 ***/
+            else if ((nbrs.size() == 1 || nbrs.size() == 2 ) && unvisitedNbrs.size() == 1) {
+                // This covers two cases:
+                // 1. nbrs = 1: We are at the very start of a passage.
+                // 2. nbrs = 2: We are in the middle of a passage.
+                // In either case, extend with the unvisited cell and enqueue.
+                edgeStart.cells.emplace_back(unvisitedNbrs[0]);
+                edgeQueue.emplace(edgeStart);
+            }
+
+            /*** 5 ***/
+            else if (nbrs.size() == 2 && unvisitedNbrs.empty()) {
+                // We are in a loop or in a short passage of length 2 existing between two cells.
+                // There is one cell behind and one cell ahead. Determine which is ahead.
+                // The current cell is the last cell in the list edgeStart.cells, so the behind cell is the cell
+                // before that.
+                assert(edgeStart.cells.size() >= 2);
+                const types::Cell &behindCell = edgeStart.cells[edgeStart.cells.size()-2];
+                const types::Cell &aheadCell = (behindCell == nbrs[0]) ? nbrs[1] : nbrs[0];
+
+                // Add this cell to the edge.
+                edgeStart.cells.emplace_back(aheadCell);
+                const auto v = vertexCell[aheadCell];
+
+                add_edge(5, v);
+
+            /*** ERROR CASE: this should never happen ***/
+            } else if (nbrs.size() == unvisitedNbrs.size()) {
+                throw std::domain_error("Unexpected maze configuration.");
+            }
+
+            /*** 6 ***/
+            else {
+                // We are at a junction. Check to see if a vertex exists for this cell, and if not, create one.
+                const auto iter = vertexCell.find(curCell);
+                const auto v = (iter == vertexCell.end()) ? add_vertex() : iter->second;
+
+                // Add an edge.
+                add_edge(6, v);
+
+                // Create new EdgeStarts for each unvisited neighbour and enqueue them.
+                // Note that we could theoretically enqueue a case already enqueued, hence the safeguard of
+                // checking that edges do not exist when adding them.
+                for (const auto &n: unvisitedNbrs)
+                    edgeQueue.emplace(EdgeStart{v, types::CellCollection{curCell, n}});
+            }
+        }
+
+        // Now we have taken care of all the dead ends: all that is left are possible loops.
+        // Iterate over the remaining cells.
+        for (auto y = 0; y < height; ++y) {
+            for (auto x = 0; x < width; ++x) {
+                // Skip visited cells.
+                if (ci[x][y]) continue;
+
+                // For cells out of bounds (e.g. walls in a ThickMaze) or cells in a room,
+                // mark visited and skip.
+                if (cellsToRooms[x][y] != -1 || !m.cellInBounds(x, y)) {
+                    ci[x][y] = true;
+                    continue;
+                }
+
+                // Perform a BFS starting here.
+                const auto bfsResults = m.performBFSFrom(types::cell(x, y));
+                const auto &loop = bfsResults.connectedCells;
+
+                // Create a vertex and loop in the graph with these cells.
+                const auto v = boost::add_vertex(graph);
+                vertexCell[types::cell(x, y)] = v;
+
+                const auto [e, success] = boost::add_edge(v, v, loop.size() - 1, graph);
+
+                // Mark all the cells as visited and add a disconnected vertex in a loop to the graph.
+                edges[e] = loop;
+            }
+        }
+    }
+
+
+    template<typename T>
+    void SquashedMaze::processRoom(const types::AbstractMaze<T> &m, const types::CellCollection &cc) {
+        // We begin by finding all of the entrances to the room.
+        // Entrances are cells that have neighbours in the maze outside of the cells comprising the room.
+#ifdef DEBUG
+        cout << "\tCells: " << typeclasses::Show<types::CellCollection>::show(cc) << endl;
+#endif
+        types::CellCollection entrances;
+        for (const auto &c: cc) {
+            auto nbrs = m.neighbours(c);
+
+            // Remove all the cells in the room to leave only the cells outside of the room.
+            for (const auto &cother: cc) {
+                const auto iter = std::find(nbrs.begin(), nbrs.end(), cother);
+                if (iter != nbrs.end())
+                    nbrs.erase(iter);
+            }
+
+            // If there are any neighbours left, we are an entrance.
+            if (!nbrs.empty())
+                entrances.emplace_back(c);
+        }
+
+#ifdef DEBUG
+        cout << "\tEntrances: " << typeclasses::Show<types::CellCollection>::show(entrances) << endl;
+#endif
+
+        // Now we have our entrances: create a vertex for each.
+        for (const auto &c: entrances) {
+            vertexCell[c] = boost::add_vertex(graph);
+#ifdef DEBUG
+            cout << "\tAssigning " << vertexCell[c] << " to " << typeclasses::Show<types::Cell>::show(c) << endl;
+#endif
+        }
+
+        // Now find the shortest path between every pair of vertices, storing the distance and the path.
+        // BfsData is the data we want to accumulate during the BFS.
+        struct BfsData {
+            int distance = -1;
+            types::CellCollection path{};
+        };
+
+        for (auto i = 0; i < entrances.size(); ++i) {
+            const auto &u = entrances[i];
+            for (auto j = i + 1; j < entrances.size(); ++j) {
+                const auto &v = entrances[j];
+
+                // Initialize a map of BfsData for each cell in the room, marking them unvisited.
+                std::map<types::Cell, BfsData> bfsData;
+                for (const auto &c: cc) {
+                    bfsData[c] = BfsData{};
+                }
+
+                // Now we create the BFS queue, and initialize it with u.
+                std::queue<types::Cell> bfsQueue;
+                bfsQueue.emplace(u);
+                bfsData[u] = BfsData{0, types::CellCollection{u}};
+
+                while (!bfsQueue.empty()) {
+                    // Get the next cell to process.
+                    const auto c = bfsQueue.front();
+                    bfsQueue.pop();
+
+                    // Get the BfsData for the current cell.
+                    const auto &cBfsData = bfsData[c];
+
+                    // Get the unvisited neighbours in the room.
+                    const auto nbrs = m.neighbours(c);
+                    for (const auto &n: nbrs) {
+                        // if we can't find the neighbour, it is outside of the room, so skip.
+                        const auto iter = bfsData.find(n);
+                        if (iter == bfsData.end())
+                            continue;
+
+                        // If the cell has already been visited (i.e. has populated BfsData), skip.
+                        const auto &[dist, cells] = iter->second;
+                        if (dist != -1) continue;
+
+                        // It has not been visited. Fill out its BfsData.
+                        auto pathn = cBfsData.path;
+                        pathn.emplace_back(n);
+                        bfsData[n] = BfsData{cBfsData.distance + 1, pathn};
+
+                        // Add it to the queue.
+                        bfsQueue.push(n);
+                    }
+
+                    // If we have found v, stop.
+                    const auto &[vdist, vpath] = bfsData[v];
+                    if (vdist != -1)
+                        break;
+                }
+
+                // Make sure we have found v.
+                const auto &[vdist, vpath] = bfsData[v];
+                assert(vdist != -1);
+
+                // Insert the weighted edge and modify edges to record the path.
+                const auto [e, success] = boost::add_edge(vertexCell[u], vertexCell[v], vdist, graph);
+                edges[e] = vpath;
+#ifdef DEBUG
+                cout << "\tEdge " << e << " of weight " << vdist << endl;
+#endif
+            }
+        }
+    }
 }
 

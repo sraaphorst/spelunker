@@ -48,6 +48,11 @@ namespace spelunker::squashedmaze {
         // Invariant at any given time:
         // 1. For any cell c, RoomContents(CellToRoom(c)) contains c.
         // 2. For any room r, for any c in RoomContents(r), then CellToRoom(c) = r.
+        struct Room {
+            types::CellCollection contents;
+            types::CellCollection entrances;
+
+        };
         using RoomContents = std::map<RoomID, types::CellCollection>;
 
         RoomFinder(const types::AbstractMaze<T> &maze)
@@ -171,6 +176,5 @@ namespace spelunker::squashedmaze {
         CellToRoom cellToRoom;
         RoomContents roomContents;
     };
-
-};
+}
 

@@ -43,7 +43,7 @@ TEST_CASE("Room finder properly finds all rooms", "[roomfinder][maze]") {
         if (iter != keys.end())
             REQUIRE(*iter == (roomContents.size() - 1));
         else
-            REQUIRE(0 == roomContents.size());
+            REQUIRE(roomContents.empty());
     }
 
     SECTION("Rooms have size >= 4") {
