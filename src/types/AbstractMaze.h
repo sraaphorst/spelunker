@@ -196,6 +196,28 @@ namespace spelunker::types {
             return deadends;
         }
 
+        /// Find the junctions for this maze.
+        /**
+         * Find a collection of all the junctions for this maze.
+         * A cell is considered a "junction" if it has exactly zero or one walls,
+         * thus offering a choice of movement.
+         * A junction with one wall is called a <em>T junction</em>.
+         * A junction with zero walls is called a <em>+ junction</em>.
+         * @return a collection of the junction cells
+         */
+         const types::CellCollection findJunctions() const noexcept {
+             types::CellCollection junctions;
+             const auto [width, height] = dimensions.values();
+             for (auto y = 0; y < height; ++y) {
+                 for (auto x = 0; x < width; ++x) {
+                     const auto c = types::cell(x, y);
+                     if (numCellWalls(c) == 0 || numCellWalls(c) == 1)
+                         junctions.emplace_back(c);
+                 }
+             }
+             return junctions;
+         }
+
         /**
          * Empty constructor for serialization.
          */
