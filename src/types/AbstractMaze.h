@@ -26,7 +26,7 @@
 #include "CommonMazeAttributes.h"
 #include "Exceptions.h"
 #include "Dimensions2D.h"
-#include "Symmetry.h"
+#include "Transformation.h"
 
 namespace spelunker::types {
     /**
@@ -35,35 +35,22 @@ namespace spelunker::types {
      * 2. the (possible) starting position of the maze
      * 3. the ending position(s) (can be empty) of the maze.
      */
-    template<typename T>
     class AbstractMaze {
     protected:
-        AbstractMaze(const Dimensions2D &d, const PossibleCell &startPos, const CellCollection &endPos)
-                : dimensions{d}, startCell{startPos}, goalCells{endPos} {
-            if (d.getWidth() < 1 || d.getHeight() < 1)
-                throw types::IllegalDimensions(d.getWidth(), d.getHeight());
-            if (startCell)
-                checkCell(*startCell);
-            for (const auto g: goalCells)
-                checkCell(g);
-        }
-
-        AbstractMaze(const Dimensions2D &d)
-                : AbstractMaze{d, {}, CellCollection()} {}
-
-        AbstractMaze(int w, int h, const PossibleCell &startPos, const CellCollection &endPos)
-                : AbstractMaze{Dimensions2D{w, h}, startPos, endPos} {}
-
-        AbstractMaze(int w, int h)
-                : AbstractMaze{Dimensions2D{w, h}, {}, CellCollection()} {}
+        AbstractMaze(const Dimensions2D &d, const PossibleCell &startPos, const CellCollection &endPos);
+        AbstractMaze(const Dimensions2D &d);
+        AbstractMaze(int w, int h, const PossibleCell &startPos, const CellCollection &endPos);
+        AbstractMaze(int w, int h);
 
         virtual ~AbstractMaze() = default;
 
-        bool operator==(const AbstractMaze<T> &other) const noexcept {
-            return dimensions == other.dimensions &&
-                   startCell == other.startCell &&
-                   goalCells == other.goalCells;
-        }
+        /**
+         * For two mazes to be equal, they must have the same start, goals, and dimensions.
+         * Subclasses should extend this to add content checking to it.
+         * @param other the other maze
+         * @return true if they are equal, and false otherwise
+         */
+        bool operator==(const AbstractMaze &other) const noexcept;
 
     public:
         inline const Dimensions2D &getDimensions() const noexcept {
@@ -87,18 +74,10 @@ namespace spelunker::types {
         }
 
         /// We make this virtual since the start position may not be valid in some cases, e.g. a wall in a ThickMaze.
-        virtual void setStartingCell(const PossibleCell &startPos) noexcept {
-            if (startPos)
-                checkCell(*startPos);
-            startCell = startPos;
-        }
+        virtual void setStartingCell(const PossibleCell &startPos) noexcept;
 
         /// We make this virtual since the goal positions may not be valid in some cases, e.g. a wall in a ThickMaze.
-        virtual void setGoalCells(const CellCollection &cells) noexcept {
-            for (const auto c: cells)
-                checkCell(c);
-            goalCells = cells;
-        }
+        virtual void setGoalCells(const CellCollection &cells) noexcept;
 
         /**
          * Given a cell, check to see if the cell is in the dimensions.
@@ -106,9 +85,7 @@ namespace spelunker::types {
          * @param c the cell
          * @throws OutOfBoundsException
          */
-        void checkCell(const Cell &c) const {
-            dimensions.checkCell(c);
-        }
+        void checkCell(const Cell &c) const;
 
         /**
          * Given a set of coordinates, check to see if they are in the dimensions.
@@ -119,9 +96,7 @@ namespace spelunker::types {
          * @param y the y coordinate
          * @throws OutOfBoundsException
          */
-        void checkCell(int x, int y) const {
-            checkCell(types::cell(x, y));
-        }
+        void checkCell(int x, int y) const;
 
         /**
          * Given a set of coordinates, check to see if they are in the dimensions.
@@ -129,9 +104,7 @@ namespace spelunker::types {
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
-        virtual bool cellInBounds(const Cell &c) const noexcept {
-            return dimensions.cellInBounds(c) && numCellWalls(c) < 4;
-        }
+        virtual bool cellInBounds(const Cell &c) const noexcept;
 
         /**
          * Given a cell, check to see if the cell is in the dimensions.
@@ -141,38 +114,7 @@ namespace spelunker::types {
          * @param y the y coordinate
          * @return true if the cell is in bounds, and false otherwise
          */
-        bool cellInBounds(int x, int y) const noexcept {
-            return cellInBounds(cell(x, y));
-        }
-
-        /**
-         * Apply a symmetry to this maze to get a new one.
-         * Reflections in the diagonals can only be done in square mazes.
-         * @param s the symmetry to apply
-         * @return the transformed maze
-         * @throws IllegalGroupOperation if the symmetry cannot be applied
-         */
-        virtual const T applySymmetry(Symmetry s) const = 0;
-
-        /**
-         * A braided maze is a maze with no dead ends.
-         * Any maze can be made into a braided maze simply by removing one wall from each dead end.
-         *
-         * @param probability the probability of eliminating a dead end
-         * @return a braided or semi-braided maze
-         */
-        virtual const T braid(double probability) const noexcept = 0;
-
-        /**
-         * A braided maze is a maze with no dead ends.
-         * Any maze can be made into a braided maze simply by removing one wall from each dead end.
-         *
-         * @param probability the probability of eliminating a dead end
-         * @return a braided or semi-braided maze
-         */
-        const T braidAll() const noexcept {
-            return braid(1.0);
-        };
+        bool cellInBounds(int x, int y) const noexcept;
 
         /// Determine the number of walls a cell has.
         virtual int numCellWalls(const types::Cell &c) const = 0;
@@ -183,18 +125,7 @@ namespace spelunker::types {
          * A cell is considered a "dead end" if it has exactly three walls.
          * @return a collection of the dead end cells
          */
-        const types::CellCollection findDeadEnds() const noexcept {
-            types::CellCollection deadends;
-            const auto[width, height] = dimensions.values();
-            for (auto y = 0; y < height; ++y) {
-                for (auto x = 0; x < width; ++x) {
-                    const auto c = types::cell(x, y);
-                    if (numCellWalls(c) == 3)
-                        deadends.emplace_back(c);
-                }
-            }
-            return deadends;
-        }
+        const types::CellCollection findDeadEnds() const noexcept;
 
         /// Find the junctions for this maze.
         /**
@@ -205,42 +136,14 @@ namespace spelunker::types {
          * A junction with zero walls is called a <em>+ junction</em>.
          * @return a collection of the junction cells
          */
-         const types::CellCollection findJunctions() const noexcept {
-             types::CellCollection junctions;
-             const auto [width, height] = dimensions.values();
-             for (auto y = 0; y < height; ++y) {
-                 for (auto x = 0; x < width; ++x) {
-                     const auto c = types::cell(x, y);
-                     if (numCellWalls(c) == 0 || numCellWalls(c) == 1)
-                         junctions.emplace_back(c);
-                 }
-             }
-             return junctions;
-         }
+         const types::CellCollection findJunctions() const noexcept;
 
          /// Count the number of carved walls for the maze.
          /**
           * Count the number of walls that the maze has carved out.
           * @return the number of carved walls
           */
-         const int numCarvedWalls() const noexcept {
-             // TODO: If we generalize mazes further, cells may not have four walls. This will need to be changed.
-             // We do this by iterating over the cells and counting how many walls each cell is missing.
-             // Each missing wall falls between two cells, so it will be counted twice. Thus, we must dissolve the
-             // total by two.
-             int num = 0;
-             const auto [width, height] = dimensions.values();
-             for (auto y = 0; y < height; ++y)
-                 for (auto x = 0; x < width; ++x)
-                     num += (4 - numCellWalls(types::cell(x, y)));
-             return num / 2;
-         }
-
-        /**
-         * Empty constructor for serialization.
-         */
-        AbstractMaze()
-                : dimensions{Dimensions2D{1, 1}}, startCell{}, goalCells{CellCollection{}} {}
+          const int numCarvedWalls() const noexcept;
 
         /// Find the neighbours of a given cell.
         /**
@@ -256,21 +159,7 @@ namespace spelunker::types {
          * Given a CellCollection, find its neighbours int he maze.
          *
          */
-        const types::CellSet neighbours(const types::CellCollection &cc) const {
-            // Add all the neighbours of each cell.
-            types::CellSet nbrs;
-            for (const auto &c: cc) {
-                const auto cnbrs = neighbours(c);
-                for (const auto &c2: cnbrs)
-                    nbrs.insert(c2);
-            }
-
-            // Remove the original cells.
-            for (const auto &c: cc)
-                nbrs.erase(c);
-
-            return nbrs;
-        }
+        const types::CellSet neighbours(const types::CellCollection &cc) const;
 
         /// Performs a BFS from the given input cell and returns the results.
         /**
@@ -292,61 +181,14 @@ namespace spelunker::types {
          * @param start the starting cell
          * @return the data collected during the BFS
          */
-        const BFSResults performBFSFrom(const types::Cell &start) const {
-            checkCell(start);
-
-            // Keep track of the cells to which we're connected.
-            CellCollection connectedCells;
-
-            // Keep track of the distances of the cells.
-            // start is the only cell at position zero so record it.
-            CellDistances distances{1};
-
-            // Prepare the queue for BFS. The cell info comprises a cell and its distance.
-            using cellInfo = std::pair<const types::Cell, const int>;
-            std::queue<cellInfo> cellQueue{};
-            cellQueue.emplace(cellInfo{start, 0});
-
-            // We also want to keep track of the cells visited.
-            auto ci = initializeCellIndicator(getDimensions(), false);
-
-            while (!cellQueue.empty()) {
-                const auto[cell, dist] = cellQueue.front();
-                const auto[cellx, celly] = cell;
-                cellQueue.pop();
-
-                // If this cell has already been visited, ignore.
-                if (ci[cellx][celly])
-                    continue;
-
-                // Mark the cell visited, the distance and add the neighbours.
-                ci[cellx][celly] = true;
-                connectedCells.emplace_back(cell);
-                if (distances.size() <= dist)
-                    distances.resize(dist+1);
-                distances[dist].emplace_back(cell);
-
-                const auto nbrs = neighbours(cell);
-                for (auto n: nbrs)
-                    cellQueue.emplace(cellInfo{n, dist + 1});
-            }
-
-            return BFSResults{start, connectedCells, distances};
-        }
+        const BFSResults performBFSFrom(const types::Cell &start) const;
 
         /**
          * This method looks through the cells of the maze, and returns those that are considered invalid, i.e.
          * those that have four walls.
          * @return a collection of the invalid cells
          */
-        const CellCollection findInvalidCells() const noexcept {
-            CellCollection cc;
-            for (auto y = 0; y < getHeight(); ++y)
-                for (auto x = 0; x < getWidth(); ++x)
-                    if (!cellInBounds(x, y))
-                        cc.emplace_back(cell(x, y));
-            return cc;
-        }
+        const CellCollection findInvalidCells() const noexcept;
 
         /// Find the connected components of the maze.
         /**
@@ -355,31 +197,7 @@ namespace spelunker::types {
          * this method.
          * @return a collection of connected components
          */
-        const ConnectedComponents findConnectedComponents() const noexcept {
-            ConnectedComponents cc;
-
-            // We need to keep track of which cells we've visited.
-            // Start by marking the out-of-bound cells as "visited", since we don't want to visit them.
-            CellIndicator ci = initializeCellIndicator(dimensions);
-            const auto invalidCells = findInvalidCells();
-            for (const auto ic: invalidCells) {
-                const auto [x, y] = ic;
-                ci[x][y] = true;
-            }
-
-            for (auto y = 0; y < getHeight(); ++y)
-                for (auto x = 0; x < getWidth(); ++x) {
-                    if (ci[x][y]) continue;
-                    const auto bfsResults = performBFSFrom(cell(x, y));
-                    const auto comp = bfsResults.connectedCells;
-                    for (const auto c: comp) {
-                        const auto[cx, cy] = c;
-                        ci[cx][cy] = true;
-                    }
-                    cc.emplace_back(comp);
-                }
-            return cc;
-        }
+        const ConnectedComponents findConnectedComponents() const noexcept;
 
         /**
          * Find the diameter of the graph. This consists of the longest distance between any pair
@@ -397,74 +215,28 @@ namespace spelunker::types {
          *
          * @return a structure with the distance and a list of the pairs of cells at that distance
          */
-        const FurthestCellResults findDiameter() const noexcept {
-            int longestDistance = 0;
-            std::vector<std::pair<Cell, Cell>> winners;
-            using cellInfo = std::pair<const Cell, const int>;
-            auto ranker = [this](int x, int y) { return y * getWidth() + x; };
+        const FurthestCellResults findDiameter() const noexcept;
 
-            // For speed, use array to keep track of cells visited.
-            const int numCells = getWidth() * getHeight();
-
-            for (auto y = 0; y < getHeight(); ++y) {
-                for (auto x = 0; x < getWidth(); ++x) {
-                    // We can't just clear this: it doesn't work.
-                    std::vector<bool> visited(numCells, false);
-
-                    std::queue<cellInfo> cellQueue;
-                    types::Cell stc{x,y};
-                    cellQueue.emplace(cellInfo{stc, 0});
-
-                    while (!cellQueue.empty()) {
-                        const auto[c, cd] = cellQueue.front();
-                        const auto[cx, cy] = c;
-                        const auto rk = ranker(cx, cy);
-                        cellQueue.pop();
-                        if (visited[rk]) continue;
-
-                        visited[rk] = true;
-                        if (cd > longestDistance) {
-                            longestDistance = cd;
-                            winners.clear();
-                            winners.emplace_back(std::make_pair(stc, c));
-                        } else if (cd == longestDistance) {
-                            if (compareCells(stc, c) < 0)
-                                winners.emplace_back(std::make_pair(stc, c));
-                        }
-
-                        const auto nbrs = neighbours(c);
-                        for (const auto &n: nbrs) {
-                            cellQueue.emplace(cellInfo{n, cd + 1});
-                        }
-                    }
-                }
-            }
-
-            return FurthestCellResults{longestDistance, winners};
-        }
-
+    protected:
         /**
-         * Find the diameter of the graph. This consists of the longest distance between any pair
-         * of points. To do so, we can find the shortest distance between any two vertices and
-         * then take the maximum.
-         * Find all the pairs of cells who have the longest shortest path between them in a maze.
-         * We could optimize this by not storing all the intermediate information, but by the test
-         * cases, we know the BFS algorithm works, so for now, we use it instead of reimplementing.
-         * @return a structure with the distance and a list of the pairs of cells at that distance
+         * Empty constructor for Boost.Serialization.
          */
+        AbstractMaze();
 
+        template<typename Archive>
+        void serialize(Archive &ar, const unsigned int version) {
+                ar & const_cast<Dimensions2D &>(dimensions);
+                ar & startCell;
+                ar & goalCells;
+        }
 
     private:
         const Dimensions2D dimensions;
         PossibleCell startCell;
         CellCollection goalCells;
 
-        template<typename Archive>
-        void serialize(Archive &ar, const unsigned int version) {
-            ar & const_cast<Dimensions2D &>(dimensions);
-            ar & startCell;
-            ar & goalCells;
-        }
+        /// The maximum number of cell walls. We may change this later, so isolate it here.
+        static constexpr int NumWalls = 4;
 
         friend class boost::serialization::access;
     };

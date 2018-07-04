@@ -9,6 +9,7 @@
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/adj_list_serialize.hpp>
+#include <boost/graph/isomorphism.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/text_oarchive.hpp>
@@ -30,7 +31,7 @@ namespace spelunker::graphmaze {
                          const types::PossibleCell &start,
                          const types::CellCollection &goals,
                          const VertexCellPathCollection &ps)
-         : types::AbstractMaze<GraphMaze>{d, start, goals},
+         : types::AbstractMaze{d, start, goals},
            vertices{createVertexCellGrid(d)},
            lookup{createCellLookup(d)},
            graph{graphFromPaths(d.getWidth() * d.getHeight(), ps)} {}
@@ -51,6 +52,13 @@ namespace spelunker::graphmaze {
                          const spelunker::graphmaze::VertexCellPathCollection &ps)
         : GraphMaze{types::Dimensions2D{w, h}, {}, types::CellCollection(), ps} {}
 
+    bool GraphMaze::operator==(const GraphMaze &other) const noexcept {
+        return AbstractMaze::operator==(other) &&
+            boost::isomorphism(graph, other.graph) &&
+            vertices == other.vertices &&
+            lookup == other.lookup;
+    }
+
     GridGraph GraphMaze::graphFromPaths(const vertex_size_t numcells,
                                         const VertexCellPathCollection &ps) {
         return GridGraph{ps.begin(), ps.end(), numcells};
@@ -62,13 +70,13 @@ namespace spelunker::graphmaze {
         return graph.out_edge_list(v).size();
     }
 
-    const GraphMaze GraphMaze::applySymmetry(types::Symmetry s) const {
+    const GraphMaze GraphMaze::applyTransformation(types::Transformation t) const {
         // Cheat by taking the homomorphic way out.
         const maze::Maze m = typeclasses::Homomorphism<GraphMaze, maze::Maze>::morph(*this);
-        return typeclasses::Homomorphism<maze::Maze, GraphMaze>::morph(m.applySymmetry(s));
+        return typeclasses::Homomorphism<maze::Maze, GraphMaze>::morph(m.applyTransformation(t));
     }
 
-    const GraphMaze GraphMaze::makeUnicursal() const {
+    const GraphMaze GraphMaze::makeUnicursal() const noexcept {
         // Cheat by taking the homomorphic way out.
         const maze::Maze m = typeclasses::Homomorphism<GraphMaze, maze::Maze>::morph(*this);
         return typeclasses::Homomorphism<maze::Maze, GraphMaze>::morph(m.makeUnicursal());
@@ -94,7 +102,7 @@ namespace spelunker::graphmaze {
 
     template<typename Archive>
     void GraphMaze::serialize(Archive &ar, const unsigned int version) {
-        ar & boost::serialization::base_object<types::AbstractMaze<GraphMaze>>(*this);
+        ar & boost::serialization::base_object<types::AbstractMaze>(*this);
         ar & const_cast<GridGraph&>(graph);
         ar & const_cast<VertexCellGrid&>(vertices);
         ar & const_cast<CellFromVertexCellMap&>(lookup);

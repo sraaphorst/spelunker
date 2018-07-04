@@ -4,6 +4,7 @@
 set(_TYPES_PUBLIC_HEADER_FILES
         AbstractMaze.h
         AbstractMazeGenerator.h
+        BraidableMaze.h
         CommonMazeAttributes.h
         Dimensions2D.h
         Direction.h
@@ -11,7 +12,8 @@ set(_TYPES_PUBLIC_HEADER_FILES
         Observable.h
         Observer.h
         ReversibleMaze.h
-        Symmetry.h
+        TransformableMaze.h
+        Transformation.h
         UnicursalizableMaze.h
         PARENT_SCOPE
         )
@@ -22,10 +24,11 @@ set(_TYPES_PRIVATE_HEADER_FILES
         )
 
 set(_TYPES_SOURCE_FILES
+        AbstractMaze.cpp
         CommonMazeAttributes.cpp
         Dimensions2D.cpp
         Direction.cpp
-        Symmetry.cpp
+        Transformation.cpp
         PARENT_SCOPE
         )
 

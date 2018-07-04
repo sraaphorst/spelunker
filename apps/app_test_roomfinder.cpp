@@ -27,8 +27,7 @@ int main() {
 
     std::cout << typeclasses::Show<thickmaze::ThickMaze>::show(tm) << std::endl;
 
-    const auto &atm = dynamic_cast<const types::AbstractMaze<thickmaze::ThickMaze>&>(tm);
-    const squashedmaze::RoomFinder ft(atm);
+    const squashedmaze::RoomFinder ft(tm);
     const auto &tmRoomContents = ft.getRoomContents();
     std::cout << "Rooms:" << std::endl;
     for (const auto &room: tmRoomContents) {
@@ -44,8 +43,7 @@ int main() {
 
     std::cout << typeclasses::Show<maze::Maze>::show(m) << std::endl;
 
-    const auto &am = dynamic_cast<const types::AbstractMaze<maze::Maze>&>(m);
-    const squashedmaze::RoomFinder f(am);
+    const squashedmaze::RoomFinder f(m);
     const auto &mRoomContents = f.getRoomContents();
     std::cout << "Rooms:" << std::endl;
     for (const auto &room: mRoomContents) {

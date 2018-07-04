@@ -39,12 +39,15 @@ namespace spelunker::gui {
         const auto mh = maze.getHeight();
 
         // Determine the size per cell at the current resolution.
-        const auto cellW = (1.0 * w - 2 * BORDER_WIDTH) / mw;
-        const auto cellH = (1.0 * h - 2 * BORDER_WIDTH) / mh;
+        const auto cellW = (1.0 * w - 2 * WALL_WIDTH) / mw;
+        const auto cellH = (1.0 * h - 2 * WALL_WIDTH) / mh;
 
         // Draw the floor.
+        for (auto y = 0; y < mh; ++y)
+            for (auto x = 0; x < mw; ++x)
+                painter.fillRect(QRectF{x * cellW, y * cellH, cellW, cellH}, (x + y) % 2 ? FLOOR_COLOUR1 : FLOOR_COLOUR2);
         const QRect fullRect{0, 0, w, h};
-        painter.fillRect(fullRect, FLOOR_COLOUR);
+        //painter.fillRect(fullRect, FLOOR_COLOUR);
 
         // Draw the border.
         // Increase the border width by 1 because otherwise sometimes it leaves a small
@@ -56,9 +59,10 @@ namespace spelunker::gui {
 
         // Draw the walls by iterating over the cells.
         pen.setWidth(WALL_WIDTH);
-        auto ypos = 1.0 * BORDER_WIDTH;
+        //auto ypos = 0.5 * BORDER_WIDTH;
+        auto ypos = -0.5 * WALL_WIDTH;
         for (auto y=0; y < mh; ++y) {
-            auto xpos = 1.0 * BORDER_WIDTH;
+            auto xpos = -0.5 * WALL_WIDTH;
             for (auto x=0; x < mw; ++x) {
                 // Determine the walls.
                 const auto UPPER_LEFT  = QPointF{xpos, ypos};

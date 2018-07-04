@@ -7,6 +7,6 @@ set(types_tests
         TestBFSThickMaze
         TestDimensions2D
         TestDirection
-        TestSymmetry
+        TestTransformation
         PARENT_SCOPE
         )

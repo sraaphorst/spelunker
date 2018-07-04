@@ -20,6 +20,6 @@ namespace spelunker::types {
     public:
 
         /// From this maze, produce a unicursal maze.
-        virtual const T makeUnicursal() const = 0;
+        virtual const T makeUnicursal() const noexcept = 0;
     };
 }
