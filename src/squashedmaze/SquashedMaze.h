@@ -452,8 +452,9 @@ namespace spelunker::squashedmaze {
                 }
 
                 // Make sure we have found v.
-                const auto vdist = bfsData[v].distance;
-                const auto &vpath = bfsData[v].path;
+                const auto &[vdist, vpath] = bfsData[v];
+//                const auto vdist = bfsData[v].distance;
+//                const auto &vpath = bfsData[v].path;
                 assert(vdist != -1);
 
                 // Insert the weighted edge and modify edges to record the path.
