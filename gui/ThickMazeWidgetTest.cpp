@@ -22,8 +22,8 @@ int main(int argc, char *argv[]) {
     QApplication app{argc, argv};
 
     // We will use a homomorphism to generate a ThickMaze. Leave room the the border.
-    auto constexpr mazeWidth  = 48;
-    auto constexpr mazeHeight = 38;
+    auto constexpr mazeWidth  = 10;
+    auto constexpr mazeHeight = 10;
     auto constexpr cellSize = 10;
     auto constexpr windowSeparation = 20;
 

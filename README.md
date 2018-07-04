@@ -115,9 +115,9 @@ Here is the same maze after being fully braided:
 
 Spelunker also defines several typeclasses for the various types of mazes, namely:
 
-1. [`Show`](#show), which can be used to create string representations of mazes, thick mazes, coordinates, positions, etc. for text output; and
+1. [`Show`](src/typeclasses/README.md##show), which can be used to create string representations of mazes, thick mazes, coordinates, positions, etc. for text output; and
 
-2. [`Homomorphism`](#homomorphism), which is a structure-preserving mapping from mazes of one type to another.
+2. [`Homomorphism`](src/typeclasses/README.md#homomorphism), which is a structure-preserving mapping from mazes of one type to another.
 
 Here is an example of the string representations of a `Maze` produced with `Show`:
 

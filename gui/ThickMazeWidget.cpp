@@ -40,7 +40,7 @@ namespace spelunker::gui {
         const QRect fullRect{0, 0, w, h};
 
         QPainter painter { this };
-        painter.fillRect(fullRect, FLOOR_COLOUR);
+        //painter.fillRect(fullRect, FLOOR_COLOUR1);
 
         const QPen pen{QBrush{Qt::SolidPattern}, WALL_COLOUR};
         painter.setPen(pen);
@@ -53,6 +53,8 @@ namespace spelunker::gui {
                 // If this is a wall, draw it.
                 if (x == -1 || x == mw || y == -1 || y == mh || maze.cellIs(x, y) == thickmaze::CellType::WALL)
                     painter.fillRect(QRectF{xpos, ypos, cellW, cellH}, WALL_COLOUR);
+                else
+                    painter.fillRect(QRectF{xpos, ypos, cellW, cellH}, (x+y) % 2 ? FLOOR_COLOUR1 : FLOOR_COLOUR2);
 
                 xpos += cellW;
             }
