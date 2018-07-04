@@ -13,5 +13,7 @@ set(_SQUASHEDMAZE_PRIVATE_HEADER_FILES
         )
 
 set(_SQUASHEDMAZE_SOURCE_FILES
+        RoomFinder.cpp
+        SquashedMaze.cpp
         PARENT_SCOPE
         )

@@ -13,7 +13,7 @@
 #include <types/CommonMazeAttributes.h>
 #include <types/Dimensions2D.h>
 #include <types/Exceptions.h>
-#include <types/Symmetry.h>
+#include <types/Transformation.h>
 #include <math/MathUtils.h>
 #include <math/RNG.h>
 
@@ -25,7 +25,7 @@ namespace spelunker::thickmaze {
                          const types::PossibleCell &start,
                          const types::CellCollection &goals,
                          const CellContents &c)
-        : types::AbstractMaze<ThickMaze>{d, start, goals}, contents{c} {
+        : types::AbstractMaze{d, start, goals}, contents{c} {
 
         if (start && cellIs(*start) == CellType::WALL)
             throw types::IllegalSpecialCellPosition{*start, types::SpecialCellType::START};
@@ -50,7 +50,7 @@ namespace spelunker::thickmaze {
     bool ThickMaze::operator==(const ThickMaze &other) const noexcept {
         // We can just compare the wall incidence vectors, since == on vectors of the
         // same size compares the contents.
-        return types::AbstractMaze<ThickMaze>::operator==(other) &&
+        return types::AbstractMaze::operator==(other) &&
                contents == other.contents;
     }
 
@@ -68,57 +68,57 @@ namespace spelunker::thickmaze {
         return numCellWallsInContents(c, contents);
     }
 
-    const ThickMaze ThickMaze::applySymmetry(types::Symmetry s) const {
+    const ThickMaze ThickMaze::applyTransformation(types::Transformation t) const {
         // Get the symmetry map corresponding to the symmetry.
         std::function<const types::Cell(const types::Cell&)> mp;
 
         const auto [width, height] = getDimensions().values();
 
-        switch (s) {
-            case types::Symmetry::IDENTITY:
+        switch (t) {
+            case types::Transformation::IDENTITY:
                 mp = [](const types::Cell &c) {
                     return c;
                 };
                 break;
-            case types::Symmetry::ROTATION_BY_90:
+            case types::Transformation::ROTATION_BY_90:
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(getHeight() - y - 1, x);
                 };
                 break;
-            case types::Symmetry::ROTATION_BY_180:
+            case types::Transformation::ROTATION_BY_180:
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(getWidth() - x - 1, getHeight() - y - 1);
                 };
                 break;
-            case types::Symmetry::ROTATION_BY_270:
+            case types::Transformation::ROTATION_BY_270:
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(y, getWidth() - x - 1);
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_X:
+            case types::Transformation::REFLECTION_IN_X:
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(x, getHeight() - y - 1);
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_Y:
+            case types::Transformation::REFLECTION_IN_Y:
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(getWidth() - x - 1, y);
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_NWSE:
-                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
+            case types::Transformation::REFLECTION_IN_NWSE:
+                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), t);
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(y, x);
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_NESW:
-                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
+            case types::Transformation::REFLECTION_IN_NESW:
+                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), t);
                 mp = [this](const types::Cell &c) {
                     const auto[x, y] = c;
                     return types::cell(getHeight() - y - 1, getWidth() - x - 1);
@@ -126,7 +126,7 @@ namespace spelunker::thickmaze {
         }
 
         // Determine the new width / height and create the wall incidence.
-        const auto nDim = types::applySymmetryToDimensions(s, getDimensions());
+        const auto nDim = types::applyTransformationToDimensions(t, getDimensions());
         auto ncc = createThickMazeLayout(nDim);
 
         for (auto y = 0; y < height; ++y) {
@@ -246,7 +246,7 @@ namespace spelunker::thickmaze {
 
     template<typename Archive>
     void ThickMaze::serialize(Archive &ar, const unsigned int version) {
-        ar & boost::serialization::base_object<types::AbstractMaze<ThickMaze>>(*this);
+        ar & boost::serialization::base_object<types::AbstractMaze>(*this);
         ar & const_cast<CellContents&>(contents);
     }
 

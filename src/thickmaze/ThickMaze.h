@@ -11,9 +11,11 @@
 #include <iostream>
 
 #include <types/AbstractMaze.h>
+#include <types/BraidableMaze.h>
 #include <types/Dimensions2D.h>
 #include <types/ReversibleMaze.h>
-#include <types/Symmetry.h>
+#include <types/Transformation.h>
+#include <types/TransformableMaze.h>
 
 #include "ThickMazeAttributes.h"
 
@@ -22,7 +24,7 @@ namespace spelunker::thickmaze {
      * Whereas @see{Maze} represents a maze where the walls are zero thickness, ThickMaze represents a maze
      * where walls take up a grid space.
      *
-     * There is a monomorphism (but not surjective) from:
+     * There is a monomorphism from:
      * 1. Mazes of width w and height h to
      * 2. ThickMazes of width 2w-1 and height 2h-1.
      *
@@ -30,7 +32,10 @@ namespace spelunker::thickmaze {
      * odd width and height where walls are all contiguous cells of odd length >= 3. The mapping to this subset
      * is surjective, and thus Mazes and ThickMazes with this property are isomorphic.
      */
-    class ThickMaze : public types::AbstractMaze<ThickMaze>, public types::ReversibleMaze<ThickMaze> {
+    class ThickMaze : public types::AbstractMaze,
+                      public types::ReversibleMaze<ThickMaze>,
+                      public types::BraidableMaze<ThickMaze>,
+                      public types::TransformableMaze<ThickMaze> {
     public:
         /**
          * Create a ThickMaze with the given dimensions, start position, goal positions,
@@ -74,7 +79,8 @@ namespace spelunker::thickmaze {
          * @param c the contents of the maze, minus boundary walls
          */
         ThickMaze(int w, int h, const CellContents &c);
-        ~ThickMaze() = default;
+
+        ~ThickMaze() override = default;
 
         /// Determine if two mazes are equal.
         bool operator==(const ThickMaze &other) const noexcept;
@@ -96,8 +102,8 @@ namespace spelunker::thickmaze {
         /// Determine the number of walls a cell has.
         int numCellWalls(const types::Cell &c) const override;
 
-        /// Apply a given symmetry transformation to this maze.
-        const ThickMaze applySymmetry(types::Symmetry s) const override;
+        /// Apply a given transformation to this maze.
+        const ThickMaze applyTransformation(types::Transformation t) const override;
 
         /**
          * This algorithm swaps walls and floors, not including the border wall. It is useful for some
@@ -149,7 +155,7 @@ namespace spelunker::thickmaze {
         friend class boost::serialization::access;
 
         template<typename Archive>
-        void serialize(Archive &ar, const unsigned int version);
+        void serialize(Archive &ar, unsigned int version);
 
         const CellContents contents;
     };

@@ -7,7 +7,7 @@
  * Reversing should be an operation of order 2.
  */
 
-#pragma one
+#pragma once
 
 namespace spelunker::types {
     /**

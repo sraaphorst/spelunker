@@ -11,10 +11,12 @@
 #include <functional>
 
 #include <types/AbstractMaze.h>
+#include <types/BraidableMaze.h>
 #include <types/CommonMazeAttributes.h>
 #include <types/Dimensions2D.h>
 #include <types/Direction.h>
-#include <types/Symmetry.h>
+#include <types/Transformation.h>
+#include <types/TransformableMaze.h>
 #include <types/UnicursalizableMaze.h>
 
 #include "MazeAttributes.h"
@@ -51,7 +53,10 @@ namespace spelunker::maze {
      *
      * Note: This class was final, but serialization prevents it from being such.
      */
-    class Maze : public types::AbstractMaze<Maze>, public types::UnicursalizableMaze<Maze> {
+    class Maze : public types::AbstractMaze,
+                 public types::UnicursalizableMaze<Maze>,
+                 public types::BraidableMaze<Maze>,
+                 public types::TransformableMaze<Maze> {
     public:
         /// Create a maze bounded by dimensions, with a start and ending positions.
         /**
@@ -103,7 +108,7 @@ namespace spelunker::maze {
              int h,
              const WallIncidence &walls);
 
-        ~Maze() = default;
+        ~Maze() override = default;
 
         /// For a given position, determine if there is a wall.
         bool wall(const types::Position &p) const;
@@ -122,8 +127,8 @@ namespace spelunker::maze {
         /// Determine the number of walls a cell has.
         int numCellWalls(const types::Cell &c) const override;
 
-        /// Apply a given symmetry transformation to this maze.
-        const Maze applySymmetry(types::Symmetry s) const override;
+        /// Apply a given transformation to this maze.
+        const Maze applyTransformation(types::Transformation s) const override;
 
         /// Make a perfect maze into a 2w x 2h unicursal maze (aka labyrinth).
         /**
@@ -147,7 +152,7 @@ namespace spelunker::maze {
          *
          * @return a unicursal modification of this maze
          */
-        const Maze makeUnicursal() const override;
+        const Maze makeUnicursal() const noexcept override;
 
         /// Make a maze into a braid maze, clearing dead ends with the given probability.
         /**
@@ -219,7 +224,7 @@ namespace spelunker::maze {
         friend class boost::serialization::access;
 
         template<typename Archive>
-        void serialize(Archive &ar, const unsigned int version);
+        void serialize(Archive &ar, unsigned int version);
 
         int numWalls;
         WallIncidence wallIncidence;

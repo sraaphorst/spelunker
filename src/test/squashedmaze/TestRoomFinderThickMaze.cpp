@@ -23,8 +23,7 @@ TEST_CASE("Room finder properly finds all rooms", "[roomfinder][thickmaze]") {
     const auto tm = gen.generate();
     const auto invalidCells = tm.findInvalidCells();
 
-    const auto &am = dynamic_cast<const types::AbstractMaze<thickmaze::ThickMaze> &>(tm);
-    const squashedmaze::RoomFinder f(am);
+    const squashedmaze::RoomFinder f(tm);
     const auto &cellToRoom = f.getCellToRoom();
     const auto &roomContents = f.getRoomContents();
 

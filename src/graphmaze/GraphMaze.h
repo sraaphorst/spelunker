@@ -13,10 +13,12 @@
 #include <iostream>
 
 #include <types/AbstractMaze.h>
+#include <types/BraidableMaze.h>
 #include <types/CommonMazeAttributes.h>
 #include <types/Dimensions2D.h>
 #include <types/Direction.h>
-#include <types/Symmetry.h>
+#include <types/TransformableMaze.h>
+#include <types/Transformation.h>
 #include <types/UnicursalizableMaze.h>
 
 #include "GraphMazeAttributes.h"
@@ -29,7 +31,10 @@ namespace spelunker::graphmaze {
      * of a maze, we have one vertex per maze cell and edges represent the absence of a wall
      * between two cells, i.e. a path.
      */
-    class GraphMaze : public types::AbstractMaze<GraphMaze>, public types::UnicursalizableMaze<GraphMaze> {
+    class GraphMaze : public types::AbstractMaze,
+                      public types::UnicursalizableMaze<GraphMaze>,
+                      public types::BraidableMaze<GraphMaze>,
+                      public types::TransformableMaze<GraphMaze> {
     public:
         /// Create a graph maze bounded by the dimensions given, with a start and end position.
         GraphMaze(const types::Dimensions2D &d,
@@ -53,7 +58,10 @@ namespace spelunker::graphmaze {
                   int h,
                   const VertexCellPathCollection &ps);
 
-        ~GraphMaze() = default;
+        ~GraphMaze() override = default;
+
+        /// WARNING: This operation uses graph isomorphism checking, and thus may be VERY SLOW.
+        bool operator==(const GraphMaze &other) const noexcept;
 
         inline const GridGraph &getUnderlyingGraph() const noexcept { return graph; }
 
@@ -61,9 +69,9 @@ namespace spelunker::graphmaze {
 
         int numCellWalls(const types::Cell &c) const override;
 
-        const GraphMaze applySymmetry(types::Symmetry s) const override;
+        const GraphMaze applyTransformation(types::Transformation s) const override;
 
-        const GraphMaze makeUnicursal() const override;
+        const GraphMaze makeUnicursal() const noexcept override;
 
         const GraphMaze braid(double probability) const noexcept override;
 

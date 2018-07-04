@@ -14,7 +14,7 @@
 #include <typeclasses/Show.h>
 
 //#include "Dimensions2D.h"
-#include "Symmetry.h"
+#include "Transformation.h"
 
 namespace spelunker::types {
 
@@ -57,15 +57,15 @@ namespace spelunker::types {
      */
     class IllegalGroupOperation : public Exception {
     public:
-        IllegalGroupOperation(const Dimensions2D &d, const types::Symmetry s) : Exception(msg(d, s)) {}
-        IllegalGroupOperation(const int width, const int height, const types::Symmetry s)
-                : IllegalGroupOperation(Dimensions2D{width, height}, s) {}
+        IllegalGroupOperation(const Dimensions2D &d, const types::Transformation t) : Exception(msg(d, t)) {}
+        IllegalGroupOperation(const int width, const int height, const types::Transformation t)
+                : IllegalGroupOperation(Dimensions2D{width, height}, t) {}
 
     private:
-        static std::string msg(const Dimensions2D &d, const types::Symmetry s) {
+        static std::string msg(const Dimensions2D &d, const types::Transformation t) {
             return "width " + typeclasses::Show<int>::show(d.getWidth())
                    + " != height " + typeclasses::Show<int>::show(d.getHeight())
-                   + ", so cannot perform symmetry: " + typeclasses::Show<types::Symmetry>::show(s);
+                   + ", so cannot perform transformation: " + typeclasses::Show<types::Transformation>::show(t);
         }
     };
 

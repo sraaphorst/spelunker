@@ -57,15 +57,7 @@ namespace spelunker::math {
          * Given an STL collection, returns a reference to a random element in it.
          */
         template<typename Container>
-        static auto &randomElement(Container &c) {
-            auto iter       = c.begin();
-            const auto size = std::distance(iter, c.end());
-            auto r          = getRNG();
-            const auto idx  = r->randomRange(size);
-
-            std::advance(iter, idx);
-            return *iter;
-        }
+        static auto &randomElement(const Container &c);
 
         /// Shuffle a collection.
         /**
@@ -74,17 +66,7 @@ namespace spelunker::math {
          * @param c the container of elements to shuffle.
          */
         template<typename Container>
-        static void shuffle(Container &c) {
-            auto r = getRNG();
-
-            // c.size is unsigned, so we must cast to int for the case that it is 0.
-            const auto maxPos = static_cast<int>(c.size()) - 1;
-            for (auto i=0; i < maxPos; ++i) {
-                // Find a random element and swap it with begin.
-                const auto idx = randomRange(i, c.size());
-                std::swap(c[i], c[idx]);
-            }
-        }
+        static void shuffle(Container &c);
 
     protected:
         /// Generate a number in the range [lower,upper).
@@ -108,4 +90,29 @@ namespace spelunker::math {
         /// The random number generator. RNG takes access to it.
         static std::shared_ptr<RNG> rng;
     };
+
+
+    template<typename Container>
+    auto &RNG::randomElement(const Container &c) {
+        auto iter       = c.begin();
+        const auto size = std::distance(iter, c.end());
+        auto r          = getRNG();
+        const auto idx  = r->randomRange(static_cast<int>(size));
+
+        std::advance(iter, idx);
+        return *iter;
+    }
+
+    template<typename Container>
+    void RNG::shuffle(Container &c) {
+        auto r = getRNG();
+
+        // c.size is unsigned, so we must cast to int for the case that it is 0.
+        const auto maxPos = static_cast<int>(c.size()) - 1;
+        for (auto i=0; i < maxPos; ++i) {
+            // Find a random element and swap it with begin.
+            const auto idx = randomRange(i, c.size());
+            std::swap(c[i], c[idx]);
+        }
+    }
 };

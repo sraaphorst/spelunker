@@ -18,7 +18,7 @@
 #include <types/Direction.h>
 #include <types/Dimensions2D.h>
 #include <types/Exceptions.h>
-#include <types/Symmetry.h>
+#include <types/Transformation.h>
 #include "MazeAttributes.h"
 #include "Maze.h"
 #include "MazeGenerator.h"
@@ -28,7 +28,7 @@ namespace spelunker::maze {
                const types::PossibleCell &start,
                const types::CellCollection &goals,
                const WallIncidence &walls)
-            : types::AbstractMaze<Maze>{d, start, goals},
+            : types::AbstractMaze{d, start, goals},
               numWalls{calculateNumWalls(d)},
               wallIncidence{walls} {}
 
@@ -61,7 +61,7 @@ namespace spelunker::maze {
     bool Maze::operator==(const Maze &other) const noexcept {
         // We can just compare the wall incidence vectors, since == on vectors of the
         // same size compares the contents.
-        return types::AbstractMaze<Maze>::operator==(other) &&
+        return types::AbstractMaze::operator==(other) &&
                getDimensions() == other.getDimensions()
                && wallIncidence == other.wallIncidence;
     }
@@ -70,82 +70,82 @@ namespace spelunker::maze {
         return numCellWallsInWI(c, wallIncidence);
     }
 
-    const Maze Maze::applySymmetry(const types::Symmetry s) const {
-        // Get the new dimensions for the symmetry.
-        const auto ndim = types::applySymmetryToDimensions(s, getDimensions());
+    const Maze Maze::applyTransformation(types::Transformation t) const {
+        // Get the new dimensions for the transformation.
+        const auto ndim = types::applyTransformationToDimensions(t, getDimensions());
 
-        // Get the symmetry map corresponding to the symmetry.
+        // Get the transformation map corresponding to the transformation.
         std::function<WallID(const types::Position &)> mp;
 
-        switch (s) {
-            case types::Symmetry::IDENTITY:
+        switch (t) {
+            case types::Transformation::IDENTITY:
                 mp = [&ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, x, y, d);
                 };
                 break;
-            case types::Symmetry::ROTATION_BY_90:
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::ROTATION_BY_90:
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, getHeight() - y - 1, x,
-                                               types::applySymmetryToDirection(s, d));
+                                               types::applyTransformationToDirection(t, d));
                 };
                 break;
-            case types::Symmetry::ROTATION_BY_180:
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::ROTATION_BY_180:
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, getWidth() - x - 1, getHeight() - y - 1,
-                                               types::applySymmetryToDirection(s, d));
+                                               types::applyTransformationToDirection(t, d));
                 };
                 break;
-            case types::Symmetry::ROTATION_BY_270:
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::ROTATION_BY_270:
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, y, getWidth() - x - 1,
-                                               types::applySymmetryToDirection(s, d));
+                                               types::applyTransformationToDirection(t, d));
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_X:
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::REFLECTION_IN_X:
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, x, getHeight() - y - 1,
-                                               types::applySymmetryToDirection(s, d));
+                                               types::applyTransformationToDirection(t, d));
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_Y:
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::REFLECTION_IN_Y:
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, getWidth() - x - 1, y,
-                                               types::applySymmetryToDirection(s, d));
+                                               types::applyTransformationToDirection(t, d));
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_NWSE:
-                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::REFLECTION_IN_NWSE:
+                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), t);
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
-                    return Maze::rankPositionS(ndim, y, x, types::applySymmetryToDirection(s, d));
+                    return Maze::rankPositionS(ndim, y, x, types::applyTransformationToDirection(t, d));
                 };
                 break;
-            case types::Symmetry::REFLECTION_IN_NESW:
-                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), s);
-                mp = [this, s, &ndim](const types::Position &p) {
+            case types::Transformation::REFLECTION_IN_NESW:
+                if (!getDimensions().isSquare()) throw types::IllegalGroupOperation(getDimensions(), t);
+                mp = [this, t, &ndim](const types::Position &p) {
                     const auto[c, d] = p;
                     const auto[x, y] = c;
                     return Maze::rankPositionS(ndim, getHeight() - y - 1, getWidth() - x - 1,
-                                               types::applySymmetryToDirection(s, d));
+                                               types::applyTransformationToDirection(t, d));
                 };
                 break;
         }
 
         // Determine the new width / height and create the wall incidence.
-        const auto nDim = types::applySymmetryToDimensions(s, getDimensions());
+        const auto nDim = types::applyTransformationToDimensions(t, getDimensions());
 
         const auto dirs = types::directions();
         auto nwi = WallIncidence(numWalls, true);
@@ -165,7 +165,7 @@ namespace spelunker::maze {
         return Maze(nDim, nwi);
     }
 
-    const Maze Maze::makeUnicursal() const {
+    const Maze Maze::makeUnicursal() const noexcept {
         // We need a wall incidence map of size 2w x 2h.
         const types::Dimensions2D ud = 2 * getDimensions();
         const int uNumWalls = calculateNumWalls(ud);
@@ -419,7 +419,7 @@ namespace spelunker::maze {
 
     template<typename Archive>
     void Maze::serialize(Archive &ar, const unsigned int version) {
-        ar & boost::serialization::base_object<types::AbstractMaze<Maze>>(*this);
+        ar & boost::serialization::base_object<types::AbstractMaze>(*this);
         ar & const_cast<int &>(numWalls);
         ar & const_cast<WallIncidence &>(wallIncidence);
     }
