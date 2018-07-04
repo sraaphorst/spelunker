@@ -431,7 +431,8 @@ namespace spelunker::squashedmaze {
                             continue;
 
                         // If the cell has already been visited (i.e. has populated BfsData), skip.
-                        const auto &[dist, cells] = iter->second;
+                        const auto dist = iter->second.distance;
+                        const auto &cells = iter->second.path;
                         if (dist != -1) continue;
 
                         // It has not been visited. Fill out its BfsData.
