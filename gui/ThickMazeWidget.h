@@ -30,7 +30,8 @@ namespace spelunker::gui {
 
         thickmaze::ThickMaze maze;
 
-        static auto const FLOOR_COLOUR = Qt::gray;
+        static auto const FLOOR_COLOUR1 = Qt::gray;
+        static auto const FLOOR_COLOUR2 = Qt::lightGray;
         static auto const WALL_COLOUR  = Qt::black;
         static auto constexpr WALL_WIDTH = 2;
     };

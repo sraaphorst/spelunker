@@ -72,11 +72,11 @@ namespace spelunker::maze {
             // Now split into two areas. Since we are always adding walls on the E and S,
             // we must do this carefully.
             if (vertical) {
-                areas.push(rectangle(area.x, area.y, p + 1, area.h));
-                areas.push(rectangle(area.x + p + 1, area.y, area.w - p - 1, area.h));
+                areas.emplace(rectangle(area.x, area.y, p + 1, area.h));
+                areas.emplace(rectangle(area.x + p + 1, area.y, area.w - p - 1, area.h));
             } else {
-                areas.push(rectangle(area.x, area.y, area.w, p + 1));
-                areas.push(rectangle(area.x, area.y + p + 1, area.w, area.h - p - 1));
+                areas.emplace(rectangle(area.x, area.y, area.w, p + 1));
+                areas.emplace(rectangle(area.x, area.y + p + 1, area.w, area.h - p - 1));
             }
         }
 

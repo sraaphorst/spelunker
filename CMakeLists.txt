@@ -15,6 +15,10 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
+#if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+#    add_definitions(-DDEBUG)
+#endif()
+
 add_subdirectory(src)
 add_subdirectory(apps)
 add_subdirectory(gui)

@@ -78,7 +78,7 @@ namespace spelunker::thickmaze {
         cout << "OffsetMap:" << endl;
         for (auto om: offsetMap) {
             const auto &[p,q] = om;
-            cout << p << ": ";
+            cout << typeclasses::Show<types::Direction>::show(p) << ": ";
             for (auto c: q) {
                 cout << "(" << c.first << "," << c.second << ") ";
             }

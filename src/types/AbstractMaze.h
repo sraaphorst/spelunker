@@ -129,7 +129,7 @@ namespace spelunker::types {
          * @param c the cell
          * @return true if the cell is in bounds, and false otherwise
          */
-        bool cellInBounds(const Cell &c) const noexcept {
+        virtual bool cellInBounds(const Cell &c) const noexcept {
             return dimensions.cellInBounds(c) && numCellWalls(c) < 4;
         }
 
@@ -196,6 +196,46 @@ namespace spelunker::types {
             return deadends;
         }
 
+        /// Find the junctions for this maze.
+        /**
+         * Find a collection of all the junctions for this maze.
+         * A cell is considered a "junction" if it has exactly zero or one walls,
+         * thus offering a choice of movement.
+         * A junction with one wall is called a <em>T junction</em>.
+         * A junction with zero walls is called a <em>+ junction</em>.
+         * @return a collection of the junction cells
+         */
+         const types::CellCollection findJunctions() const noexcept {
+             types::CellCollection junctions;
+             const auto [width, height] = dimensions.values();
+             for (auto y = 0; y < height; ++y) {
+                 for (auto x = 0; x < width; ++x) {
+                     const auto c = types::cell(x, y);
+                     if (numCellWalls(c) == 0 || numCellWalls(c) == 1)
+                         junctions.emplace_back(c);
+                 }
+             }
+             return junctions;
+         }
+
+         /// Count the number of carved walls for the maze.
+         /**
+          * Count the number of walls that the maze has carved out.
+          * @return the number of carved walls
+          */
+         const int numCarvedWalls() const noexcept {
+             // TODO: If we generalize mazes further, cells may not have four walls. This will need to be changed.
+             // We do this by iterating over the cells and counting how many walls each cell is missing.
+             // Each missing wall falls between two cells, so it will be counted twice. Thus, we must dissolve the
+             // total by two.
+             int num = 0;
+             const auto [width, height] = dimensions.values();
+             for (auto y = 0; y < height; ++y)
+                 for (auto x = 0; x < width; ++x)
+                     num += (4 - numCellWalls(types::cell(x, y)));
+             return num / 2;
+         }
+
         /**
          * Empty constructor for serialization.
          */
@@ -210,6 +250,27 @@ namespace spelunker::types {
          * @return a list of its direct neighbours
          */
         virtual const types::CellCollection neighbours(const types::Cell &c) const = 0;
+
+        /// Find the neighbours of a group of cells.
+        /**
+         * Given a CellCollection, find its neighbours int he maze.
+         *
+         */
+        const types::CellSet neighbours(const types::CellCollection &cc) const {
+            // Add all the neighbours of each cell.
+            types::CellSet nbrs;
+            for (const auto &c: cc) {
+                const auto cnbrs = neighbours(c);
+                for (const auto &c2: cnbrs)
+                    nbrs.insert(c2);
+            }
+
+            // Remove the original cells.
+            for (const auto &c: cc)
+                nbrs.erase(c);
+
+            return nbrs;
+        }
 
         /// Performs a BFS from the given input cell and returns the results.
         /**
@@ -244,7 +305,7 @@ namespace spelunker::types {
             // Prepare the queue for BFS. The cell info comprises a cell and its distance.
             using cellInfo = std::pair<const types::Cell, const int>;
             std::queue<cellInfo> cellQueue{};
-            cellQueue.push(cellInfo{start, 0});
+            cellQueue.emplace(cellInfo{start, 0});
 
             // We also want to keep track of the cells visited.
             auto ci = initializeCellIndicator(getDimensions(), false);
@@ -267,7 +328,7 @@ namespace spelunker::types {
 
                 const auto nbrs = neighbours(cell);
                 for (auto n: nbrs)
-                    cellQueue.push(cellInfo{n, dist + 1});
+                    cellQueue.emplace(cellInfo{n, dist + 1});
             }
 
             return BFSResults{start, connectedCells, distances};
@@ -352,7 +413,7 @@ namespace spelunker::types {
 
                     std::queue<cellInfo> cellQueue;
                     types::Cell stc{x,y};
-                    cellQueue.push(cellInfo{stc, 0});
+                    cellQueue.emplace(cellInfo{stc, 0});
 
                     while (!cellQueue.empty()) {
                         const auto[c, cd] = cellQueue.front();
@@ -373,7 +434,7 @@ namespace spelunker::types {
 
                         const auto nbrs = neighbours(c);
                         for (const auto &n: nbrs) {
-                            cellQueue.push(cellInfo{n, cd + 1});
+                            cellQueue.emplace(cellInfo{n, cd + 1});
                         }
                     }
                 }

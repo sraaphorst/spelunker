@@ -16,6 +16,7 @@ target_link_libraries(tests Catch)
 
 set(TEST_SUBDIRS
         maze
+        squashedmaze
         thickmaze
         types
         )
