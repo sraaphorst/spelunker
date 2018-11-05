@@ -1,6 +1,6 @@
 # spelunker
 
-*NOTE:* I am making a major refactor of this library to be fully based on the Boost Graph Library, and have the base type be a maze over a graph (with the vertices dictating the cells and the edges the possible passages) instead of the current implementation, which assumes a grid. This will allow a much more diverse collection of mazes, such as with triangular cells, hexagonal cells, polar coordinates, masks, etc.
+**Status:** I am making a major refactor of this library to be fully based on the Boost Graph Library, and have the base type be a maze over a graph (with the vertices dictating the cells and the edges the possible passages) instead of the current implementation, which assumes a grid. This will allow a much more diverse collection of mazes, such as with triangular cells, hexagonal cells, polar coordinates, masks, etc.
 
 As I didn't want to clutter up spelunker until the refactor was complete, I am performing the refactor in another repository at the present time. See https://github.com/sraaphorst/spelunker_graphmaze.
 
