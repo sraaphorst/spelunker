@@ -4,9 +4,9 @@
 
 As I didn't want to clutter up spelunker until the refactor was complete, I am performing the refactor in another repository at the present time. See https://github.com/sraaphorst/spelunker_graphmaze.
 
-Current status:
+<!-- Current status:
 
-[![Build Status](https://travis-ci.com/sraaphorst/spelunker.svg?branch=master)](https://travis-ci.com/sraaphorst/spelunker)
+[![Build Status](https://travis-ci.com/sraaphorst/spelunker.svg?branch=master)](https://travis-ci.com/sraaphorst/spelunker) -->
 
 `spelunker` is a work-in-progress C++17 library for generating and solving different types of mazes:
 
